@@ -1,0 +1,8 @@
+﻿TODO:
+
+1. Make github
+2. add all assets
+3. animate hero
+4. animate enemies
+6. make map
+
