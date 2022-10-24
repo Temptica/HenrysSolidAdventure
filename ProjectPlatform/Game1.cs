@@ -44,7 +44,7 @@ namespace ProjectPlatform
             Background[1] = Content.Load<Texture2D>("Background/background_layer_2");
             Background[2] = Content.Load<Texture2D>("Background/background_layer_3");
             Font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
-            Movables.Add(new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100)));//Main character will always be index 0;
+            Movables.Add(new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.001f));//Main character will always be index 0;
         }
 
         protected override void Update(GameTime gameTime)
@@ -68,7 +68,7 @@ namespace ProjectPlatform
             }
             if (keyState.IsKeyDown(Keys.Space))
             {
-                Movables[0].Velocity = new Vector2(velocityX, -10);
+                (Movables[0] as Otter)?.Jump();
             }
             else
             {
@@ -79,11 +79,37 @@ namespace ProjectPlatform
                //attack
             }
 
+            if (keyState.IsKeyDown(Keys.P))
+            {
+                switch (gameState)
+                {
+                    case GameState.Menu:
+                        gameState = GameState.Playing;
+                        break;
+                    case GameState.Playing:
+                        gameState = GameState.Menu;
+                        break;
+                    default:
+                        gameState = GameState.Playing;
+                        break;
+
+                }
+            }
+
             #endregion
             // TODO: Add your update logic here
-            foreach(IMovable movable in Movables)
+            switch (gameState)
             {
-                movable.Update(gameTime);
+                case GameState.Menu:
+                    break;
+                case GameState.Paused:
+                    break;
+                case GameState.Playing:
+                    foreach (IMovable movable in Movables)
+                    {
+                        movable.Update(gameTime);
+                    }
+                    break;
             }
             base.Update(gameTime);
         }
@@ -92,15 +118,29 @@ namespace ProjectPlatform
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _spriteBatch.Begin();
-            
             foreach (Texture2D background in Background)
             {
-                Vector2 Scale = new (_graphics.PreferredBackBufferHeight / background.Height,
-                                     _graphics.PreferredBackBufferWidth / background.Width);
-                _spriteBatch.Draw(background, Vector2.Zero, null,Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+                Vector2 Scale = new(_graphics.PreferredBackBufferHeight / background.Height,
+                    _graphics.PreferredBackBufferWidth / background.Width);
+                _spriteBatch.Draw(background, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
             }
+            switch (gameState)
+            {
+                case GameState.Menu:
+                    _spriteBatch.DrawString(Font, "Press Enter to start", new Vector2(100, 100), Color.White);
+                    break;
+                case GameState.Paused:
+                    _spriteBatch.DrawString(Font, "Press Enter to resume", new Vector2(100, 100), Color.White);
+                    break;
+                case GameState.Playing:
+                    foreach (IMovable movable in Movables)
+                    {
+                        movable.Draw(_spriteBatch);
+                    }
+                    break;
+            }
+            
             // TODO: Add your drawing code here
-            _spriteBatch.DrawString(Font, "Hello World", new Vector2(100, 100), Color.White);
             foreach (IMovable movable in Movables)
             {
                 movable.Draw(_spriteBatch);
