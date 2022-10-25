@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace ProjectPlatform
         enum GameState { Menu, Paused, Playing}
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        List<IMovable> Movables;
+        List<IMoveable> Movables;
         Texture2D[] Background;
         SpriteFont Font;
         GameState gameState;
@@ -27,7 +28,7 @@ namespace ProjectPlatform
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Movables = new List<IMovable>();
+            Movables = new List<IMoveable>();
             // _graphics.IsFullScreen = true;
             gameState = GameState.Menu;
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -57,22 +58,17 @@ namespace ProjectPlatform
                 Exit();
             }
             KeyboardState keyState = Keyboard.GetState();
-            int velocityX = 0;
-            if (keyState.IsKeyDown(Keys.D))
+            if (keyState.IsKeyDown(Keys.D)||keyState.IsKeyDown(Keys.Right))
             {
-                velocityX = 5;
+                Movables[0].MoveRight();
             }
-            else if (keyState.IsKeyDown(Keys.Q))
+            else if (keyState.IsKeyDown(Keys.Q) || keyState.IsKeyDown(Keys.Left))
             {
-                velocityX = -5;
+                Movables[0].MoveLeft();
             }
-            if (keyState.IsKeyDown(Keys.Space))
+            if (keyState.IsKeyDown(Keys.Space) || keyState.IsKeyDown(Keys.Up))
             {
-                (Movables[0] as Otter)?.Jump();
-            }
-            else
-            {
-                Movables[0].Velocity = new Vector2(velocityX, 0);
+                Movables[0].Jump();
             }
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
@@ -88,6 +84,9 @@ namespace ProjectPlatform
                         break;
                     case GameState.Playing:
                         gameState = GameState.Menu;
+                        break;
+                    case GameState.Paused:
+                        gameState = GameState.Playing;
                         break;
                     default:
                         gameState = GameState.Playing;
@@ -105,7 +104,7 @@ namespace ProjectPlatform
                 case GameState.Paused:
                     break;
                 case GameState.Playing:
-                    foreach (IMovable movable in Movables)
+                    foreach (var movable in Movables)
                     {
                         movable.Update(gameTime);
                     }
@@ -120,9 +119,9 @@ namespace ProjectPlatform
             _spriteBatch.Begin();
             foreach (Texture2D background in Background)
             {
-                Vector2 Scale = new(_graphics.PreferredBackBufferHeight / background.Height,
-                    _graphics.PreferredBackBufferWidth / background.Width);
-                _spriteBatch.Draw(background, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+                Vector2 scale = new(_graphics.PreferredBackBufferHeight / background.Height,
+                    _graphics.PreferredBackBufferWidth / background.Width);//checks how many times background fits in screen. Code below will multiply this scale number to make it fit
+                _spriteBatch.Draw(background, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
             switch (gameState)
             {
@@ -133,15 +132,17 @@ namespace ProjectPlatform
                     _spriteBatch.DrawString(Font, "Press Enter to resume", new Vector2(100, 100), Color.White);
                     break;
                 case GameState.Playing:
-                    foreach (IMovable movable in Movables)
+                    foreach (var movable in Movables)
                     {
                         movable.Draw(_spriteBatch);
                     }
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             
             // TODO: Add your drawing code here
-            foreach (IMovable movable in Movables)
+            foreach (var movable in Movables)
             {
                 movable.Draw(_spriteBatch);
             }

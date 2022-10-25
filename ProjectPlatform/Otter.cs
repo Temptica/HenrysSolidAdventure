@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectPlatform
 {
     internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead }
-    internal class Otter : IMovable
+    internal class Otter:IMoveable
     {
         #region Consts
         private const int Height = 200;
         private const int Width = 200;
-        private const float jumpForce = 7f;
-        private const float maxY = 10f;
+        private const float JumpForce = 0.5f;
+        private const float MaxYVelocity = 10f;
+        private const float WalkSpeed = 1f;
+        private const float RunningSpeed = 2f;
         #endregion
 
         #region properities
-        public Vector2 Velocity { get; set; }
+
+
         public Vector2 Position { get; set; }
         public Texture2D Texture { get; set; }
         public Rectangle Rectangle { get; set; }
@@ -29,11 +27,20 @@ namespace ProjectPlatform
         public int AttackRange { get; set; }
         public State State { get; set; }
         public float Gravity { get; }
+        private float _currentYVelocity;
+
+        public float CurrentYVelocity
+        {
+            get => _currentYVelocity;
+            set => _currentYVelocity = value>MaxYVelocity?MaxYVelocity:value;
+        }
+
         #endregion
-        
+
         #region private variables
-        private int _currentX;
+        private int _currentSpriteX;
         private double _time;
+        private Vector2 _velocity;
         #endregion
 
         public Otter(Texture2D otter, Vector2 position, float gravity)
@@ -43,20 +50,17 @@ namespace ProjectPlatform
             Gravity = gravity;
         }
 
-        private float airtime;
+        
         public void Update(GameTime gameTime)
         {
-            var newVelocity = Velocity;
             if (!OnGround())
             {
-                airtime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                var newY = (Gravity * airtime)+ Velocity.Y;
-                newVelocity.Y += newY > maxY ? maxY : newY;//make falling smoother
-                
+                var newY = _velocity.Y +(float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
             }
             else
             {
-                airtime = 0f;
+                _velocity.Y = 0f;
             }
             if (State == State.Idle)
             {
@@ -64,22 +68,30 @@ namespace ProjectPlatform
 
                 if (_time > 250) //1000/4
                 {
-                    _currentX += Width;
-                    if (_currentX >= Texture.Width)
-                        _currentX = 0;
+                    _currentSpriteX += Width;
+                    if (_currentSpriteX >= Texture.Width)
+                        _currentSpriteX = 0;
                     _time = 0;
                 }
 
             }
+            Position += _velocity*(float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            _velocity.X = 0;
+        }
 
-            Velocity = newVelocity;
-            Position += newVelocity;
+        public void MoveLeft()
+        {
+            _velocity.X = -WalkSpeed;
+        }
+
+        public void MoveRight()
+        {
+            _velocity.X = WalkSpeed;
         }
 
         public void Jump()
         {
-            Velocity = new Vector2(Velocity.X, -jumpForce) ;
-            airtime = 0f;
+            _velocity = new Vector2(_velocity.X, -JumpForce) ;
         }
 
         public bool OnGround()
@@ -89,9 +101,9 @@ namespace ProjectPlatform
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position,new Rectangle(_currentX,0,Height,Width)
+            spriteBatch.Draw(Texture, Position,new Rectangle(_currentSpriteX,0,Height,Width)
                 ,Color.White,0,Vector2.Zero,0.5f, 
-                Velocity.X < 0? SpriteEffects.FlipHorizontally:SpriteEffects.None//if moving to the left, then flip
+                _velocity.X < 0? SpriteEffects.FlipHorizontally:SpriteEffects.None//if moving to the left, then flip
                 ,0f);
         }
     }
