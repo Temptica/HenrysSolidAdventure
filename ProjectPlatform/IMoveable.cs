@@ -10,11 +10,12 @@ namespace ProjectPlatform
 {
     internal interface IMoveable
     {
+        Vector2 Position { get; set; }
         public void Update(GameTime gameTime);
         public void MoveLeft();
         public void MoveRight();
         public void Jump();
         public bool OnGround();
-        public void Draw(SpriteBatch spriteBatch);
+        public void Draw(SpriteBatch spriteBatch, float scale);
     }
 }

@@ -41,6 +41,8 @@ namespace ProjectPlatform
         private int _currentSpriteX;
         private double _time;
         private Vector2 _velocity;
+        private bool canJump;
+        private bool canWalk;
         #endregion
 
         public Otter(Texture2D otter, Vector2 position, float gravity)
@@ -53,14 +55,16 @@ namespace ProjectPlatform
         
         public void Update(GameTime gameTime)
         {
-            if (!OnGround())
+            if (OnGround() && _velocity.Y >= 0)
             {
-                var newY = _velocity.Y +(float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
-                _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
+                _velocity.Y = 0f;
+                canJump = true;
             }
             else
             {
-                _velocity.Y = 0f;
+                canJump = false;
+                var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
             }
             if (State == State.Idle)
             {
@@ -75,8 +79,12 @@ namespace ProjectPlatform
                 }
 
             }
+
+            if (!canWalk)
+            {
+                _velocity.X = 0;
+            }
             Position += _velocity*(float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            _velocity.X = 0;
         }
 
         public void MoveLeft()
@@ -91,20 +99,27 @@ namespace ProjectPlatform
 
         public void Jump()
         {
-            _velocity = new Vector2(_velocity.X, -JumpForce) ;
+            if(canJump)_velocity = new Vector2(_velocity.X, -JumpForce);
         }
 
         public bool OnGround()
         {
-            return false;
+            return Position.Y >= 950;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, float scale = 0.5f)
         {
-            spriteBatch.Draw(Texture, Position,new Rectangle(_currentSpriteX,0,Height,Width)
-                ,Color.White,0,Vector2.Zero,0.5f, 
+            spriteBatch.Draw(Texture, Position
+                ,new Rectangle(_currentSpriteX,0,Height,Width)
+                ,Color.White,0,Vector2.Zero, scale, 
                 _velocity.X < 0? SpriteEffects.FlipHorizontally:SpriteEffects.None//if moving to the left, then flip
                 ,0f);
+            _velocity.X = 0;
+        }
+
+        public void SetCanWalk(bool canWalk)
+        {
+            this.canWalk = canWalk;
         }
     }
 }
