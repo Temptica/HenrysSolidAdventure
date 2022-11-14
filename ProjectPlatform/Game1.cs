@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Linq;
+using ProjectPlatform.Mapfolder;
 
 namespace ProjectPlatform
 {
@@ -11,14 +12,14 @@ namespace ProjectPlatform
     public class Game1 : Game
     {
         
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        List<IMoveable> Movables;
         private BackGround backGround;
-        SpriteFont Font;
-        GameState gameState;
-        Otter otter;
-        List<Button> Buttons;
+        private SpriteFont Font;
+        private GameState gameState;
+        private Otter otter;
+        private List<Button> Buttons;
+        private Texture2D hitbox;
 
 
         public Game1()
@@ -32,7 +33,6 @@ namespace ProjectPlatform
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Movables = new List<IMoveable>();
             Buttons = new List<Button>();
             // _graphics.IsFullScreen = true;
             gameState = GameState.Menu;
@@ -44,18 +44,30 @@ namespace ProjectPlatform
 
         protected override void LoadContent()
         {
+            
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            var BackgroundTextures = new Texture2D[3];
-            BackgroundTextures[0] = Content.Load<Texture2D>("Background/background_layer_1");
-            BackgroundTextures[1] = Content.Load<Texture2D>("Background/background_layer_2");
-            BackgroundTextures[2] = Content.Load<Texture2D>("Background/background_layer_3");
-            backGround = new BackGround(BackgroundTextures);
+
+            backGround = BackGround.Instance;
+            backGround.Initialise(Content);
             Font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
-            Movables.Add(new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.001f));//Main character will always be index 0;
-            otter = (Otter)Movables[0];
+            //Movables.Add(otter);//Main character will always be index 0;
             var startTexture = Content.Load<Texture2D>("Buttons/StartButton");
             Buttons.Add(new Button("StartButton", startTexture, new Vector2((_graphics.PreferredBackBufferWidth - startTexture.Width)/2f, (_graphics.PreferredBackBufferHeight- startTexture.Height)/2f), GameState.Menu));
-
+            var map = Map.GetInstance();
+            map.Initialise(Content, _graphics.PreferredBackBufferWidth);
+            otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.001f, map.Scale/5f);//dyncamic
+            hitbox = new Texture2D(GraphicsDevice, 1, 1);
+            hitbox.SetData(new[] { Color.White });
+            var x = 0f;
+            var rng = new Random();
+            var testMap = new List<MapTile>();
+            while (x < _graphics.PreferredBackBufferWidth)
+            {
+                testMap.Add(new MapTile(map.GetTile(rng.Next(0, map.TileSet.Count)), new Vector2(x, _graphics.PreferredBackBufferHeight - 100)));
+                x += testMap[0].Tile.Rectangle.Width*map.Scale;
+            }
+            map.FrontMap = testMap;
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -89,7 +101,6 @@ namespace ProjectPlatform
                     {
                         BeginGame();
                     }
-
                 }
             }
 
@@ -112,27 +123,27 @@ namespace ProjectPlatform
                         break;
                 }
             }
-
+            if (keyState.IsKeyDown(Keys.LeftAlt) && keyState.IsKeyDown(Keys.Enter))
+            {
+                _graphics.ToggleFullScreen();
+                _graphics.ApplyChanges();
+            }
             #endregion
             // TODO: Add your update logic here
             switch (gameState)
             {
                 case GameState.Menu:
                     backGround.Update(gameTime);
-                    otter.Update(gameTime);
+                    otter.CurrentAnimation.Update(gameTime);
                     break;
                 case GameState.Paused:
                     break;
                 case GameState.Playing:
-                    foreach (var movable in Movables)
-                    {
-                        movable.Update(gameTime);
-                    }
+                    otter.Update(gameTime);
                     break;
             }
             base.Update(gameTime);
         }
-
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -157,22 +168,27 @@ namespace ProjectPlatform
                         , Color.SandyBrown);//foreground
 
                     otter.Position = new Vector2(50, halfHeight);
-                    otter.Draw(_spriteBatch, 2f); //draw otter
-
-                    
+                    otter.Draw(_spriteBatch); //draw otter                   
 
                     break;
                 case GameState.Paused:
                     _spriteBatch.DrawString(Font, "Press Enter to resume", new Vector2(100, 100), Color.White);
                     break;
                 case GameState.Playing:
-                    foreach (var movable in Movables)
-                    {
-                        movable.Draw(_spriteBatch,0.5f);
-                    }
+
+                    //var tile = Map.GetInstance().GetTile(8);
+
+                    //var mapTile = new MapTile(tile, new Vector2(0, _graphics.PreferredBackBufferHeight-100));
+                    //mapTile.Draw(_spriteBatch);
+                    Map.GetInstance().FrontMap.ForEach(tile => tile.Draw(_spriteBatch));
+                    //foreach (var tile in Map.GetInstance().FrontMap)
+                    //{
+                    //    _spriteBatch.Draw(hitbox, tile.HitBox, Color.Green);
+                    //}
+                    _spriteBatch.Draw(hitbox, otter.HitBox, Color.Red);
+                    otter.Draw(_spriteBatch);
+                    //_spriteBatch.Draw(hitbox, )
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
             
             Buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_spriteBatch));// draw active buttons

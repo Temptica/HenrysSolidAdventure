@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 
 namespace ProjectPlatform
 {
@@ -14,12 +15,31 @@ namespace ProjectPlatform
         float[] scroll;
         float scale;
         float scrollSpeed = 0.05f;
-        
 
-        public BackGround(Texture2D[] backgrounds)
+        //singleton
+        private static BackGround instance;
+        public static BackGround Instance
         {
-            Backgrounds = backgrounds;
-            scroll = new float[backgrounds.Length];
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new BackGround();
+                }
+                return instance;
+            }
+        }
+        private BackGround()
+        {
+        }
+        public void Initialise(ContentManager content)
+        {
+            var BackgroundTextures = new Texture2D[3];
+            BackgroundTextures[0] = content.Load<Texture2D>("Background/background_layer_1");
+            BackgroundTextures[1] = content.Load<Texture2D>("Background/background_layer_2");
+            BackgroundTextures[2] = content.Load<Texture2D>("Background/background_layer_3");
+            Backgrounds = BackgroundTextures;
+            scroll = new float[Backgrounds.Length];
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 ScreenSize)
