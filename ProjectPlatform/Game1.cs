@@ -58,15 +58,9 @@ namespace ProjectPlatform
             otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.001f, map.Scale/5f);//dyncamic
             hitbox = new Texture2D(GraphicsDevice, 1, 1);
             hitbox.SetData(new[] { Color.White });
-            var x = 0f;
-            var rng = new Random();
-            var testMap = new List<MapTile>();
-            while (x < _graphics.PreferredBackBufferWidth)
-            {
-                testMap.Add(new MapTile(map.GetTile(rng.Next(0, map.TileSet.Count)), new Vector2(x, _graphics.PreferredBackBufferHeight - 100)));
-                x += testMap[0].Tile.Rectangle.Width*map.Scale;
-            }
-            map.FrontMap = testMap;
+            
+
+            MapLoader.LoadMap(@"D:\ap\22-23\ProjGameDev\Map\Level1V2.json", GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             
         }
 
@@ -80,13 +74,14 @@ namespace ProjectPlatform
                 Exit();
             }
             KeyboardState keyState = Keyboard.GetState();
+            bool shifting = keyState.IsKeyDown(Keys.LeftShift);
             if (keyState.IsKeyDown(Keys.D)||keyState.IsKeyDown(Keys.Right))
             {
-                otter.MoveRight();
+                otter.MoveRight(shifting);
             }
             else if (keyState.IsKeyDown(Keys.Q) || keyState.IsKeyDown(Keys.Left))
             {
-                otter.MoveLeft();
+                otter.MoveLeft(shifting);
             }
             if (keyState.IsKeyDown(Keys.Space) || keyState.IsKeyDown(Keys.Up))
             {
@@ -103,7 +98,10 @@ namespace ProjectPlatform
                     }
                 }
             }
-
+            if (keyState.IsKeyDown(Keys.R) && keyState.IsKeyDown(Keys.LeftControl))
+            {
+                otter.Position = new Vector2(100, 100);
+            }
             if (keyState.IsKeyDown(Keys.P))
             {
                 switch (gameState)
@@ -180,14 +178,9 @@ namespace ProjectPlatform
 
                     //var mapTile = new MapTile(tile, new Vector2(0, _graphics.PreferredBackBufferHeight-100));
                     //mapTile.Draw(_spriteBatch);
-                    Map.GetInstance().FrontMap.ForEach(tile => tile.Draw(_spriteBatch));
-                    //foreach (var tile in Map.GetInstance().FrontMap)
-                    //{
-                    //    _spriteBatch.Draw(hitbox, tile.HitBox, Color.Green);
-                    //}
+                    Map.GetInstance().Draw(_spriteBatch);
                     _spriteBatch.Draw(hitbox, otter.HitBox, Color.Red);
                     otter.Draw(_spriteBatch);
-                    //_spriteBatch.Draw(hitbox, )
                     break;
             }
             
@@ -199,8 +192,9 @@ namespace ProjectPlatform
         }
         public void SetMenu()
         {
-            gameState = GameState.Playing;
-            otter.Position = new Vector2(100, 100);
+            gameState = GameState.Menu;
+            var halfHeight = _graphics.PreferredBackBufferHeight / 2f;
+            otter.Position = new Vector2(50, halfHeight);
             otter.SetCanWalk(false);
             backGround.Reset();
             Buttons.ForEach(button => button.UpdateActive(gameState));

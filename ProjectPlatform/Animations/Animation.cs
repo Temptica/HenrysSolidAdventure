@@ -45,9 +45,9 @@ namespace ProjectPlatform.Animations
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
         {
-            spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, Color.White, 0f, Vector2.Zero, scale, spriteEffects, 0f);
         }
 
     }

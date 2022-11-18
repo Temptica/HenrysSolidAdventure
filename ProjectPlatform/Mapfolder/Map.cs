@@ -15,7 +15,7 @@ namespace ProjectPlatform.Mapfolder
     public class Map
     {
         private static Map uMap; //unique key
-        internal List<Tile> TileSet { get; private set; }
+        public static List<Tile> TileSet { get; private set; }
         internal List<MapTile> FrontMap { get; set; }
         internal List<MapTile> BackMap { get; set; }
         internal float Scale { get; private set; }
@@ -35,26 +35,21 @@ namespace ProjectPlatform.Mapfolder
             var currentHeight = 0;
             var currentWidth = 0;
 
-            List<Tile> tempTiles = new List<Tile>();
+            TileSet = new List<Tile>();
             while (currentHeight + tileSize <= tileSheet.Height && currentWidth + tileSize <= tileSheet.Width)
             {
-                tempTiles.Add(new Tile(tileSheet, new Rectangle(currentWidth, currentHeight, tileSize, tileSize)));
+                TileSet.Add(new Tile(tileSheet, new Rectangle(currentWidth, currentHeight, tileSize, tileSize)));
                 currentWidth += tileSize;
                 if (!(currentWidth >= tileSheet.Width)) continue;
                 currentWidth = 0;
                 currentHeight += tileSize;
             }
-
-            TileSet = tempTiles.Where(tile => !IsFullyTransparent(tile.Texture, tile.Rectangle)).ToList();
-        }
-
-        public void Setmap(string map)
-        {
-            //to be implemented later            
         }
         public void Draw(SpriteBatch spriteBatch)
         {
+            BackMap.ForEach(mapTile => mapTile.Draw(spriteBatch));
             FrontMap.ForEach(mapTile => mapTile.Draw(spriteBatch));
+            
 
         }
         public Tile GetTile(int i)
