@@ -8,8 +8,8 @@ using ProjectPlatform.Animations;
 
 namespace ProjectPlatform
 {
-    //TODO: Contionbar, Healthbar, stats upgrades, coin collection
-    internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead }
+    //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
+    internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Other }
     internal class Otter
     {
         #region Consts
@@ -17,7 +17,7 @@ namespace ProjectPlatform
         private const float MaxYVelocity = 0.7f;
         private const float WalkSpeed = 0.2f;
         private const float RunningSpeed = 0.4f;
-        private const float XAcceleration = 0.1f;
+        private const float XAcceleration = 0.03f;
         #endregion
 
         #region properities
@@ -26,21 +26,17 @@ namespace ProjectPlatform
         public List<Animation> Animations { get; set; }
         public Animation CurrentAnimation => /*Animations?.Where(a => a.AnimationState == State).FirstOrDefault();*/ Animations[0];
         //revert hitbox if moving left
-        public Rectangle HitBox => new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X*Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y*Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width*Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
+        public Rectangle HitBox => GetHitBox();
         public int CurrentSpriteX { get; set; }
         public int MoveSpeed { get; set; }
         public int Health { get; set; }
+        public int MaxHeath{ get; private set; }
+        public int MaxCondition { get; private set; }
+        public int Condition { get; set; }
         public int Damage { get; set; }
         public int AttackRange { get; set; }
         public State State { get; set; }
-        public float Gravity { get; }
-        private float _currentYVelocity;
-
-        public float CurrentYVelocity
-        {
-            get => _currentYVelocity;
-            set => _currentYVelocity = value>MaxYVelocity?MaxYVelocity:value;
-        }
+        public float Gravity { get; }        
         public float Scale { get; set; }
 
         #endregion
@@ -49,7 +45,7 @@ namespace ProjectPlatform
         private bool canJump;
         private bool canWalk;
         private bool LookingLeft = false;
-        
+
         #endregion
 
         public Otter(Texture2D otter, Vector2 position, float gravity, float scale)
@@ -67,78 +63,190 @@ namespace ProjectPlatform
         public void Update(GameTime gameTime)
         {
             Map map = Map.GetInstance();
-            if (_velocity.Y >= 0) //jump/falling mechanism
+            CurrentAnimation.Update(gameTime);//update the animation
+
+            if (!canWalk)
             {
-                if (OnGround())
+                _velocity.X = 0;
+            }
+            else if (InputController.LeftInput) //links bewegen
+            {
+                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (InputController.ShiftInput)
+                {
+                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X < -RunningSpeed)
+                        _velocity.X = -RunningSpeed;
+                    State = State.Running;
+                }
+                else
+                {
+                    if (_velocity.X < -WalkSpeed)
+                        _velocity.X = -WalkSpeed;
+                    State = State.Walking;
+                }
+            }
+            else if (InputController.RightInput)//rechtse input
+            {
+                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (InputController.ShiftInput)
+                {
+                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X > RunningSpeed)
+                        _velocity.X = RunningSpeed;
+                    State = State.Running;
+                }
+                else
+                {
+                    if (_velocity.X > WalkSpeed)
+                        _velocity.X = WalkSpeed;
+                    State = State.Walking;
+                }
+            }
+            else
+            {
+                _velocity.X = 0;
+            }
+
+            if (InputController.JumpInput && canJump) //springen
+            {
+                _velocity.Y = -JumpForce;
+                canJump = false;
+                State = State.Jumping;
+            }
+            else if (canJump)
+            {
+                State = State.Idle;
+            }
+            else
+            {
+                var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
+            }
+            float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * _velocity.X);
+            
+            var nextPosition = Position;
+            if (velocityXDelta != 0)
+            {
+                nextPosition.X += velocityXDelta;
+            }
+            if (_velocity.Y != 0)
+            {
+                nextPosition.Y += _velocity.Y;
+            }
+            var nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
+
+            if (_velocity.Y < 0)//going up
+            {
+                var tile = OtterCollision.OtterTopHit(nextHitBox, map.FrontMap);
+                if (tile != null)
+                {
+                    _velocity.Y = 0f;
+                    nextPosition = new(nextPosition.X, tile.HitBox.Bottom);
+                }
+                else
+                {
+                    _velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y + _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                }
+                nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
+                canJump = false;
+            }
+
+            if (_velocity.X > 0)//to right
+            {
+                //make new hitbox that will check if there will be a collision
+
+                var tile = OtterCollision.OtterRightHit(nextHitBox, map.FrontMap);
+                if (tile is not null)
+                {
+                    nextPosition = new Vector2(tile.Position.X - HitBox.Width - 1, nextHitBox.Y);
+                    nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
+                    _velocity.X = 0;
+                }
+            }
+            else if (_velocity.X < 0)
+            {
+
+                var tile = OtterCollision.OtterLeftHit(nextHitBox, map.FrontMap);
+                if (tile is not null)
+                {
+                    nextPosition = new Vector2(tile.Position.X + tile.HitBox.Width + 1, nextHitBox.Y);
+                    nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
+                    _velocity.X = 0;
+                }
+            }
+
+            if (_velocity.Y >= 0) //jump/falling mechanism
+            {                
+                var result = OnGround(nextHitBox);
+                if (result != Vector2.Zero)
                 {
                     _velocity.Y = 0f;
                     canJump = true;
+                    nextPosition = new((int)result.X, (int)result.Y);
+                    nextHitBox = new Rectangle((int)result.X, (int)result.Y, nextHitBox.Width, nextHitBox.Height);
                 }
                 else
                 {
                     canJump = false;
                     var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                     _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
+                    
+                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y+ _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                    nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                 }
             }
-            else //still going up
-            {
-                var tile = OtterCollision.OtterTopHit(this, map.FrontMap);
-                if (tile != null)
-                {
-                    _velocity.Y = 0f;
-                    Position =  new (Position.X,tile.HitBox.Bottom +1);
+            
+            if (_velocity.Y != 0) State = State.Jumping;
+            else if (_velocity.X == 0 && _velocity.Y == 0) State = State.Idle;
+            Position = new (nextHitBox.X, nextHitBox.Y);
 
+            
+            _velocity.X = 0;
+        }
+
+        public void MoveLeft(GameTime gameTime, bool isRunning = false)
+        {
+            if (canWalk)
+            {
+                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (InputController.ShiftInput)
+                {
+                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X < -RunningSpeed)
+                        _velocity.X = -RunningSpeed;
+                    State = State.Running;
                 }
                 else
                 {
-                    _velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
-                }
-                canJump = false;                
-            }
-
-            
-
-            if (!canWalk)
-            {
-                _velocity.X = 0;
-            }
-
-            if (_velocity.X > 0)
-            {
-                var tile = OtterCollision.OtterRightHit(this, map.FrontMap);
-                if(tile is not null)
-                {
-                    Position = new(tile.Position.X - HitBox.Width-1, Position.Y);
-                    _velocity.X = 0;
+                    if (_velocity.X < -WalkSpeed)
+                        _velocity.X = -WalkSpeed;
+                    State = State.Walking;
                 }
             }
-            else if (_velocity.X < 0)
-            {
-                var tile = OtterCollision.OtterLeftHit(this, map.FrontMap);
-                if (tile is not null)
-                {
-                    Position = new(tile.Position.X + tile.HitBox.Width+1, Position.Y);
-                    _velocity.X = 0;
-                }
-            }
-            Position += _velocity*(float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (_velocity.Y != 0) State = State.Jumping;
-            else if (_velocity.X != 0) State = Math.Abs(_velocity.X)> WalkSpeed ? State.Running:State.Walking;
-            else State = State.Idle;
-            
-            CurrentAnimation.Update(gameTime);//update the animation
-        }
-
-        public void MoveLeft(bool isRunning = false)
-        {
-            _velocity.X = isRunning? -RunningSpeed : -WalkSpeed;
             LookingLeft = true;
         }
 
-        public void MoveRight(bool isRunning = false)
+        public void MoveRight(GameTime gameTime, bool isRunning = false)
         {
-            _velocity.X = isRunning ? RunningSpeed : WalkSpeed;
+            if (canWalk)
+            {
+                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (isRunning)
+                {
+                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X > RunningSpeed)
+                        _velocity.X = RunningSpeed;
+                    State = State.Running;
+                }
+                else
+                {
+                    if (_velocity.X > WalkSpeed)
+                        _velocity.X = WalkSpeed;
+                    State = State.Walking;
+                }
+            }
             LookingLeft = false;
         }
 
@@ -146,26 +254,35 @@ namespace ProjectPlatform
         {
             if (canJump) _velocity.Y = -JumpForce;
         }
-
-        public bool OnGround()
+        
+        public Vector2 OnGround(Rectangle hitbox)
         {
+            var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 20);
             //checks if any tile in map.currentMap has collision with the bottom of the otter if so set otter to the tile height            
-            var tile = OtterCollision.OtterGroundHit(this, Map.GetInstance().FrontMap);
-            if (tile ==-1) return false;
+            var tile = OtterCollision.OtterGroundHit(groundBox, Map.GetInstance().FrontMap);
+            if (tile ==-1) return Vector2.Zero;
             //set the otter position so the otter is on the tile
-            Position = new Vector2(Position.X, tile- HitBox.Height- CurrentAnimation.CurrentFrame.HitBox.Y*Scale+1);
-            return true;
+            return new Vector2(hitbox.X, tile- hitbox.Height- CurrentAnimation.CurrentFrame.HitBox.Y*Scale);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             CurrentAnimation.Draw(spriteBatch, Position, LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale);
-            _velocity.X = 0;
         }
 
         public void SetCanWalk(bool canWalk)
         {
             this.canWalk = canWalk;
+        }
+        private Rectangle GetHitBox()
+        {
+            if (LookingLeft)
+            {//invert hitbox
+                //return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale- CurrentAnimation.CurrentFrame.HitBox.Width * Scale)
+            return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
+
+            }
+            return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
         }
     }
     

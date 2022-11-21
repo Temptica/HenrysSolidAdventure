@@ -22,7 +22,9 @@ namespace ProjectPlatform.Mapfolder
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
-                Vector2.Zero, Map.GetInstance().Scale, SpriteEffects.None, 0f);
+                Vector2.Zero, Map.GetInstance().Scale + 0.05f, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
+            //   Vector2.Zero, Map.GetInstance().Scale, SpriteEffects.None, 0f);
         }
 
         //check if send in rectangle hits the top of the tile with it's bottom

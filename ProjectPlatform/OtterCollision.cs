@@ -9,10 +9,9 @@ namespace ProjectPlatform
 {
     internal static class OtterCollision
     {
-        public static float OtterGroundHit(Otter otter, List<MapTile> maptiles)
-        {
-            var otterHitbox = new Rectangle(otter.HitBox.X+5, otter.HitBox.Y, otter.HitBox.Width-10, otter.HitBox.Height);
-            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(otterHitbox) && ((tile.HitBox.Top<= otterHitbox.Bottom && otterHitbox.Bottom - tile.HitBox.Top <50)||tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with otter (main hitbox based)
+        public static float OtterGroundHit(Rectangle otterHitBox, List<MapTile> maptiles)
+        {            
+            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(otterHitBox) && ((tile.HitBox.Top<= otterHitBox.Bottom && otterHitBox.Bottom - tile.HitBox.Top <50)||tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with otter (main hitbox based)
             if (MainTileFilter.Count == 0) return -1;
             var sorted = MainTileFilter.MinBy(tile => tile.HitBox.Top);
             if (MainTileFilter.TrueForAll(tile => tile.Tile.Type is TileType.Flat or TileType.Air)) return sorted.Position.Y;//no slopes
@@ -23,59 +22,63 @@ namespace ProjectPlatform
                 switch (HighestTile.Tile.Type)
                 {
                     case TileType.UphillLow: //on the right
-                        var onTileDistance = otterHitbox.Right - HighestTile.HitBox.Left;
+                        var onTileDistance = otterHitBox.Right - HighestTile.HitBox.Left;
                         //uphill is 2x for 1y staring from the bottom of the block
                         height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - HighestTile.Tile.Rectangle.Height / 2);
 
                         break;
                     case TileType.UpHillHigh://on the right
                         //uphill is 2x for 1y staring from the middle height of the block
-                        onTileDistance = otterHitbox.Right - HighestTile.HitBox.Left;
+                        onTileDistance = otterHitBox.Right - HighestTile.HitBox.Left;
                         height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - HighestTile.Tile.Rectangle.Height/2);
                         break;
                     case TileType.DownhillHigh: //on the left
                         //downhill is 2x for 1y staring from the middle height of the block
-                        onTileDistance = HighestTile.HitBox.Left - otterHitbox.Right;
+                        onTileDistance = HighestTile.HitBox.Left - otterHitBox.Right;
                         height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - 50);
                         break;
                     case TileType.DownHillLow: //On the left
                         //downhill is 2x for 1y staring from the bottom of the block
-                        onTileDistance = HighestTile.HitBox.Left - otterHitbox.Right;
+                        onTileDistance = HighestTile.HitBox.Left - otterHitBox.Right;
                         height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f));
                         break;
                 }
                 
             }
-            //check if a normal tile has teh same or a higher height
+            //check if a normal tile has teh same or a higher height           
             if (MainTileFilter.Count == 1) return height;
-
-            return MainTileFilter[1].HitBox.Top < height ? MainTileFilter[1].HitBox.Top : height;
+            for (int i = 1; i < MainTileFilter.Count; i++)
+            {
+                if (MainTileFilter[i].HitBox.Top < height)
+                {
+                    height = MainTileFilter[i].HitBox.Top;
+                }
+            }
+            return height;
         }
 
-        public static MapTile OtterTopHit(Otter otter, List<MapTile> maptiles)
-        {
-            var otterHitbox = new Rectangle(otter.HitBox.X, otter.HitBox.Y, otter.HitBox.Width, otter.HitBox.Height);
-            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitbox) && tile.HitBox.Bottom >= otterHitbox.Top && tile.HitBox.Bottom - otterHitbox.Top < 10).ToList();
+        public static MapTile OtterTopHit(Rectangle otterHitBox, List<MapTile> maptiles)
+        {            
+            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Bottom >= otterHitBox.Top && tile.HitBox.Bottom - otterHitBox.Top < 10).ToList();
             if (MainTileFilter.Count == 0) return null;
             return MainTileFilter.OrderByDescending(tile => tile.HitBox.Bottom).First();
         }
         
-        public static MapTile OtterLeftHit(Otter otter, List<MapTile> maptiles)
+        public static MapTile OtterLeftHit(Rectangle otterHitBox, List<MapTile> mapTiles)
         {
-            var otterHitbox = new Rectangle(otter.HitBox.X, otter.HitBox.Y-5, otter.HitBox.Width, otter.HitBox.Height - 10);
+            
             //check every tile if teh otter walks into it and ignores the ground tiles
-            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitbox) && tile.HitBox.Right >= otterHitbox.Left && tile.HitBox.Right - otterHitbox.Left < 10).ToList();
-            if (MainTileFilter.Count == 0) return null;
-            return MainTileFilter.OrderByDescending(tile => tile.HitBox.Right).First();
+            var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Right >= otterHitBox.Left && tile.HitBox.Right - otterHitBox.Left < 20).ToList();
+            if (mainTileFilter.Count == 0) return null;
+            return mainTileFilter.OrderByDescending(tile => tile.HitBox.Right).First();
         }
 
-        public static MapTile OtterRightHit(Otter otter, List<MapTile> maptiles)
+        public static MapTile OtterRightHit(Rectangle otterHitBox, List<MapTile> mapTiles)
         {
-            var otterHitbox = new Rectangle(otter.HitBox.X, otter.HitBox.Y-5, otter.HitBox.Width, otter.HitBox.Height - 10);
             //checks every time if intersects with oterHitbox
-            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitbox) && tile.HitBox.Left <= otterHitbox.Right && otterHitbox.Right - tile.HitBox.Left < 10).ToList();
-            if (MainTileFilter.Count == 0) return null;
-            return MainTileFilter.OrderBy(tile => tile.HitBox.Left).First();
+            var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Left <= otterHitBox.Right && otterHitBox.Right - tile.HitBox.Left < 20).ToList();
+            if (mainTileFilter.Count == 0) return null;
+            return mainTileFilter.OrderBy(tile => tile.HitBox.Left).First();
             
         }
 

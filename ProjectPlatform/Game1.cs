@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ProjectPlatform.Mapfolder;
 
@@ -27,7 +28,6 @@ namespace ProjectPlatform
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-
         }
 
         protected override void Initialize()
@@ -51,39 +51,36 @@ namespace ProjectPlatform
             backGround.Initialise(Content);
             Font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
             //Movables.Add(otter);//Main character will always be index 0;
+            Coin.Texture = Content.Load<Texture2D>("Items/Coin");
             var startTexture = Content.Load<Texture2D>("Buttons/StartButton");
             Buttons.Add(new Button("StartButton", startTexture, new Vector2((_graphics.PreferredBackBufferWidth - startTexture.Width)/2f, (_graphics.PreferredBackBufferHeight- startTexture.Height)/2f), GameState.Menu));
             var map = Map.GetInstance();
             map.Initialise(Content, _graphics.PreferredBackBufferWidth);
-            otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.001f, map.Scale/5f);//dyncamic
+            otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.0005f, map.Scale/5f);//dyncamic
             hitbox = new Texture2D(GraphicsDevice, 1, 1);
             hitbox.SetData(new[] { Color.White });
             
 
-            MapLoader.LoadMap(@"D:\ap\22-23\ProjGameDev\Map\Level1V2.json", GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            MapLoader.LoadMap(@$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level1V3.json", GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             
         }
 
         protected override void Update(GameTime gameTime)
         {
             #region Controlls
+
+            InputController.Update();
             
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (InputController.ExitInput) Exit();
+            if (InputController.RightInput)
             {
-                Exit();
+                otter.MoveRight(gameTime, InputController.ShiftInput);
             }
-            KeyboardState keyState = Keyboard.GetState();
-            bool shifting = keyState.IsKeyDown(Keys.LeftShift);
-            if (keyState.IsKeyDown(Keys.D)||keyState.IsKeyDown(Keys.Right))
+            else if (InputController.LeftInput)
             {
-                otter.MoveRight(shifting);
+                otter.MoveLeft(gameTime, InputController.ShiftInput);
             }
-            else if (keyState.IsKeyDown(Keys.Q) || keyState.IsKeyDown(Keys.Left))
-            {
-                otter.MoveLeft(shifting);
-            }
-            if (keyState.IsKeyDown(Keys.Space) || keyState.IsKeyDown(Keys.Up))
+            if (InputController.JumpInput)
             {
                 otter.Jump();
             }
@@ -98,34 +95,34 @@ namespace ProjectPlatform
                     }
                 }
             }
-            if (keyState.IsKeyDown(Keys.R) && keyState.IsKeyDown(Keys.LeftControl))
+            if (Keyboard.GetState().IsKeyDown(Keys.R) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
                 otter.Position = new Vector2(100, 100);
             }
-            if (keyState.IsKeyDown(Keys.P))
-            {
-                switch (gameState)
-                {
-                    case GameState.Menu:
-                        BeginGame();
-                        break;
-                    case GameState.Playing:
-                        gameState = GameState.Paused;
-                        break;
-                    case GameState.Paused:
-                        gameState = GameState.Playing;
-                        break;
-                    default:
-                        gameState = GameState.Playing;
-                        otter.Position = new Vector2(100, 100);
-                        break;
-                }
-            }
-            if (keyState.IsKeyDown(Keys.LeftAlt) && keyState.IsKeyDown(Keys.Enter))
-            {
-                _graphics.ToggleFullScreen();
-                _graphics.ApplyChanges();
-            }
+            //if (keyState.IsKeyDown(Keys.P))
+            //{
+            //    switch (gameState)
+            //    {
+            //        case GameState.Menu:
+            //            BeginGame();
+            //            break;
+            //        case GameState.Playing:
+            //            gameState = GameState.Paused;
+            //            break;
+            //        case GameState.Paused:
+            //            gameState = GameState.Playing;
+            //            break;
+            //        default:
+            //            gameState = GameState.Playing;
+            //            otter.Position = new Vector2(100, 100);
+            //            break;
+            //    }
+            //}
+            //if (keyState.IsKeyDown(Keys.LeftAlt) && keyState.IsKeyDown(Keys.Enter))
+            //{
+            //    _graphics.ToggleFullScreen();
+            //    _graphics.ApplyChanges();
+            //}
             #endregion
             // TODO: Add your update logic here
             switch (gameState)

@@ -19,7 +19,6 @@
   <ItemGroup>
     <Folder Include="Content\Tiles\" />
     <Folder Include="EnemyFolder\" />
-    <Folder Include="Shop\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
