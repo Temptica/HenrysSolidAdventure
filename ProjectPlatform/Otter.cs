@@ -64,7 +64,7 @@ namespace ProjectPlatform
 
         public void Update(GameTime gameTime)
         {
-            Map map = Map.Instance();
+            Map map = Map.Instance;
             CurrentAnimation.Update(gameTime);//update the animation
             MoveUpdate(gameTime, map);
             CheckCoins();
@@ -75,7 +75,7 @@ namespace ProjectPlatform
         
         private void CheckCoins()
         {
-            var collected = Map.Instance().Coins.FirstOrDefault(coin => coin.HitBox.Intersects(HitBox))?.Collect();
+            var collected = Map.Instance.Coins.FirstOrDefault(coin => coin.HitBox.Intersects(HitBox))?.Collect();
             if (collected == true)
             {
                 Coins++;
@@ -276,7 +276,7 @@ namespace ProjectPlatform
         {
             var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 20);
             //checks if any tile in map.currentMap has collision with the bottom of the otter if so set otter to the tile height            
-            var tile = OtterCollision.OtterGroundHit(groundBox, Map.Instance().FrontMap);
+            var tile = OtterCollision.OtterGroundHit(groundBox, Map.Instance.FrontMap);
             if (tile ==-1) return Vector2.Zero;
             //set the otter position so the otter is on the tile
             return new Vector2(hitbox.X, tile- hitbox.Height- CurrentAnimation.CurrentFrame.HitBox.Y*Scale);

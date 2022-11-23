@@ -24,7 +24,7 @@ namespace ProjectPlatform.Mapfolder
 
         internal Coin(Vector2 Position)
         {
-            _scale = Map.Instance().Scale* 0.375f;
+            _scale = Map.Instance.Scale* 0.375f;
             HitBox = new Rectangle((int)Position.X, (int)Position.Y, (int)((Texture.Width/12f)*_scale), (int)((Texture.Height/2f)*_scale));
             _animationX = 0;
             normalAnimation = new BasicAnimation(Texture, "idle",10, 12,(int)( Texture.Width / 12f), (int)(Texture.Width / 12f), 0);

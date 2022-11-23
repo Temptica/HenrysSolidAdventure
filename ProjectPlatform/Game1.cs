@@ -8,6 +8,7 @@ using System.Linq;
 using ProjectPlatform.Mapfolder;
 using ProjectPlatform.Shop;
 using System.Threading;
+using ProjectPlatform.Audio;
 
 namespace ProjectPlatform
 {
@@ -61,10 +62,11 @@ namespace ProjectPlatform
             map.Initialise(Content, _graphics.PreferredBackBufferWidth);
             otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.0005f, map.Scale/5f);//dyncamic
             hitbox = new Texture2D(GraphicsDevice, 1, 1);
-            hitbox.SetData(new[] { Color.White });          
-            
-            
-            
+            hitbox.SetData(new[] { Color.White });
+            AudioController.Initialise(Content);
+
+            SetMenu();
+
 
         }
 
@@ -198,6 +200,7 @@ namespace ProjectPlatform
             otter.SetWalk(false);
             backGround.Reset();
             buttons.ForEach(button => button.UpdateActive(gameState));
+            AudioController.Instance.PlaySong("MainMenu");
         }
 
         public void BeginGame()
@@ -208,6 +211,7 @@ namespace ProjectPlatform
             backGround.Reset();
             buttons.ForEach(button => button.UpdateActive(gameState));
             otter.SetWalk(true);
+            AudioController.Instance.PlaySong("GamePlay");
         }
     }
 }
