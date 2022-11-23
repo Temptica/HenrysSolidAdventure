@@ -8,22 +8,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectPlatform.Animations
 {
-    internal class Animation
+    internal class Animation: BasicAnimation
     {
-        public Texture2D Texture { get; set; }
-        public State AnimationState { get; set; }
         public Frame[] Frames { get; }
-        public int CurrentFrameIndex { get; private set; }
-        public int FrameRate { get; }
         public Frame CurrentFrame => Frames[CurrentFrameIndex];
+        public override int FrameCount => Frames.Length;
 
-        public Animation(Texture2D texture, State animationState, int framecount, int framewidth, int frameheight, int beginHeight , int fps, float scale)
+        public Animation(Texture2D texture, string identifier, int framecount, int framewidth, int frameheight, int beginHeight , int fps, float scale):base(texture,identifier, fps)
         {
-            Texture = texture;
-            AnimationState = animationState;
             Frames = new Frame[framecount];
-            CurrentFrameIndex = 0;
-            FrameRate = fps;
             MakeAnimation(framewidth, frameheight, beginHeight, scale);
         }
         private void MakeAnimation(int framewidth, int frameheight, int beginHeight, float scale)
@@ -32,20 +25,9 @@ namespace ProjectPlatform.Animations
             {
                 Frames[i] = new Frame(new Rectangle(i * framewidth, beginHeight, framewidth, frameheight), Texture, scale);
             }
-        }
-        public void Update(GameTime gameTime)
-        {
-            if (gameTime.TotalGameTime.TotalMilliseconds % FrameRate == 0)
-            {
-                CurrentFrameIndex++;
-                if (CurrentFrameIndex >= Frames.Length)
-                {
-                    CurrentFrameIndex = 0;
-                }
-            }
-        }
+        }        
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
+        public override void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
         {
             spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, Color.White, 0f, Vector2.Zero, scale, spriteEffects, 0f);
         }

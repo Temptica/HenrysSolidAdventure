@@ -35,7 +35,7 @@ namespace ProjectPlatform
                     case TileType.DownhillHigh: //on the left
                         //downhill is 2x for 1y staring from the middle height of the block
                         onTileDistance = HighestTile.HitBox.Left - otterHitBox.Right;
-                        height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - 50);
+                        height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - HighestTile.Tile.Rectangle.Height / 2);
                         break;
                     case TileType.DownHillLow: //On the left
                         //downhill is 2x for 1y staring from the bottom of the block

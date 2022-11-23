@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ProjectPlatform.Mapfolder;
+using ProjectPlatform.Shop;
+using System.Threading;
 
 namespace ProjectPlatform
 {
     enum GameState { Menu, Paused, Playing }
     public class Game1 : Game
-    {
+    {       
         
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -19,7 +21,7 @@ namespace ProjectPlatform
         private SpriteFont Font;
         private GameState gameState;
         private Otter otter;
-        private List<Button> Buttons;
+        private List<Button> buttons;
         private Texture2D hitbox;
 
 
@@ -33,7 +35,7 @@ namespace ProjectPlatform
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Buttons = new List<Button>();
+            buttons = new List<Button>();
             // _graphics.IsFullScreen = true;
             gameState = GameState.Menu;
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -52,17 +54,18 @@ namespace ProjectPlatform
             Font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
             //Movables.Add(otter);//Main character will always be index 0;
             Coin.Texture = Content.Load<Texture2D>("Items/Coin");
-            var startTexture = Content.Load<Texture2D>("Buttons/StartButton");
-            Buttons.Add(new Button("StartButton", startTexture, new Vector2((_graphics.PreferredBackBufferWidth - startTexture.Width)/2f, (_graphics.PreferredBackBufferHeight- startTexture.Height)/2f), GameState.Menu));
-            var map = Map.GetInstance();
+            Store.Texture = Content.Load<Texture2D>("Decoration/shop_anim");
+            var startTexture = Content.Load<Texture2D>("buttons/StartButton");
+            buttons.Add(new Button("StartButton", startTexture, new Vector2((_graphics.PreferredBackBufferWidth - startTexture.Width)/2f, (_graphics.PreferredBackBufferHeight- startTexture.Height)/2f), GameState.Menu));
+            var map = Map.Instance;
             map.Initialise(Content, _graphics.PreferredBackBufferWidth);
             otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.0005f, map.Scale/5f);//dyncamic
             hitbox = new Texture2D(GraphicsDevice, 1, 1);
-            hitbox.SetData(new[] { Color.White });
+            hitbox.SetData(new[] { Color.White });          
+            
+            
             
 
-            MapLoader.LoadMap(@$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level1V3.json", GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-            
         }
 
         protected override void Update(GameTime gameTime)
@@ -88,7 +91,7 @@ namespace ProjectPlatform
             {
                 if (gameState == GameState.Menu)
                 {
-                    if (Buttons.First(button => button.Name == "StartButton")
+                    if (buttons.First(button => button.Name == "StartButton")
                         .CheckHit(Mouse.GetState().Position.ToVector2()))
                     {
                         BeginGame();
@@ -134,6 +137,7 @@ namespace ProjectPlatform
                 case GameState.Paused:
                     break;
                 case GameState.Playing:
+                    Map.Instance.Update(gameTime);
                     otter.Update(gameTime);
                     break;
             }
@@ -171,17 +175,16 @@ namespace ProjectPlatform
                     break;
                 case GameState.Playing:
 
-                    //var tile = Map.GetInstance().GetTile(8);
-
-                    //var mapTile = new MapTile(tile, new Vector2(0, _graphics.PreferredBackBufferHeight-100));
-                    //mapTile.Draw(_spriteBatch);
-                    Map.GetInstance().Draw(_spriteBatch);
+                    Map.Instance.Coins.ForEach(coin => _spriteBatch.Draw(hitbox, coin.HitBox, Color.Yellow));
+                    Map.Instance.Draw(_spriteBatch);
                     _spriteBatch.Draw(hitbox, otter.HitBox, Color.Red);
                     otter.Draw(_spriteBatch);
+                        
+                    _spriteBatch.DrawString(Font, $"Coins: {otter.Coins}", new Vector2(100, 100), Color.White);
                     break;
             }
             
-            Buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_spriteBatch));// draw active buttons
+            buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_spriteBatch));// draw active buttons
 
             // TODO: Add your drawing code here
             _spriteBatch.End();
@@ -192,18 +195,19 @@ namespace ProjectPlatform
             gameState = GameState.Menu;
             var halfHeight = _graphics.PreferredBackBufferHeight / 2f;
             otter.Position = new Vector2(50, halfHeight);
-            otter.SetCanWalk(false);
+            otter.SetWalk(false);
             backGround.Reset();
-            Buttons.ForEach(button => button.UpdateActive(gameState));
+            buttons.ForEach(button => button.UpdateActive(gameState));
         }
 
         public void BeginGame()
         {
+            MapLoader.LoadMap(@$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level1V3.json", GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             gameState = GameState.Playing;
             otter.Position = new Vector2(100, 100);
             backGround.Reset();
-            Buttons.ForEach(button => button.UpdateActive(gameState));
-            otter.SetCanWalk(true);
+            buttons.ForEach(button => button.UpdateActive(gameState));
+            otter.SetWalk(true);
         }
     }
 }

@@ -12,30 +12,74 @@ namespace ProjectPlatform.Mapfolder
     internal class Coin
     {
         internal static Texture2D Texture;
-        private const float FrameRate = 200;//5 fps
-        private float AnimationX;
-        bool Collected = false;
+        BasicAnimation normalAnimation;
+        private float CollectedFrameRate = 50; //20fps
+        private const float CollectAnimationRepeatTimes = 5;
+        private float _collectAnimationTimes = 0;
+        private float _animationX;
+        bool _collected;
+        public bool Destroy;
         internal Rectangle HitBox;
-        private float scale;
+        private readonly float _scale;
 
-        internal Coin(Vector2 position)
+        internal Coin(Vector2 Position)
         {
-            scale = 0.125f *Map.GetInstance().Scale;
-            HitBox = new Rectangle((int)position.X, (int)position.Y, (int)(32*scale), (int)(32*scale));
-            AnimationX = 0;
+            _scale = Map.Instance().Scale* 0.375f;
+            HitBox = new Rectangle((int)Position.X, (int)Position.Y, (int)((Texture.Width/12f)*_scale), (int)((Texture.Height/2f)*_scale));
+            _animationX = 0;
+            normalAnimation = new BasicAnimation(Texture, "idle",10, 12,(int)( Texture.Width / 12f), (int)(Texture.Width / 12f), 0);
         }
 
         private double _time;
         internal void Update(GameTime gameTime)
         {
-            _time += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (_time< FrameRate) return;
-            AnimationX++;
-            if (AnimationX >= 4)
+            if (_collected)
             {
-                AnimationX = 0;
+                
+                if (_collectAnimationTimes < CollectAnimationRepeatTimes)
+                {
+                    _time += gameTime.ElapsedGameTime.TotalMilliseconds;
+                    CollectedFrameRate --;
+                    if (_time < CollectedFrameRate) return;
+                    _animationX+= Texture.Width / 12f;
+                    if (_animationX >= Texture.Width)
+                    {
+                        _animationX = 0;
+                        _collectAnimationTimes++;
+                    }
+                    _time -= CollectedFrameRate;
+                }
+                else
+                {
+                    Destroy = true;
+                }//make it fade
+                
+                return;
             }
-            _time -= FrameRate;
+
+            normalAnimation.Update(gameTime);
+
+        }
+
+        internal void Draw(SpriteBatch spriteBatch)
+        {
+            if (_collected)
+            {
+                var animationFrame =
+                new Rectangle((int)(_animationX), Texture.Height / 2, (int)(Texture.Width / 12f), (int)(Texture.Width / 12f));
+                spriteBatch.Draw(Texture, new Vector2(HitBox.X, HitBox.Y), animationFrame, Color.White, 0f, Vector2.One, _scale, SpriteEffects.None, 0f);
+                return;
+            }
+            normalAnimation.Draw(spriteBatch, new Vector2(HitBox.X, HitBox.Y), SpriteEffects.None, _scale);           
+        }
+
+        public bool Collect()
+        {
+            if (_collected) return false;
+            _animationX = (float)(_time = 0f);
+            
+            _collected = true;
+            return true;
         }
 
     }

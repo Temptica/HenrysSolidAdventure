@@ -43,6 +43,7 @@ namespace ProjectPlatform.Mapfolder
 
     public class Object
     {
+        [Newtonsoft.Json.JsonProperty("class")]
         public string _class { get; set; }
         public long gid { get; set; }
         public int height { get; set; }

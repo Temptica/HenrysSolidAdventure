@@ -10,8 +10,8 @@ namespace ProjectPlatform.Mapfolder
 {
     internal class Decoration
     {
-        Texture2D Texture;
-        Vector2 Position;
+        internal Texture2D Texture;
+        internal Vector2 Position;
         float Scale;
         SpriteEffects Effect;
         public Decoration(Texture2D texture, Vector2 position, float scale, SpriteEffects effect = SpriteEffects.None)

@@ -38,6 +38,8 @@ namespace ProjectPlatform
         public State State { get; set; }
         public float Gravity { get; }        
         public float Scale { get; set; }
+        public float Coins { get; private set; }
+        
 
         #endregion
         #region private variables
@@ -56,15 +58,82 @@ namespace ProjectPlatform
             Scale = scale;
             Animations = new List<Animation>()
             {
-                new(Texture, State.Idle, 6, 200, 200,0, 4, scale)
+                new Animation(Texture, "idle", 6, 200, 200,0, 4, scale)
             };
         }
 
         public void Update(GameTime gameTime)
         {
-            Map map = Map.GetInstance();
+            Map map = Map.Instance();
             CurrentAnimation.Update(gameTime);//update the animation
+            MoveUpdate(gameTime, map);
+            CheckCoins();
 
+
+            _velocity.X = 0;
+        }
+        
+        private void CheckCoins()
+        {
+            var collected = Map.Instance().Coins.FirstOrDefault(coin => coin.HitBox.Intersects(HitBox))?.Collect();
+            if (collected == true)
+            {
+                Coins++;
+            }
+        }
+
+
+        public void MoveLeft(GameTime gameTime, bool isRunning = false)
+        {
+            if (canWalk)
+            {
+                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (InputController.ShiftInput)
+                {
+                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X < -RunningSpeed)
+                        _velocity.X = -RunningSpeed;
+                    State = State.Running;
+                }
+                else
+                {
+                    if (_velocity.X < -WalkSpeed)
+                        _velocity.X = -WalkSpeed;
+                    State = State.Walking;
+                }
+            }
+            LookingLeft = true;
+        }
+
+        public void MoveRight(GameTime gameTime, bool isRunning = false)
+        {
+            if (canWalk)
+            {
+                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (isRunning)
+                {
+                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X > RunningSpeed)
+                        _velocity.X = RunningSpeed;
+                    State = State.Running;
+                }
+                else
+                {
+                    if (_velocity.X > WalkSpeed)
+                        _velocity.X = WalkSpeed;
+                    State = State.Walking;
+                }
+            }
+            LookingLeft = false;
+        }
+
+        public void Jump()
+        {
+            if (canJump) _velocity.Y = -JumpForce;
+        }
+
+        public void MoveUpdate(GameTime gameTime, Map map)
+        {
             if (!canWalk)
             {
                 _velocity.X = 0;
@@ -124,7 +193,7 @@ namespace ProjectPlatform
                 _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
             }
             float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * _velocity.X);
-            
+
             var nextPosition = Position;
             if (velocityXDelta != 0)
             {
@@ -178,7 +247,7 @@ namespace ProjectPlatform
             }
 
             if (_velocity.Y >= 0) //jump/falling mechanism
-            {                
+            {
                 var result = OnGround(nextHitBox);
                 if (result != Vector2.Zero)
                 {
@@ -192,74 +261,22 @@ namespace ProjectPlatform
                     canJump = false;
                     var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                     _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
-                    
-                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y+ _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+
+                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y + _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                 }
             }
-            
+
             if (_velocity.Y != 0) State = State.Jumping;
             else if (_velocity.X == 0 && _velocity.Y == 0) State = State.Idle;
-            Position = new (nextHitBox.X, nextHitBox.Y);
-
-            
-            _velocity.X = 0;
-        }
-
-        public void MoveLeft(GameTime gameTime, bool isRunning = false)
-        {
-            if (canWalk)
-            {
-                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                if (InputController.ShiftInput)
-                {
-                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X < -RunningSpeed)
-                        _velocity.X = -RunningSpeed;
-                    State = State.Running;
-                }
-                else
-                {
-                    if (_velocity.X < -WalkSpeed)
-                        _velocity.X = -WalkSpeed;
-                    State = State.Walking;
-                }
-            }
-            LookingLeft = true;
-        }
-
-        public void MoveRight(GameTime gameTime, bool isRunning = false)
-        {
-            if (canWalk)
-            {
-                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                if (isRunning)
-                {
-                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X > RunningSpeed)
-                        _velocity.X = RunningSpeed;
-                    State = State.Running;
-                }
-                else
-                {
-                    if (_velocity.X > WalkSpeed)
-                        _velocity.X = WalkSpeed;
-                    State = State.Walking;
-                }
-            }
-            LookingLeft = false;
-        }
-
-        public void Jump()
-        {
-            if (canJump) _velocity.Y = -JumpForce;
+            Position = new(nextHitBox.X, nextHitBox.Y);
         }
         
         public Vector2 OnGround(Rectangle hitbox)
         {
             var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 20);
             //checks if any tile in map.currentMap has collision with the bottom of the otter if so set otter to the tile height            
-            var tile = OtterCollision.OtterGroundHit(groundBox, Map.GetInstance().FrontMap);
+            var tile = OtterCollision.OtterGroundHit(groundBox, Map.Instance().FrontMap);
             if (tile ==-1) return Vector2.Zero;
             //set the otter position so the otter is on the tile
             return new Vector2(hitbox.X, tile- hitbox.Height- CurrentAnimation.CurrentFrame.HitBox.Y*Scale);
@@ -270,7 +287,7 @@ namespace ProjectPlatform
             CurrentAnimation.Draw(spriteBatch, Position, LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale);
         }
 
-        public void SetCanWalk(bool canWalk)
+        public void SetWalk(bool canWalk)
         {
             this.canWalk = canWalk;
         }

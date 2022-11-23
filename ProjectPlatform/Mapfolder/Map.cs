@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPlatform.Shop;
 
 namespace ProjectPlatform.Mapfolder
 {
@@ -16,41 +17,73 @@ namespace ProjectPlatform.Mapfolder
     {
         private static Map uMap; //unique key
         public static List<Tile> TileSet { get; private set; }
+        public static Dictionary<string, Texture2D> DecorationTextures { get; private set; }
         internal List<MapTile> FrontMap { get; set; }
         internal List<MapTile> BackMap { get; set; }
+        internal List<Coin> Coins { get; set; }
+        internal List<Decoration> Decorations { get; set; }
         internal float Scale { get; private set; }
+        internal Store Shop { get; set; }
+        internal Vector2 Spawn { get; set; }
+        
 
         private Map()
         {
 
         }
-        public static Map GetInstance() => uMap ??= new Map(); //Singleton
+        public static Map Instance => uMap ??= new Map(); //Singleton
 
         public void Initialise(ContentManager content, float screenWidth)
         {
-            var tileSheet = content.Load<Texture2D>("Tiles/oak_woods_tileset_fixed");
-            const int tileSize = 24;//from the pack https://brullov.itch.io/oak-woods
-            const float mapRaster = 50f; //have a raster of 50 tiles wide
-            Scale = screenWidth / (mapRaster * tileSize);
-            var currentHeight = 0;
-            var currentWidth = 0;
-
-            TileSet = new List<Tile>();
-            while (currentHeight + tileSize <= tileSheet.Height && currentWidth + tileSize <= tileSheet.Width)
+            if(TileSet is null || TileSet.Count == 0)
             {
-                TileSet.Add(new Tile(tileSheet, new Rectangle(currentWidth, currentHeight, tileSize, tileSize)));
-                currentWidth += tileSize;
-                if (!(currentWidth >= tileSheet.Width)) continue;
-                currentWidth = 0;
-                currentHeight += tileSize;
+                var tileSheet = content.Load<Texture2D>("Tiles/oak_woods_tileset_fixed");
+
+                const int tileSize = 24;//from the pack https://brullov.itch.io/oak-woods
+                const float mapRaster = 50f; //have a raster of 50 tiles wide
+                Scale = screenWidth / (mapRaster * tileSize);
+                var currentHeight = 0;
+                var currentWidth = 0;
+
+                TileSet = new List<Tile>();
+                while (currentHeight + tileSize <= tileSheet.Height && currentWidth + tileSize <= tileSheet.Width)
+                {
+                    TileSet.Add(new Tile(tileSheet, new Rectangle(currentWidth, currentHeight, tileSize, tileSize)));
+                    currentWidth += tileSize;
+                    if (!(currentWidth >= tileSheet.Width)) continue;
+                    currentWidth = 0;
+                    currentHeight += tileSize;
+                }
             }
+
+            if (DecorationTextures is not null && DecorationTextures.Count != 0) return;
+            DecorationTextures = new Dictionary<string, Texture2D>();
+            DecorationTextures.Add("fence_1", content.Load<Texture2D>("Decoration/fence_1"));
+            DecorationTextures.Add("fence_2", content.Load<Texture2D>("Decoration/fence_2"));
+            DecorationTextures.Add("grass_1", content.Load<Texture2D>("Decoration/grass_1"));
+            DecorationTextures.Add("grass_2", content.Load<Texture2D>("Decoration/grass_2"));
+            DecorationTextures.Add("grass_3", content.Load<Texture2D>("Decoration/grass_3"));
+            DecorationTextures.Add("lamp", content.Load<Texture2D>("Decoration/lamp"));
+            DecorationTextures.Add("rock_1", content.Load<Texture2D>("Decoration/rock_1"));
+            DecorationTextures.Add("rock_2", content.Load<Texture2D>("Decoration/rock_2"));
+            DecorationTextures.Add("rock_3", content.Load<Texture2D>("Decoration/rock_3"));
+            DecorationTextures.Add("sign", content.Load<Texture2D>("Decoration/sign"));
+
         }
         public void Draw(SpriteBatch spriteBatch)
         {
             BackMap.ForEach(mapTile => mapTile.Draw(spriteBatch));
             FrontMap.ForEach(mapTile => mapTile.Draw(spriteBatch));
-            
-
+            Coins.ForEach(coin =>coin.Draw(spriteBatch));
+            Shop.Draw(spriteBatch);
+            Decorations.ForEach(deco => deco.Draw(spriteBatch));
+        }
+        public void Update(GameTime gameTime)
+        {
+            Coins.ForEach(coin => coin.Update(gameTime));
+            var coinToDestroy = Coins.Where(coin => coin.Destroy).FirstOrDefault();
+            if (coinToDestroy != null) Coins.Remove(coinToDestroy);
+            Shop.Update(gameTime);
         }
         public Tile GetTile(int i)
         {

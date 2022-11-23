@@ -12,7 +12,7 @@ namespace ProjectPlatform.Mapfolder
     {
         public Tile Tile { get; set; }
         public Vector2 Position { get; set; }
-        public Rectangle HitBox => new((int)Position.X, (int)Position.Y, (int)(24* Map.GetInstance().Scale), (int)(24 * Map.GetInstance().Scale));
+        public Rectangle HitBox => new((int)Position.X, (int)Position.Y, (int)(24* Map.Instance().Scale), (int)(24 * Map.Instance().Scale));
 
         public MapTile(Tile tile, Vector2 position)
         {
@@ -22,9 +22,9 @@ namespace ProjectPlatform.Mapfolder
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
-                Vector2.Zero, Map.GetInstance().Scale + 0.05f, SpriteEffects.None, 0f);
+                Vector2.Zero, Map.Instance().Scale + 0.05f, SpriteEffects.None, 0f);
             //spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
-            //   Vector2.Zero, Map.GetInstance().Scale, SpriteEffects.None, 0f);
+            //   Vector2.Zero, Map.Instance().Scale, SpriteEffects.None, 0f);
         }
 
         //check if send in rectangle hits the top of the tile with it's bottom
