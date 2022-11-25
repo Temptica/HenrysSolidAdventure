@@ -75,7 +75,7 @@ namespace ProjectPlatform
         
         private void CheckCoins()
         {
-            var collected = Map.Instance.Coins.FirstOrDefault(coin => coin.HitBox.Intersects(HitBox))?.Collect();
+            var collected = Map.Instance.Coins?.FirstOrDefault(coin => coin.HitBox.Intersects(HitBox))?.Collect();
             if (collected == true)
             {
                 Coins++;

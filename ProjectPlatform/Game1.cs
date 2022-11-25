@@ -205,7 +205,7 @@ namespace ProjectPlatform
 
         public void BeginGame()
         {
-            MapLoader.LoadMap(@$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level1V3.json", GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            MapLoader.LoadMap(@$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level3.json", GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
             gameState = GameState.Playing;
             otter.Position = new Vector2(100, 100);
             backGround.Reset();

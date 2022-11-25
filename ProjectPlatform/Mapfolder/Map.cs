@@ -72,18 +72,18 @@ namespace ProjectPlatform.Mapfolder
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            BackMap.ForEach(mapTile => mapTile.Draw(spriteBatch));
+            BackMap?.ForEach(mapTile => mapTile.Draw(spriteBatch));
             FrontMap.ForEach(mapTile => mapTile.Draw(spriteBatch));
-            Coins.ForEach(coin =>coin.Draw(spriteBatch));
-            Shop.Draw(spriteBatch);
-            Decorations.ForEach(deco => deco.Draw(spriteBatch));
+            Coins?.ForEach(coin =>coin.Draw(spriteBatch));
+            Shop?.Draw(spriteBatch);
+            Decorations?.ForEach(deco => deco.Draw(spriteBatch));
         }
         public void Update(GameTime gameTime)
         {
-            Coins.ForEach(coin => coin.Update(gameTime));
-            var coinToDestroy = Coins.Where(coin => coin.Destroy).FirstOrDefault();
-            if (coinToDestroy != null) Coins.Remove(coinToDestroy);
-            Shop.Update(gameTime);
+            Coins?.ForEach(coin => coin.Update(gameTime));
+            var coinToDestroy = Coins?.Where(coin => coin.Destroy).FirstOrDefault();
+            if (coinToDestroy != null) Coins?.Remove(coinToDestroy);
+            Shop?.Update(gameTime);
         }
         public Tile GetTile(int i)
         {
@@ -99,6 +99,15 @@ namespace ProjectPlatform.Mapfolder
             texture.GetData(0, r, buffer, 0, size);
             return buffer.All(c => c == Color.Transparent);
         }
-
+        
+        internal void Unload()
+        {
+            FrontMap??= null;
+            BackMap??= null;
+            Coins ??= null;
+            Decorations ??= null;
+            Shop ??= null;
+            Spawn = Vector2.One;
+        }
     }
 }

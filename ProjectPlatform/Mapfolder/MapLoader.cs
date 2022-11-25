@@ -18,6 +18,7 @@ namespace ProjectPlatform.Mapfolder
         {
             var mapFromFile = Newtonsoft.Json.JsonConvert.DeserializeObject<MapReaderObject>(System.IO.File.ReadAllText(location));
             var map = Map.Instance;
+            map.Unload();
             map.FrontMap =  GenerateTileLayer(mapFromFile.layers.First(layer => layer.name == "ForegroundTiles"), screenheight);
             map.BackMap = GenerateTileLayer(mapFromFile.layers.First(layer => layer.name == "BackgroundTiles"), screenheight);
             map.Coins = GenerateCoins(mapFromFile.layers.First(layer => layer.name == "Coins").objects, screenheight);
@@ -88,8 +89,6 @@ namespace ProjectPlatform.Mapfolder
             //}
 
             //scale the position to be on the correct place on the map
-            
-
             return CoinList;
         }
     }
