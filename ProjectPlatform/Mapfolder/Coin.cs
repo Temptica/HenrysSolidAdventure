@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.Animations;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform.Mapfolder
 {
     internal class Coin
     {
+        public const float Scale = 0.5f;
         internal static Texture2D Texture;
-        BasicAnimation normalAnimation;
+        readonly BasicAnimation normalAnimation;
         private float CollectedFrameRate = 50; //20fps
         private const float CollectAnimationRepeatTimes = 5;
         private float _collectAnimationTimes = 0;
@@ -20,12 +22,11 @@ namespace ProjectPlatform.Mapfolder
         bool _collected;
         public bool Destroy;
         internal Rectangle HitBox;
-        private readonly float _scale;
 
         internal Coin(Vector2 Position)
         {
-            _scale = Map.Instance.Scale* 0.375f;
-            HitBox = new Rectangle((int)Position.X, (int)Position.Y, (int)((Texture.Width/12f)*_scale), (int)((Texture.Height/2f)*_scale));
+
+            HitBox = new Rectangle((int)Position.X, (int)Position.Y, (int)((Texture.Width/12f)), (int)((Texture.Height/2f)* Scale));
             _animationX = 0;
             normalAnimation = new BasicAnimation(Texture, "idle",10, 12,(int)( Texture.Width / 12f), (int)(Texture.Width / 12f), 0);
         }
@@ -61,16 +62,16 @@ namespace ProjectPlatform.Mapfolder
 
         }
 
-        internal void Draw(SpriteBatch spriteBatch)
+        internal void Draw(Sprites spriteBatch)
         {
             if (_collected)
             {
                 var animationFrame =
                 new Rectangle((int)(_animationX), Texture.Height / 2, (int)(Texture.Width / 12f), (int)(Texture.Width / 12f));
-                spriteBatch.Draw(Texture, new Vector2(HitBox.X, HitBox.Y), animationFrame, Color.White, 0f, Vector2.One, _scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Texture, new Vector2(HitBox.X, HitBox.Y), animationFrame, Color.White, 0f, Vector2.One, Scale, SpriteEffects.None, 0f);
                 return;
             }
-            normalAnimation.Draw(spriteBatch, new Vector2(HitBox.X, HitBox.Y), SpriteEffects.None, _scale);           
+            normalAnimation.Draw(spriteBatch, new Vector2(HitBox.X, HitBox.Y), SpriteEffects.None, Scale);           
         }
 
         public bool Collect()

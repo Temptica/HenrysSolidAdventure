@@ -28,7 +28,8 @@ namespace ProjectPlatform.Audio
                 {"GamePlay", content.Load<Song>(@"Audio\Music\The_Aquaticans")}
             };
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume -= 0.9f;
+            //MediaPlayer.Volume -= 0.9f;
+            MediaPlayer.Volume = 0;
 
 
         }

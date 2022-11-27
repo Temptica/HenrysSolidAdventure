@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform.Mapfolder
 {
@@ -12,17 +13,17 @@ namespace ProjectPlatform.Mapfolder
     {
         public Tile Tile { get; set; }
         public Vector2 Position { get; set; }
-        public Rectangle HitBox => new((int)Position.X, (int)Position.Y, (int)(24* Map.Instance.Scale), (int)(24 * Map.Instance.Scale));
+        public Rectangle HitBox => new((int)Position.X, (int)Position.Y, Tile.Rectangle.Width, Tile.Rectangle.Height);
 
         public MapTile(Tile tile, Vector2 position)
         {
             Tile = tile;
             Position = position;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(Sprites spriteBatch)
         {
             spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
-                Vector2.Zero, Map.Instance.Scale + 0.05f, SpriteEffects.None, 0f);
+                Vector2.Zero, 1, SpriteEffects.None, 0f);
             //spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
             //   Vector2.Zero, Map.Instance().Scale, SpriteEffects.None, 0f);
         }

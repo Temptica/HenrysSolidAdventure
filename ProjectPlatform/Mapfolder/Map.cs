@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPlatform.Graphics;
 using ProjectPlatform.Shop;
 
 namespace ProjectPlatform.Mapfolder
@@ -22,7 +23,7 @@ namespace ProjectPlatform.Mapfolder
         internal List<MapTile> BackMap { get; set; }
         internal List<Coin> Coins { get; set; }
         internal List<Decoration> Decorations { get; set; }
-        internal float Scale { get; private set; }
+        //internal float Scale { get; private set; }
         internal Store Shop { get; set; }
         internal Vector2 Spawn { get; set; }
         
@@ -33,18 +34,16 @@ namespace ProjectPlatform.Mapfolder
         }
         public static Map Instance => uMap ??= new Map(); //Singleton
 
-        public void Initialise(ContentManager content, float screenWidth)
+        public void Initialise(ContentManager content)
         {
             if(TileSet is null || TileSet.Count == 0)
             {
                 var tileSheet = content.Load<Texture2D>("Tiles/oak_woods_tileset_fixed");
 
                 const int tileSize = 24;//from the pack https://brullov.itch.io/oak-woods
-                const float mapRaster = 50f; //have a raster of 50 tiles wide
-                Scale = screenWidth / (mapRaster * tileSize);
                 var currentHeight = 0;
                 var currentWidth = 0;
-
+                //Scale = 1;
                 TileSet = new List<Tile>();
                 while (currentHeight + tileSize <= tileSheet.Height && currentWidth + tileSize <= tileSheet.Width)
                 {
@@ -70,7 +69,7 @@ namespace ProjectPlatform.Mapfolder
             DecorationTextures.Add("sign", content.Load<Texture2D>("Decoration/sign"));
 
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(Sprites spriteBatch)
         {
             BackMap?.ForEach(mapTile => mapTile.Draw(spriteBatch));
             FrontMap.ForEach(mapTile => mapTile.Draw(spriteBatch));

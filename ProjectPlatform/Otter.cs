@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using ProjectPlatform.Mapfolder;
 using ProjectPlatform.Animations;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform
 {
@@ -13,16 +14,16 @@ namespace ProjectPlatform
     internal class Otter
     {
         #region Consts
-        private const float JumpForce = 0.5f;
-        private const float MaxYVelocity = 0.7f;
-        private const float WalkSpeed = 0.2f;
-        private const float RunningSpeed = 0.4f;
+        private const float JumpForce = 0.35f;
+        private const float MaxYVelocity = 0.5f;
+        private const float WalkSpeed = 0.1f;
+        private const float RunningSpeed = 0.2f;
         private const float XAcceleration = 0.03f;
         #endregion
 
         #region properities
         public Vector2 Position { get; set; }
-        public Texture2D Texture { get; set; }
+        public static Texture2D Texture { get; set; }
         public List<Animation> Animations { get; set; }
         public Animation CurrentAnimation => /*Animations?.Where(a => a.AnimationState == State).FirstOrDefault();*/ Animations[0];
         //revert hitbox if moving left
@@ -58,7 +59,7 @@ namespace ProjectPlatform
             Scale = scale;
             Animations = new List<Animation>()
             {
-                new Animation(Texture, "idle", 6, 200, 200,0, 4, scale)
+                new(Texture, "idle", 6, Texture.Width/6, Texture.Height,0, 4, scale)
             };
         }
 
@@ -68,8 +69,6 @@ namespace ProjectPlatform
             CurrentAnimation.Update(gameTime);//update the animation
             MoveUpdate(gameTime, map);
             CheckCoins();
-
-
             _velocity.X = 0;
         }
         
@@ -80,56 +79,6 @@ namespace ProjectPlatform
             {
                 Coins++;
             }
-        }
-
-
-        public void MoveLeft(GameTime gameTime, bool isRunning = false)
-        {
-            if (canWalk)
-            {
-                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                if (InputController.ShiftInput)
-                {
-                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X < -RunningSpeed)
-                        _velocity.X = -RunningSpeed;
-                    State = State.Running;
-                }
-                else
-                {
-                    if (_velocity.X < -WalkSpeed)
-                        _velocity.X = -WalkSpeed;
-                    State = State.Walking;
-                }
-            }
-            LookingLeft = true;
-        }
-
-        public void MoveRight(GameTime gameTime, bool isRunning = false)
-        {
-            if (canWalk)
-            {
-                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                if (isRunning)
-                {
-                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X > RunningSpeed)
-                        _velocity.X = RunningSpeed;
-                    State = State.Running;
-                }
-                else
-                {
-                    if (_velocity.X > WalkSpeed)
-                        _velocity.X = WalkSpeed;
-                    State = State.Walking;
-                }
-            }
-            LookingLeft = false;
-        }
-
-        public void Jump()
-        {
-            if (canJump) _velocity.Y = -JumpForce;
         }
 
         public void MoveUpdate(GameTime gameTime, Map map)
@@ -154,6 +103,7 @@ namespace ProjectPlatform
                         _velocity.X = -WalkSpeed;
                     State = State.Walking;
                 }
+                LookingLeft = true;
             }
             else if (InputController.RightInput)//rechtse input
             {
@@ -171,6 +121,7 @@ namespace ProjectPlatform
                         _velocity.X = WalkSpeed;
                     State = State.Walking;
                 }
+                LookingLeft = false;
             }
             else
             {
@@ -274,7 +225,7 @@ namespace ProjectPlatform
         
         public Vector2 OnGround(Rectangle hitbox)
         {
-            var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 20);
+            var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 10);
             //checks if any tile in map.currentMap has collision with the bottom of the otter if so set otter to the tile height            
             var tile = OtterCollision.OtterGroundHit(groundBox, Map.Instance.FrontMap);
             if (tile ==-1) return Vector2.Zero;
@@ -282,7 +233,7 @@ namespace ProjectPlatform
             return new Vector2(hitbox.X, tile- hitbox.Height- CurrentAnimation.CurrentFrame.HitBox.Y*Scale);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(Sprites spriteBatch)
         {
             CurrentAnimation.Draw(spriteBatch, Position, LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale);
         }

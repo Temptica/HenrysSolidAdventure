@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform
 {
@@ -30,7 +31,7 @@ namespace ProjectPlatform
             IsActive = true;
             Scale = scale;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(Sprites spriteBatch)
         {
             spriteBatch.Draw(Texture, Position,null, Color.White, 0f, Vector2.One, Scale, SpriteEffects.None, 0f );
         }

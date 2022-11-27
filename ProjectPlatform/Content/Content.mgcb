@@ -91,6 +91,18 @@
 /processorParam:TextureFormat=Color
 /build:Character/Otterly Idle.png
 
+#begin Character/rsz_otterly_idle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Character/rsz_otterly_idle.png
+
 #begin Decoration/fence_1.png
 /importer:TextureImporter
 /processor:TextureProcessor

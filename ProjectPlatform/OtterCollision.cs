@@ -92,7 +92,7 @@ namespace ProjectPlatform
         private static Color[] GetCurrentPixels(Otter otter)
         {
             Color[] otterPixels = new Color[200 * 200];
-            otter.Texture.GetData(0, new Rectangle(otter.CurrentSpriteX, 0,200, 200), otterPixels, 0, otterPixels.Length);
+            Otter.Texture.GetData(0, new Rectangle(otter.CurrentSpriteX, 0,200, 200), otterPixels, 0, otterPixels.Length);
 
             return otterPixels;
         }
@@ -101,7 +101,7 @@ namespace ProjectPlatform
         {
             Color[] otterPixels = GetCurrentPixels(otter);
             //convert otterPixels to 2d array to from a Rectangle
-            Color[,] otterPixels2D = new Color[otter.Texture.Width, otter.Texture.Height];
+            Color[,] otterPixels2D = new Color[Otter.Texture.Width, Otter.Texture.Height];
             for (int x = 0; x < 200; x++)
             {
                 for (int y = 0; y < 200; y++)

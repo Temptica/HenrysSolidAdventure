@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform.Animations
 {
@@ -27,7 +28,7 @@ namespace ProjectPlatform.Animations
             }
         }        
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
+        public override void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
         {
             spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, Color.White, 0f, Vector2.Zero, scale, spriteEffects, 0f);
         }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform
 {
@@ -42,9 +43,9 @@ namespace ProjectPlatform
             scroll = new float[Backgrounds.Length];
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 ScreenSize)
+        public void Draw(Sprites spriteBatch, Vector2 ScreenSize)
         {
-            if(scale == 0) scale = ScreenSize.X / Backgrounds[0].Width;
+            scale = ScreenSize.X / Backgrounds[0].Width;
             for (int i = 0; i<Backgrounds.Length; i++)
             {
                 spriteBatch.Draw(Backgrounds[i], new Vector2(scroll[i], 0), new Rectangle(0, 0, Backgrounds[i].Width, Backgrounds[i].Height), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0f);//scrolled background

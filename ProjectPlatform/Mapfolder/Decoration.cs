@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform.Mapfolder
 {
@@ -21,7 +22,7 @@ namespace ProjectPlatform.Mapfolder
             Scale = scale;
             Effect = effect;
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(Sprites spriteBatch)
         {
             spriteBatch.Draw(Texture, Position, null, Color.White, 0f, Vector2.Zero, Scale, Effect, 1f);
         }

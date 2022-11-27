@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform.Animations
 {
@@ -52,7 +53,7 @@ namespace ProjectPlatform.Animations
             
             _time = 0;
         }
-        public virtual void Draw(SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
+        public virtual void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
         {
               spriteBatch.Draw(Texture, position, FrameRectangle, Color.White, 0f, Vector2.Zero, scale, spriteEffects, 0f);
         }
