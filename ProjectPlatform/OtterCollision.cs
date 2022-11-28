@@ -113,5 +113,14 @@ namespace ProjectPlatform
 
             return otterPixels2D;
         }
+        public static bool LeavingLeftMapBorder(Rectangle otter, int x)
+        {
+            return otter.Left < x;
+        }
+
+        public static bool LeavingRightMapBorder(Rectangle otter, int x)
+        {
+            return otter.Right > x;
+        }
     }
 }

@@ -68,7 +68,7 @@ namespace ProjectPlatform
             _buttons.Add(new Button("StartButton", startTexture, new Vector2((_screen.Width - startTexture.Width)/2f, (_screen.Height- startTexture.Height)/2f), GameState.Menu));
             
             var map = Map.Instance;
-            map.Initialise(Content);
+            map.Initialise(Content, _screen);
             //_otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.0005f, 0.20f);
             _otter = new Otter(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
 
@@ -102,8 +102,21 @@ namespace ProjectPlatform
                 _graphics.ToggleFullScreen();
                 _graphics.ApplyChanges();
             }
-            #endregion
-            
+#if DEBUG
+            if (_gameState is GameState.Playing)
+            {
+                if (InputController.NextInput)
+                {
+                    MapLoader.LoadNextMap(_screen.Height);
+                }
+                else if (InputController.PreviousInput)
+                {
+                    MapLoader.LoadPreviousMap(_screen.Height);
+                }
+            }
+#endif
+#endregion
+
             switch (_gameState)
             {
                 case GameState.Menu:
@@ -157,11 +170,11 @@ namespace ProjectPlatform
                     Map.Instance.Draw(_sprites);
                     //_sprites.Draw(_hitbox, _otter.HitBox, Color.Red);
                     _otter.Draw(_sprites);
-                    _sprite.DrawString(_font, $"Coins: {_otter.Coins}", new Vector2(100, 100), Color.White);
+                    _sprite.DrawString(_font, $"Coins: {_otter.Coins}", new Vector2(20, 20), Color.White,0f, Vector2.One, 0.25f, SpriteEffects.None,0f);
                     break;
             }
             _buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_sprites));// draw active buttons
-            _sprites.Draw(_hitbox, _buttons[0].HitBox, Color.Red);
+            //_sprites.Draw(_hitbox, _buttons[0].HitBox, Color.Red);
 
             _sprites.End();
             _sprite.End();
@@ -181,7 +194,7 @@ namespace ProjectPlatform
         }
         public void BeginGame()
         {
-            MapLoader.LoadMap(@$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level2.json", _screen.Height);
+            MapLoader.LoadMap(_screen.Height);
             _gameState = GameState.Playing;
             _otter.Position = Map.Instance.Spawn;
             _backGround.Reset();

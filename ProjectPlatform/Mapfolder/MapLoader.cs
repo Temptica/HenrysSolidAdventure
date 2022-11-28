@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,11 @@ namespace ProjectPlatform.Mapfolder
         static float xScale;
         static float yScale;
         private static float mapOffset;
-        public static void LoadMap(string location, int screenheight)
+        private static int MapID = 1;
+        private static int mapCount = 3;
+        public static void LoadMap(int screenheight)
         {
+            var location = @$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level{MapID}.json";
             MapReaderObject mapFromFile = null;
             try
             {
@@ -102,6 +106,20 @@ namespace ProjectPlatform.Mapfolder
         private static List<Coin> GenerateCoins(Object[] coins)
         {
             return coins.Select(coin => new Coin(new Vector2(coin.x-4, coin.y + mapOffset -28))).ToList();
+        }
+
+        public static void LoadPreviousMap(int screenHeight)
+        {
+            if (MapID == 1) return;
+            MapID--;
+            LoadMap(screenHeight);
+        }
+
+        public static void LoadNextMap(int screenHeight)
+        {
+            if (MapID == mapCount) return;
+            MapID++;
+            LoadMap(screenHeight);
         }
     }
 }

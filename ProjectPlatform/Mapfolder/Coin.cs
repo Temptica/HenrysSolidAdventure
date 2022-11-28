@@ -12,6 +12,7 @@ namespace ProjectPlatform.Mapfolder
 {
     internal class Coin
     {
+        public static List<List<int>> CollectedCoins;
         public const float Scale = 0.5f;
         internal static Texture2D Texture;
         readonly BasicAnimation normalAnimation;
@@ -25,13 +26,14 @@ namespace ProjectPlatform.Mapfolder
 
         internal Coin(Vector2 Position)
         {
-
+            CollectedCoins ??= new List<List<int>>();
             HitBox = new Rectangle((int)Position.X, (int)Position.Y, (int)((Texture.Width/12f)), (int)((Texture.Height/2f)* Scale));
             _animationX = 0;
             normalAnimation = new BasicAnimation(Texture, "idle",10, 12,(int)( Texture.Width / 12f), (int)(Texture.Width / 12f), 0);
         }
 
         private double _time;
+        float percentage = 0;
         internal void Update(GameTime gameTime)
         {
             if (_collected)
@@ -49,6 +51,7 @@ namespace ProjectPlatform.Mapfolder
                         _collectAnimationTimes++;
                     }
                     _time -= CollectedFrameRate;
+                    percentage = _collectAnimationTimes / CollectAnimationRepeatTimes;
                 }
                 else
                 {
@@ -61,14 +64,14 @@ namespace ProjectPlatform.Mapfolder
             normalAnimation.Update(gameTime);
 
         }
-
+        
         internal void Draw(Sprites spriteBatch)
         {
             if (_collected)
             {
                 var animationFrame =
                 new Rectangle((int)(_animationX), Texture.Height / 2, (int)(Texture.Width / 12f), (int)(Texture.Width / 12f));
-                spriteBatch.Draw(Texture, new Vector2(HitBox.X, HitBox.Y), animationFrame, Color.White, 0f, Vector2.One, Scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Texture, new Vector2(HitBox.X, HitBox.Y), animationFrame, Color.Lerp(Color.White, Color.Transparent, percentage), 0f, Vector2.One, Scale, SpriteEffects.None, 0f);
                 return;
             }
             normalAnimation.Draw(spriteBatch, new Vector2(HitBox.X, HitBox.Y), SpriteEffects.None, Scale);           

@@ -48,7 +48,6 @@ namespace ProjectPlatform
         private bool canJump;
         private bool canWalk;
         private bool LookingLeft = false;
-
         #endregion
 
         public Otter(Texture2D otter, Vector2 position, float gravity, float scale)
@@ -184,6 +183,15 @@ namespace ProjectPlatform
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     _velocity.X = 0;
                 }
+                else if (OtterCollision.LeavingRightMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Right))
+                {
+                    MapLoader.LoadNextMap(Map.Instance.ScreenRectangle.Height);
+                    Position = Map.Instance.Spawn;
+                    _velocity = Vector2.Zero;
+                    return;
+                }
+
+
             }
             else if (_velocity.X < 0)
             {
@@ -195,8 +203,15 @@ namespace ProjectPlatform
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     _velocity.X = 0;
                 }
-            }
+                else if (OtterCollision.LeavingLeftMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Left))
 
+                {
+                    MapLoader.LoadPreviousMap(Map.Instance.ScreenRectangle.Height);
+                    Position = new Vector2(Map.Instance.ScreenRectangle.Right - HitBox.Width - 1, Position.Y);
+                    _velocity = Vector2.Zero;
+                    return;
+                }
+            }
             if (_velocity.Y >= 0) //jump/falling mechanism
             {
                 var result = OnGround(nextHitBox);
@@ -213,10 +228,13 @@ namespace ProjectPlatform
                     var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                     _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
 
-                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y + _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
-                    nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
+                    nextPosition = new Vector2(nextPosition.X,
+                        nextPosition.Y + _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                    nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width,
+                        HitBox.Height);
                 }
             }
+
 
             if (_velocity.Y != 0) State = State.Jumping;
             else if (_velocity.X == 0 && _velocity.Y == 0) State = State.Idle;

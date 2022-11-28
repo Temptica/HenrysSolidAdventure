@@ -26,7 +26,8 @@ namespace ProjectPlatform.Mapfolder
         //internal float Scale { get; private set; }
         internal Store Shop { get; set; }
         internal Vector2 Spawn { get; set; }
-        
+        internal Rectangle ScreenRectangle { get; private set; }
+
 
         private Map()
         {
@@ -34,7 +35,7 @@ namespace ProjectPlatform.Mapfolder
         }
         public static Map Instance => uMap ??= new Map(); //Singleton
 
-        public void Initialise(ContentManager content)
+        public void Initialise(ContentManager content, Screen screen)
         {
             if(TileSet is null || TileSet.Count == 0)
             {
@@ -54,7 +55,7 @@ namespace ProjectPlatform.Mapfolder
                     currentHeight += tileSize;
                 }
             }
-
+            ScreenRectangle = new Rectangle(0, 0, screen.Width, screen.Height);
             if (DecorationTextures is not null && DecorationTextures.Count != 0) return;
             DecorationTextures = new Dictionary<string, Texture2D>();
             DecorationTextures.Add("fence_1", content.Load<Texture2D>("Decoration/fence_1"));
@@ -101,11 +102,11 @@ namespace ProjectPlatform.Mapfolder
         
         internal void Unload()
         {
-            FrontMap??= null;
-            BackMap??= null;
-            Coins ??= null;
-            Decorations ??= null;
-            Shop ??= null;
+            FrontMap = null;
+            BackMap = null;
+            Coins  = null;
+            Decorations  = null;
+            Shop = null;
             Spawn = Vector2.One;
         }
     }
