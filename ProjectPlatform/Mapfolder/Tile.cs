@@ -69,7 +69,7 @@ namespace ProjectPlatform.Mapfolder
             }
             if (leftHeight > rightHeight) //height is from top to bottom so invert logic 
             {
-                return leftHeight < Rectangle.Height / 2 ? TileType.UphillLow : TileType.UpHillHigh;
+                return leftHeight > Rectangle.Height / 2 ? TileType.UphillLow : TileType.UpHillHigh;
             }
             return rightHeight < Rectangle.Height / 2 ? TileType.DownhillHigh : TileType.DownHillLow;
         }

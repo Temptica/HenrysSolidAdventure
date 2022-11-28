@@ -13,45 +13,46 @@ namespace ProjectPlatform
         {            
             var MainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(otterHitBox) && ((tile.HitBox.Top<= otterHitBox.Bottom && otterHitBox.Bottom - tile.HitBox.Top <50)||tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with otter (main hitbox based)
             if (MainTileFilter.Count == 0) return -1;
-            var sorted = MainTileFilter.MinBy(tile => tile.HitBox.Top);
-            if (MainTileFilter.TrueForAll(tile => tile.Tile.Type is TileType.Flat or TileType.Air)) return sorted.Position.Y;//no slopes
-            float height = 0;
-            if (MainTileFilter[0].Tile.Type is not TileType.Flat)
+            var sorted = MainTileFilter.OrderByDescending(tile => tile.HitBox.Top).ToList();
+            if (MainTileFilter.TrueForAll(tile => tile.Tile.Type is TileType.Flat or TileType.Air)) return sorted.First().Position.Y;//no slopes
+            float height = float.MaxValue;
+            foreach (var tile in sorted)
             {
-                var HighestTile = MainTileFilter[0];
-                switch (HighestTile.Tile.Type)
+                switch (tile.Tile.Type)
                 {
                     case TileType.UphillLow: //on the right
-                        var onTileDistance = otterHitBox.Right - HighestTile.HitBox.Left;
+                        var onTileDistance = Util.Clamp(otterHitBox.Right - tile.HitBox.Left, 0, tile.HitBox.Width);
+                        int upslope = onTileDistance / 2;
                         //uphill is 2x for 1y staring from the bottom of the block
-                        height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - HighestTile.Tile.Rectangle.Height / 2);
+                        float newHeight = tile.HitBox.Bottom - upslope;
+                        if (height > newHeight) height = tile.HitBox.Bottom - upslope;
 
                         break;
                     case TileType.UpHillHigh://on the right
                         //uphill is 2x for 1y staring from the middle height of the block
-                        onTileDistance = otterHitBox.Right - HighestTile.HitBox.Left;
-                        height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - HighestTile.Tile.Rectangle.Height/2);
+                        onTileDistance = Util.Clamp(otterHitBox.Right - tile.HitBox.Left, 0, tile.HitBox.Width);
+                        upslope = onTileDistance / 2;
+                        newHeight = tile.HitBox.Bottom - upslope - tile.Tile.Rectangle.Height / 2f;
+                        if (height > newHeight) height = newHeight;
                         break;
                     case TileType.DownhillHigh: //on the left
-                        //downhill is 2x for 1y staring from the middle height of the block
-                        onTileDistance = HighestTile.HitBox.Left - otterHitBox.Right;
-                        height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f) - HighestTile.Tile.Rectangle.Height / 2);
+                        //downhill is 2x for 1y staring from the top height of the block downwards to the middle
+                        onTileDistance = Util.Clamp(tile.HitBox.Right - otterHitBox.Left , 0, tile.HitBox.Width);
+                        upslope = onTileDistance / 2;
+                        newHeight = tile.HitBox.Bottom - upslope - tile.Tile.Rectangle.Height / 2f;
+                        if (height > newHeight) height = newHeight;
+
                         break;
                     case TileType.DownHillLow: //On the left
-                        //downhill is 2x for 1y staring from the bottom of the block
-                        onTileDistance = HighestTile.HitBox.Left - otterHitBox.Right;
-                        height = (float)(HighestTile.HitBox.Bottom - Math.Ceiling(onTileDistance / 2f));
+                        //downhill is 2x for 1y staring from the middle of the block downwards to the bottom
+                        onTileDistance = Util.Clamp(tile.HitBox.Right - otterHitBox.Left, 0, tile.HitBox.Width);
+                        upslope = onTileDistance / 2;
+                        newHeight = tile.HitBox.Bottom - upslope;
+                        if (height > newHeight) height = newHeight;
                         break;
-                }
-                
-            }
-            //check if a normal tile has teh same or a higher height           
-            if (MainTileFilter.Count == 1) return height;
-            for (int i = 1; i < MainTileFilter.Count; i++)
-            {
-                if (MainTileFilter[i].HitBox.Top < height)
-                {
-                    height = MainTileFilter[i].HitBox.Top;
+                    case TileType.Flat:
+                        if(height> tile.HitBox.Top) height = tile.HitBox.Top;
+                        break;
                 }
             }
             return height;

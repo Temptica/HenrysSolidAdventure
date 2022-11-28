@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace ProjectPlatform
 {
-    internal enum TextAlignment{Left, Center, Right}
     internal class Button //make ButtonList class soon ?
     {
         public string Name { get; }
@@ -18,29 +18,33 @@ namespace ProjectPlatform
         public Rectangle HitBox { get; }
         public bool IsActive { get; private set; }
         public GameState? ActivationState { get; set; }
-        public float Scale { get; set; }
         
 
-        public Button(string name,Texture2D texture, Vector2 position, GameState? activationState = null, float scale = 1f)
+        public Button(string name,Texture2D texture, Vector2 position, GameState? activationState = null)
         {
             Name = name;
             Texture = texture;
             Position = position;
-            HitBox = new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
+            HitBox = new Rectangle((int)(Position.X), (int)(Position.Y),Texture.Width, Texture.Height);
             ActivationState = activationState;
             IsActive = true;
-            Scale = scale;
         }
         public void Draw(Sprites spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position,null, Color.White, 0f, Vector2.One, Scale, SpriteEffects.None, 0f );
+            spriteBatch.Draw(Texture, Position,null, Color.White, 0f, Vector2.One, 1f, SpriteEffects.None, 0f );
         }
 
-        public bool CheckHit(Vector2 cursor)
+        public int CheckHit(Vector2 cursor, bool click) //-1 = no hit / 0 hit no click / 1 hit and click
         {
             //Check if cursor is within Hitbox
-            return HitBox.Contains(cursor);
-
+            if (!IsActive) return -1;
+            
+            if((HitBox).Contains(cursor))
+            {
+                Mouse.SetCursor(MouseCursor.Hand);
+                return click ? 1 : 0;
+            }
+            return -1;
         }
 
         public void UpdateActive(bool? isActive = null)

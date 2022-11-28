@@ -87,7 +87,7 @@ namespace ProjectPlatform
             {
                 _velocity.X = 0;
             }
-            else if (InputController.LeftInput) //links bewegen
+            else if (InputController.LeftInput) //left
             {
                 _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
                 if (InputController.ShiftInput)
@@ -105,7 +105,7 @@ namespace ProjectPlatform
                 }
                 LookingLeft = true;
             }
-            else if (InputController.RightInput)//rechtse input
+            else if (InputController.RightInput)//right
             {
                 _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
                 if (InputController.ShiftInput)
@@ -128,7 +128,7 @@ namespace ProjectPlatform
                 _velocity.X = 0;
             }
 
-            if (InputController.JumpInput && canJump) //springen
+            if (InputController.JumpInput && canJump) //jump
             {
                 _velocity.Y = -JumpForce;
                 canJump = false;

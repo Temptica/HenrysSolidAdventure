@@ -28,6 +28,7 @@ namespace ProjectPlatform
         private Screen _screen;
         private Sprites _sprites;
         private Camera _camera;
+        private float Scale => _graphics.PreferredBackBufferWidth/ (float)_screen.Width;
 
         public Game1()
         {
@@ -87,17 +88,11 @@ namespace ProjectPlatform
             InputController.Update();
             
             if (InputController.ExitInput) Exit();
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-            {
-                if (_gameState == GameState.Menu)
-                {
-                    if (_buttons.First(button => button.Name == "StartButton")
-                        .CheckHit(Mouse.GetState().Position.ToVector2()))
-                    {
-                        BeginGame();
-                    }
-                }
-            }
+            int hit = _buttons.First(button => button.Name == "StartButton")
+                .CheckHit(Vector2.Transform(Mouse.GetState().Position.ToVector2(), Matrix.Identity),
+                    Mouse.GetState().LeftButton == ButtonState.Pressed);
+            if (hit == 1) BeginGame();
+            if (hit == -1) Mouse.SetCursor(MouseCursor.Arrow);
             if (Keyboard.GetState().IsKeyDown(Keys.R) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
                 if(_gameState is GameState.Playing) _otter.Position = Map.Instance.Spawn;
@@ -166,8 +161,8 @@ namespace ProjectPlatform
                     break;
             }
             _buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_sprites));// draw active buttons
-            
-            
+            _sprites.Draw(_hitbox, _buttons[0].HitBox, Color.Red);
+
             _sprites.End();
             _sprite.End();
             _screen.UnSet();
@@ -184,7 +179,6 @@ namespace ProjectPlatform
             _buttons.ForEach(button => button.UpdateActive(_gameState));
             AudioController.Instance.PlaySong("MainMenu");
         }
-
         public void BeginGame()
         {
             MapLoader.LoadMap(@$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level2.json", _screen.Height);
