@@ -14,17 +14,22 @@ namespace ProjectPlatform.Animations
         public Frame[] Frames { get; }
         public Frame CurrentFrame => Frames[CurrentFrameIndex];
         public override int FrameCount => Frames.Length;
+        internal State State;
 
-        public Animation(Texture2D texture, string identifier, int framecount, int framewidth, int frameheight, int beginHeight , int fps, float scale):base(texture,identifier, fps)
+        public Animation(Texture2D texture, int framecount, int fps, float scale = 1f):this(texture, State.Idle, framecount, texture.Width/framecount, texture.Height, 0,0,fps, scale)
+        {
+        }
+        public Animation(Texture2D texture, State state, int framecount, int framewidth, int frameheight, int beginHeight, int beginWidth, int fps, float scale = 1f):base(texture,state.ToString(), fps)
         {
             Frames = new Frame[framecount];
-            MakeAnimation(framewidth, frameheight, beginHeight, scale);
+            State = state;
+            MakeAnimation(framewidth, frameheight, beginHeight, beginWidth, scale);
         }
-        private void MakeAnimation(int framewidth, int frameheight, int beginHeight, float scale)
+        private void MakeAnimation(int framewidth, int frameheight, int beginHeight, int beginWidth, float scale)
         {
             for (int i = 0; i < Frames.Length; i++)
             {
-                Frames[i] = new Frame(new Rectangle(i * framewidth, beginHeight, framewidth, frameheight), Texture, scale);
+                Frames[i] = new Frame(new Rectangle(i * framewidth+beginWidth, beginHeight, framewidth, frameheight), Texture, scale);
             }
         }        
 

@@ -11,7 +11,7 @@ using ProjectPlatform.Graphics;
 namespace ProjectPlatform
 {
     internal class BackGround
-    {
+    {//from same bundle as tileset, decoration and nature
         Texture2D[] Backgrounds;
         float[] scroll;
         float scale;

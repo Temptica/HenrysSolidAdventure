@@ -29,11 +29,11 @@ namespace ProjectPlatform.Mapfolder
                         System.IO.File.ReadAllText(location));
                 if (mapFromFile is null) throw new ArgumentNullException("file is empty or incorrect");
             }
-            catch (ArgumentNullException nullEx)
+            catch (ArgumentNullException)
             {
                 return;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }

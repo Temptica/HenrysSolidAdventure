@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.Mapfolder;
 using System.Collections.Generic;
 using System.Linq;
+using ProjectPlatform.EnemyFolder;
 
 namespace ProjectPlatform
 {
@@ -93,7 +94,7 @@ namespace ProjectPlatform
         private static Color[] GetCurrentPixels(Otter otter)
         {
             Color[] otterPixels = new Color[200 * 200];
-            Otter.Texture.GetData(0, new Rectangle(otter.CurrentSpriteX, 0,200, 200), otterPixels, 0, otterPixels.Length);
+            Otter.Texture.GetData(0, otter.HitBox, otterPixels, 0, otterPixels.Length);
 
             return otterPixels;
         }

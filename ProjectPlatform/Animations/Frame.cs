@@ -10,9 +10,9 @@ namespace ProjectPlatform.Animations
         public Frame(Rectangle frameRectangle,Texture2D texture, float scale)
         {
             FrameRectangle = frameRectangle;
-            SetHitboxes(texture, scale);
+            SetPixelBasedHitBox(texture);
         }
-        private void SetHitboxes(Texture2D texture, float scale)
+        private void SetPixelBasedHitBox(Texture2D texture)
         {
             //get the lowest pixel in teh rectangle
             var color = TextureUtil.GetCurrentPixels2D(texture, FrameRectangle);

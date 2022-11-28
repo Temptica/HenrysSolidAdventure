@@ -68,6 +68,8 @@ namespace ProjectPlatform.Mapfolder
             DecorationTextures.Add("rock_2", content.Load<Texture2D>("Decoration/rock_2"));
             DecorationTextures.Add("rock_3", content.Load<Texture2D>("Decoration/rock_3"));
             DecorationTextures.Add("sign", content.Load<Texture2D>("Decoration/sign"));
+            Coin.Texture = content.Load<Texture2D>("Items/Coin");
+            Store.Texture = content.Load<Texture2D>("Decoration/shop_anim");
 
         }
         public void Draw(Sprites spriteBatch)

@@ -6,12 +6,15 @@ using System.Linq;
 using ProjectPlatform.Mapfolder;
 using ProjectPlatform.Animations;
 using ProjectPlatform.Graphics;
+using ProjectPlatform.Interface;
 
 namespace ProjectPlatform
 {
     //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
     internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Other }
-    internal class Otter
+   
+    
+    internal class Otter : IAnimatable
     {
         #region Consts
         private const float JumpForce = 0.35f;
@@ -26,9 +29,12 @@ namespace ProjectPlatform
         public static Texture2D Texture { get; set; }
         public List<Animation> Animations { get; set; }
         public Animation CurrentAnimation => /*Animations?.Where(a => a.AnimationState == State).FirstOrDefault();*/ Animations[0];
-        //revert hitbox if moving left
-        public Rectangle HitBox => GetHitBox();
-        public int CurrentSpriteX { get; set; }
+        public Rectangle HitBox
+        {
+            get => GetHitBox();
+            set => throw new NotImplementedException();
+        }
+
         public int MoveSpeed { get; set; }
         public int Health { get; set; }
         public int MaxHeath{ get; private set; }
@@ -58,7 +64,7 @@ namespace ProjectPlatform
             Scale = scale;
             Animations = new List<Animation>()
             {
-                new(Texture, "idle", 6, Texture.Width/6, Texture.Height,0, 4, scale)
+                new(Texture, State, 6, Texture.Width/6, Texture.Height,0, 0,4, scale)
             };
         }
 
