@@ -13,8 +13,12 @@ namespace ProjectPlatform.EnemyFolder
     internal class Bat : TrackingEnemy
     {
         //flying tracking enemy. will start flying to you when you are 15 tiles away, regardless of walls. Once detected, it will keep tracking
+        Vector2 _velocity;
+        float _flyingSpeed;
+        float _roamingSpeed;
         public Bat(Texture2D texture, Vector2 position)
         {
+            _velocity = Vector2.Zero;
             Animations = new();
             Animations.Add(new Animation(texture, 4, 10));
         }

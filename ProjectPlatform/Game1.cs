@@ -30,7 +30,6 @@ namespace ProjectPlatform
         private Sprites _sprites;
         private Camera _camera;
         private Bat bat;
-        private float Scale => _graphics.PreferredBackBufferWidth/ (float)_screen.Width;
 
         public Game1()
         {

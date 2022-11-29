@@ -14,7 +14,7 @@ namespace ProjectPlatform
     internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Other }
    
     
-    internal class Otter : IAnimatable
+    internal class Otter : IAnimatable, IGameObject
     {
         #region Consts
         private const float JumpForce = 0.35f;
@@ -34,7 +34,6 @@ namespace ProjectPlatform
             get => GetHitBox();
             set => throw new NotImplementedException();
         }
-
         public int MoveSpeed { get; set; }
         public int Health { get; set; }
         public int MaxHeath{ get; private set; }
@@ -46,7 +45,7 @@ namespace ProjectPlatform
         public float Gravity { get; }        
         public float Scale { get; set; }
         public float Coins { get; private set; }
-        
+
 
         #endregion
         #region private variables
@@ -275,6 +274,11 @@ namespace ProjectPlatform
 
             }
             return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            throw new NotImplementedException();
         }
     }
     
