@@ -57,6 +57,7 @@ namespace ProjectPlatform
                         break;
                 }
             }
+            if (otterHitBox.Bottom < height) return -1;
             return height;
         }
 
