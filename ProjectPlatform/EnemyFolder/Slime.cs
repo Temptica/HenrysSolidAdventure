@@ -5,20 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Animations;
 using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform.EnemyFolder
 {
-    internal class Boss : Enemy
-    {//https://luizmelo.itch.io/evil-wizard-2
-        public static Texture2D Texture { get; set; }
-        public Boss(Vector2 position):base()
+    internal class Slime:RoamingEnemy
+    {//slimes are dumb and won't track
+        public static Texture2D Texture;
+        public Slime() : base()
         {
-            Position = position;
-            Animations = new List<Animation>();
+            
         }
-
         public override void Update(GameTime gameTime)
         {
             throw new NotImplementedException();

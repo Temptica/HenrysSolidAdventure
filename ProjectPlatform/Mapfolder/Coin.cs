@@ -18,7 +18,7 @@ namespace ProjectPlatform.Mapfolder
         readonly BasicAnimation normalAnimation;
         private float CollectedFrameRate = 50; //20fps
         private const float CollectAnimationRepeatTimes = 5;
-        private float _collectAnimationTimes = 0;
+        private float _collectAnimationTimes;
         private float _animationX;
         bool _collected;
         public bool Destroy;
@@ -33,36 +33,33 @@ namespace ProjectPlatform.Mapfolder
         }
 
         private double _time;
-        float percentage = 0;
+        float percentage;
         internal void Update(GameTime gameTime)
         {
-            if (_collected)
+            if (!_collected)
             {
-                
-                if (_collectAnimationTimes < CollectAnimationRepeatTimes)
-                {
-                    _time += gameTime.ElapsedGameTime.TotalMilliseconds;
-                    CollectedFrameRate --;
-                    if (_time < CollectedFrameRate) return;
-                    _animationX+= Texture.Width / 12f;
-                    if (_animationX >= Texture.Width)
-                    {
-                        _animationX = 0;
-                        _collectAnimationTimes++;
-                    }
-                    _time -= CollectedFrameRate;
-                    percentage = _collectAnimationTimes / CollectAnimationRepeatTimes;
-                }
-                else
-                {
-                    Destroy = true;
-                }//make it fade
-                
+                normalAnimation.Update(gameTime);
                 return;
             }
+            if (_collectAnimationTimes < CollectAnimationRepeatTimes)
+            {
+                _time += gameTime.ElapsedGameTime.TotalMilliseconds;
+                CollectedFrameRate--;
+                if (_time < CollectedFrameRate) return;
+                _animationX += Texture.Width / 12f;
+                if (_animationX >= Texture.Width)
+                {
+                    _animationX = 0;
+                    _collectAnimationTimes++;
+                }
 
-            normalAnimation.Update(gameTime);
-
+                _time -= CollectedFrameRate;
+                percentage = _collectAnimationTimes / CollectAnimationRepeatTimes;
+            }
+            else
+            {
+                Destroy = true;
+            } //make it fade
         }
         
         internal void Draw(Sprites spriteBatch)

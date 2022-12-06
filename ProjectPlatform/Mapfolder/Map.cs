@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPlatform.EnemyFolder;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Shop;
 
@@ -27,6 +28,7 @@ namespace ProjectPlatform.Mapfolder
         internal Store Shop { get; set; }
         internal Vector2 Spawn { get; set; }
         internal Rectangle ScreenRectangle { get; private set; }
+        internal List<Enemy> Enemies { get; set; }
 
 
         private Map()
@@ -44,7 +46,6 @@ namespace ProjectPlatform.Mapfolder
                 const int tileSize = 24;//from the pack https://brullov.itch.io/oak-woods
                 var currentHeight = 0;
                 var currentWidth = 0;
-                //Scale = 1;
                 TileSet = new List<Tile>();
                 while (currentHeight + tileSize <= tileSheet.Height && currentWidth + tileSize <= tileSheet.Width)
                 {
@@ -70,6 +71,7 @@ namespace ProjectPlatform.Mapfolder
             DecorationTextures.Add("sign", content.Load<Texture2D>("Decoration/sign"));
             Coin.Texture = content.Load<Texture2D>("Items/Coin");
             Store.Texture = content.Load<Texture2D>("Decoration/shop_anim");
+            EnemyInitialiser.Loadtextures(content);
 
         }
         public void Draw(Sprites spriteBatch)
@@ -79,6 +81,7 @@ namespace ProjectPlatform.Mapfolder
             Coins?.ForEach(coin =>coin.Draw(spriteBatch));
             Shop?.Draw(spriteBatch);
             Decorations?.ForEach(deco => deco.Draw(spriteBatch));
+            Enemies?.ForEach(enemy => enemy.Draw(spriteBatch));
         }
         public void Update(GameTime gameTime)
         {
@@ -86,6 +89,8 @@ namespace ProjectPlatform.Mapfolder
             var coinToDestroy = Coins?.Where(coin => coin.Destroy).FirstOrDefault();
             if (coinToDestroy != null) Coins?.Remove(coinToDestroy);
             Shop?.Update(gameTime);
+            Enemies?.ForEach(enemy => enemy.Update(gameTime));
+            
         }
         public Tile GetTile(int i)
         {

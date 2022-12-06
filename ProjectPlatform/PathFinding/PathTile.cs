@@ -8,25 +8,20 @@ using System.Threading.Tasks;
 
 namespace ProjectPlatform.PathFinding
 {
-    internal class PathTile
+    internal class PathPoint
     {
-        
-        public MapTile MapTile { get; set; }
-        public Vector2 Position => MapTile.HitBox.Center.ToVector2(); //object shall always navigate to the center of the tile
-public float Cost { get; set; }
+        public Point Position { get; }
+        public float Cost { get; set; }
         public float Distance { get; set; }
         public float TotalCost => Cost + Distance;
-        public PathTile Parent { get; set; }
-        public PathTile(MapTile mapTile)
+        public List<PathPoint> NeighborPoints { get; set; }
+        public PathPoint(Point position)
         {
-            MapTile = mapTile;            
+            Position = position;      
         }
-        public void SetDistance(PathTile target)
+        public void SetDistance(PathPoint target)
         {
-            Distance = Math.Abs(MapTile.Position.X - target.MapTile.Position.X) + Math.Abs(MapTile.Position.Y - target.MapTile.Position.Y);
+            Distance = Vector2.Distance(Position.ToVector2(), target.Position.ToVector2());
         }
-        
-        
-
     }
 }

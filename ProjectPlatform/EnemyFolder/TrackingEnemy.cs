@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 namespace ProjectPlatform.EnemyFolder
 {
     internal abstract class TrackingEnemy : Enemy
-    {//bat
-        public abstract override void Draw(Sprites spriteBatch);
-
-        public abstract override void Update(GameTime gameTime);
+    {        
+        public TrackingEnemy() : base()
+        {            
+        }
     }
 }

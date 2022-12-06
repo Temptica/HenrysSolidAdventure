@@ -7,13 +7,12 @@ using ProjectPlatform.Mapfolder;
 using ProjectPlatform.Animations;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Interface;
+using ProjectPlatform.EnemyFolder;
 
 namespace ProjectPlatform
 {
     //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
-    internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Other }
-   
-    
+    internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead,Hit, Other }
     internal class Otter : IAnimatable, IGameObject
     {
         #region Consts
@@ -34,15 +33,16 @@ namespace ProjectPlatform
             get => GetHitBox();
             set => throw new NotImplementedException();
         }
-        public int MoveSpeed { get; set; }
-        public int Health { get; set; }
-        public int MaxHeath{ get; private set; }
+        public int MoveSpeed { get; private set; }
+        public int Health { get; private set; }
+        public float HealthPercentage => (float)Health / MaxHealth;
+        public int MaxHealth { get; private set; }
         public int MaxCondition { get; private set; }
         public int Condition { get; set; }
         public int Damage { get; set; }
         public int AttackRange { get; set; }
         public State State { get; set; }
-        public float Gravity { get; }        
+        public float Gravity { get; private set; }        
         public float Scale { get; set; }
         public float Coins { get; private set; }
 
@@ -54,8 +54,25 @@ namespace ProjectPlatform
         private bool canWalk;
         private bool LookingLeft = false;
         #endregion
+        //signleton 
+        private static Otter _instance;
+        public static Otter Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new Otter();
+                }
+                return _instance;
+            }
+        }
+        
 
-        public Otter(Texture2D otter, Vector2 position, float gravity, float scale)
+        private Otter()
+        {
+        }
+        public void Initialise(Texture2D otter, Vector2 position, float gravity, float scale)
         {
             Texture = otter;
             Position = position;
@@ -65,6 +82,7 @@ namespace ProjectPlatform
             {
                 new(Texture, State, 6, Texture.Width/6, Texture.Height,0, 0,4, scale)
             };
+            Damage = 7;
         }
 
         public void Update(GameTime gameTime)
@@ -73,9 +91,30 @@ namespace ProjectPlatform
             CurrentAnimation.Update(gameTime);//update the animation
             MoveUpdate(gameTime, map);
             CheckCoins();
+            CheckEnemies();
             _velocity.X = 0;
         }
-        
+
+        private void CheckEnemies()
+        {
+            if (Enemy.Enemies.Count <= 0) return;
+            foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State != State.Dead).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
+            {
+                if (/*State == State.Attacking*/ true)
+                {
+                    if (!enemy.GetDamage(Damage)) continue;
+                    Coins += 1;
+                    var coin = new Coin(enemy.Position);
+                    Map.Instance.Coins.Add(coin);
+                    coin.Collect();
+                }
+                else
+                {
+                    Health -= enemy.Attack();
+                }
+            }
+        }
+
         private void CheckCoins()
         {
             var collected = Map.Instance.Coins?.FirstOrDefault(coin => coin.HitBox.Intersects(HitBox))?.Collect();

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectPlatform.EnemyFolder;
 using ProjectPlatform.Shop;
 
 namespace ProjectPlatform.Mapfolder
@@ -13,11 +14,10 @@ namespace ProjectPlatform.Mapfolder
     internal static class MapLoader
     {
         //"D:\ap\22-23\ProjGameDev\Map\Level1.json"
-        static float xScale;
-        static float yScale;
         private static float mapOffset;
         private static int MapID = 1;
         private static int mapCount = 3;
+        private static string mapPath = "Map/Level";
         public static void LoadMap(int screenheight)
         {
             var location = @$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level{MapID}.json";
@@ -48,15 +48,18 @@ namespace ProjectPlatform.Mapfolder
             GenerateDecorations(mapFromFile.layers.First(layer => layer.name == "Decoration").objects, map.Decorations);
             GenerateDecorations(mapFromFile.layers.First(layer => layer.name == "Nature").objects, map.Decorations);
             map.Shop = GenerateShop(mapFromFile.layers.First(layer => layer.name == "Shop").objects.First());
-            var spawn = mapFromFile.layers.First(layer => layer.name == "Otter & enemies").objects
-                .First(obj => obj._class == "Spawn");
-            map.Spawn = SetSpawn(spawn);
+            var spawn = mapFromFile.layers.First(layer => layer.name == "Otter & enemies").objects;
+            SetSpawns(spawn, map);
         }
 
-        private static Vector2 SetSpawn(Object spawn)
+        private static void SetSpawns(Object[] spawns, Map map)
         {
-            
-            return new Vector2(spawn.x, spawn.y+mapOffset-Otter.Texture.Height);
+            map.Enemies = new List<Enemy>();
+            foreach (var spawn in spawns)
+            {
+                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height);
+                if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset)));
+            }           
         }
 
         private static void GenerateDecorations(IEnumerable<Object> objects, ICollection<Decoration> decorations)
@@ -66,7 +69,6 @@ namespace ProjectPlatform.Mapfolder
                 var texture = Map.DecorationTextures.GetValueOrDefault(obj._class);
                 decorations.Add(new Decoration(texture, new Vector2(obj.x,obj.y+ mapOffset - texture.Height), 1));
             }
-            //put decoration on the correct position (scaled by the map);
         }
 
         private static Store GenerateShop(Object store)
@@ -85,12 +87,10 @@ namespace ProjectPlatform.Mapfolder
                     var data = layer.data[x + y * layer.height];
                     if (data == 0)
                     {
-                        continue;
+                        data = 5; //make air
                     }
                     var tile = Map.TileSet[data-1];
-                    xScale = tile.Rectangle.Width;
-                    yScale = tile.Rectangle.Height;
-                    map.Add(new MapTile(tile, new Vector2(x * tile.Rectangle.Width, (y * tile.Rectangle.Height))));
+                    map.Add(new MapTile(tile, new Vector2(x * tile.Rectangle.Width, (y * tile.Rectangle.Height)), new Vector2(x, y)));
                 }
             }
             

@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using ProjectPlatform.Graphics;
 
 namespace ProjectPlatform.EnemyFolder
 {
-    internal class RoamingEnemy
+    internal abstract class RoamingEnemy:Enemy
     {
+        public RoamingEnemy() : base()
+        {
+            
+        }
     }
 }

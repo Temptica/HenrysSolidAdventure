@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ProjectPlatform.Interface
 {
     internal interface IGameObject
-    {
+    {        
         Vector2 Position { get; set; }
         Rectangle HitBox { get; set; }
         void Update(GameTime gameTime);

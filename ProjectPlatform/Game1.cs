@@ -65,11 +65,12 @@ namespace ProjectPlatform
             _font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
             var startTexture = Content.Load<Texture2D>("buttons/StartButton");
             _buttons.Add(new Button("StartButton", startTexture, new Vector2((_screen.Width - startTexture.Width)/2f, (_screen.Height- startTexture.Height)/2f), GameState.Menu));
-            bat = new Bat(Content.Load<Texture2D>("Enemies/Bat"), new Vector2(20, 20));
+            Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
             map.Initialise(Content, _screen);
             //_otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.0005f, 0.20f);
-            _otter = new Otter(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
+            _otter = Otter.Instance;
+            _otter.Initialise(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
 
             _hitbox = new Texture2D(GraphicsDevice, 1, 1);
             _hitbox.SetData(new[] { Color.White });
@@ -120,7 +121,6 @@ namespace ProjectPlatform
             {
                 case GameState.Menu:
                     _backGround.Update(gameTime);
-                    bat.Update(gameTime);
                     _otter.CurrentAnimation.Update(gameTime);
                     break;
                 case GameState.Paused:
@@ -145,7 +145,6 @@ namespace ProjectPlatform
                 case GameState.Menu:
                     string title = "Otterly Adventure";
                     var length = _font.MeasureString(title).Length();
-                    bat.Draw(_sprites);
                     var halfWidth = _screen.Width/2f;
                     var halfHeight = _screen.Height/2f;
                     Vector2 textPosition = new(halfWidth-length/2, _screen.Height/10f);

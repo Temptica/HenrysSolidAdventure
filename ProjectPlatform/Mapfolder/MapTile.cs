@@ -13,12 +13,14 @@ namespace ProjectPlatform.Mapfolder
     {
         public Tile Tile { get; set; }
         public Vector2 Position { get; set; }
+        public Vector2 GridPosition { get; set; }
         public Rectangle HitBox => new((int)Position.X, (int)Position.Y, Tile.Rectangle.Width, Tile.Rectangle.Height);
 
-        public MapTile(Tile tile, Vector2 position)
+        public MapTile(Tile tile, Vector2 position, Vector2 gridPosition)
         {
             Tile = tile;
             Position = position;
+            GridPosition = gridPosition;
         }
         public void Draw(Sprites spriteBatch)
         {
@@ -51,6 +53,21 @@ namespace ProjectPlatform.Mapfolder
         {
             return rectangle.Left <= HitBox.Right && rectangle.Left >= HitBox.Left &&
                    rectangle.Bottom >= HitBox.Top && rectangle.Top <= HitBox.Bottom;
+        }
+        public static MapTile GetClosestAirTile(Vector2 Position)
+        {
+            {
+                var list = new List<MapTile>();
+                foreach (var item in Map.Instance.FrontMap)
+                {
+                    if (item.Tile.Type is TileType.Air)
+                    {
+                        list.Add(item);
+                    }
+                }
+                var closest = list.OrderBy(x => Vector2.Distance(Position, x.Position)).First();
+                return closest;
+            }
         }
     }
 }
