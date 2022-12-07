@@ -35,7 +35,7 @@ namespace ProjectPlatform
         }
         public int MoveSpeed { get; private set; }
         public int Health { get; private set; }
-        public float HealthPercentage => (float)Health / MaxHealth;
+        public float HealthPercentage => (float)Math.Round(Health / (double)MaxHealth*100,0);
         public int MaxHealth { get; private set; }
         public int MaxCondition { get; private set; }
         public int Condition { get; set; }
@@ -50,24 +50,20 @@ namespace ProjectPlatform
         #endregion
         #region private variables
         private Vector2 _velocity;
-        private bool canJump;
-        private bool canWalk;
-        private bool LookingLeft = false;
+        private bool _canJump;
+        private bool _canWalk;
+        private bool _lookingLeft = false;
+        private bool _IsWalking;
+        private bool _IsRunning;
+        private bool _IsJumping;
+        private bool _IsAttacking;
+        private bool _IsSleeping;
+        private bool _IsDead;
+        private bool _IsHit;        
         #endregion
         //signleton 
         private static Otter _instance;
-        public static Otter Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new Otter();
-                }
-                return _instance;
-            }
-        }
-        
+        public static Otter Instance => _instance??= new Otter();   
 
         private Otter()
         {
@@ -82,17 +78,32 @@ namespace ProjectPlatform
             {
                 new(Texture, State, 6, Texture.Width/6, Texture.Height,0, 0,4, scale)
             };
+            Health = MaxHealth = 20;
             Damage = 7;
         }
 
         public void Update(GameTime gameTime)
         {
             Map map = Map.Instance;
+            SetState();
             CurrentAnimation.Update(gameTime);//update the animation
             MoveUpdate(gameTime, map);
             CheckCoins();
             CheckEnemies();
             _velocity.X = 0;
+        }
+
+        private void SetState()
+        {
+            if (State is State.Dead || _IsDead || (State is State.Hit && _IsHit)) return;
+            //attack>Jump>sprint>walk>idle
+            else if (_IsAttacking) State = State.Attacking;
+            else if (_IsJumping) State = State.Jumping;
+            else if (_IsRunning) State = State.Running;
+            else if (_IsWalking) State = State.Walking;
+            else State = State.Idle;
+
+
         }
 
         private void CheckEnemies()
@@ -126,7 +137,7 @@ namespace ProjectPlatform
 
         public void MoveUpdate(GameTime gameTime, Map map)
         {
-            if (!canWalk)
+            if (!_canWalk)
             {
                 _velocity.X = 0;
             }
@@ -138,15 +149,17 @@ namespace ProjectPlatform
                     _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
                     if (_velocity.X < -RunningSpeed)
                         _velocity.X = -RunningSpeed;
-                    State = State.Running;
+                    _IsRunning = true;
+                    
                 }
                 else
                 {
                     if (_velocity.X < -WalkSpeed)
                         _velocity.X = -WalkSpeed;
-                    State = State.Walking;
+                    _IsRunning = false;
                 }
-                LookingLeft = true;
+                _lookingLeft = true;
+                _IsWalking = true;
             }
             else if (InputController.RightInput)//right
             {
@@ -156,30 +169,31 @@ namespace ProjectPlatform
                     _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
                     if (_velocity.X > RunningSpeed)
                         _velocity.X = RunningSpeed;
-                    State = State.Running;
+                    _IsRunning = true;
                 }
                 else
                 {
                     if (_velocity.X > WalkSpeed)
                         _velocity.X = WalkSpeed;
-                    State = State.Walking;
+                    _IsRunning = false;
                 }
-                LookingLeft = false;
+                _IsWalking = true;
+                _lookingLeft = false;
             }
             else
             {
                 _velocity.X = 0;
+                _IsWalking = false;
+                _IsRunning = false;
             }
-
-            if (InputController.JumpInput && canJump) //jump
+            
+            if (InputController.JumpInput && _canJump) //jump
             {
                 _velocity.Y = -JumpForce;
-                canJump = false;
-                State = State.Jumping;
+                _canJump = false;
             }
-            else if (canJump)
+            else if (_canJump)
             {
-                State = State.Idle;
             }
             else
             {
@@ -213,7 +227,7 @@ namespace ProjectPlatform
                     nextPosition = new Vector2(nextPosition.X, nextPosition.Y + _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
                 }
                 nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
-                canJump = false;
+                _canJump = false;
             }
 
             if (_velocity.X > 0)//to right
@@ -262,13 +276,13 @@ namespace ProjectPlatform
                 if (result != Vector2.Zero)
                 {
                     _velocity.Y = 0f;
-                    canJump = true;
+                    _canJump = true;
                     nextPosition = new((int)result.X, (int)result.Y);
                     nextHitBox = new Rectangle((int)result.X, (int)result.Y, nextHitBox.Width, nextHitBox.Height);
                 }
                 else
                 {
-                    canJump = false;
+                    _canJump = false;
                     var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                     _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
 
@@ -278,10 +292,6 @@ namespace ProjectPlatform
                         HitBox.Height);
                 }
             }
-
-
-            if (_velocity.Y != 0) State = State.Jumping;
-            else if (_velocity.X == 0 && _velocity.Y == 0) State = State.Idle;
             Position = new(nextHitBox.X, nextHitBox.Y);
         }
         
@@ -297,16 +307,16 @@ namespace ProjectPlatform
 
         public void Draw(Sprites spriteBatch)
         {
-            CurrentAnimation.Draw(spriteBatch, Position, LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale);
+            CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale);
         }
 
         public void SetWalk(bool canWalk)
         {
-            this.canWalk = canWalk;
+            this._canWalk = canWalk;
         }
         private Rectangle GetHitBox()
         {
-            if (LookingLeft)
+            if (_lookingLeft)
             {//invert hitbox
                 //return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale- CurrentAnimation.CurrentFrame.HitBox.Width * Scale)
             return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));

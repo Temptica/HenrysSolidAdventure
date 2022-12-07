@@ -171,6 +171,7 @@ namespace ProjectPlatform
                     //_sprites.Draw(_hitbox, _otter.HitBox, Color.Red);
                     _otter.Draw(_sprites);
                     _sprite.DrawString(_font, $"Coins: {_otter.Coins}", new Vector2(20, 20), Color.White,0f, Vector2.One, 0.25f, SpriteEffects.None,0f);
+                    _sprite.DrawString(_font, $"HP: {_otter.Health}. HP%: {_otter.HealthPercentage}" , new Vector2(20, 40), Color.White, 0f, Vector2.One, 0.25f, SpriteEffects.None, 0f);
                     break;
             }
             _buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_sprites));// draw active buttons

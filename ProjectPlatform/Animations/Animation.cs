@@ -14,6 +14,9 @@ namespace ProjectPlatform.Animations
         public Frame[] Frames { get; }
         public Frame CurrentFrame => Frames[CurrentFrameIndex];
         public override int FrameCount => Frames.Length;
+
+        public bool IsFinished { get; internal set; }
+
         internal State State;
 
         public Animation(Texture2D texture, int framecount, int fps, float scale = 1f):this(texture, State.Idle, framecount, texture.Width/framecount, texture.Height, 0,0,fps, scale)
