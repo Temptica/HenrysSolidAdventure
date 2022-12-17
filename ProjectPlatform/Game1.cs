@@ -78,7 +78,7 @@ namespace ProjectPlatform
 
             SetMenu();
 
-
+            base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
@@ -95,7 +95,14 @@ namespace ProjectPlatform
             if (hit == -1) Mouse.SetCursor(MouseCursor.Arrow);
             if (Keyboard.GetState().IsKeyDown(Keys.R) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
             {
-                if(_gameState is GameState.Playing) _otter.Position = Map.Instance.Spawn;
+                if(_gameState is GameState.Playing)
+                {
+                    if (InputController.ShiftInput)
+                    {
+                        MapLoader.LoadMap(_screen.Height);
+                    }
+                    _otter.Position = Map.Instance.Spawn;
+                }
             }
             if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
@@ -165,10 +172,7 @@ namespace ProjectPlatform
                     _sprite.DrawString(_font, "Press Enter to resume", new Vector2(100, 100), Color.White);
                     break;
                 case GameState.Playing:
-
-                    //Map.Instance.Coins.ForEach(coin => _spriteBatch.Draw(_hitbox, coin.HitBox, Color.Yellow));
                     Map.Instance.Draw(_sprites);
-                    //_sprites.Draw(_hitbox, _otter.HitBox, Color.Red);
                     _otter.Draw(_sprites);
                     _sprite.DrawString(_font, $"Coins: {_otter.Coins}", new Vector2(20, 20), Color.White,0f, Vector2.One, 0.25f, SpriteEffects.None,0f);
                     _sprite.DrawString(_font, $"HP: {_otter.Health}. HP%: {_otter.HealthPercentage}" , new Vector2(20, 40), Color.White, 0f, Vector2.One, 0.25f, SpriteEffects.None, 0f);

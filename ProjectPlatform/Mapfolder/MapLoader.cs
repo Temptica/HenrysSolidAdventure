@@ -58,7 +58,8 @@ namespace ProjectPlatform.Mapfolder
             foreach (var spawn in spawns)
             {
                 if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height);
-                if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset)));
+                if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
+                if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
             }           
         }
 

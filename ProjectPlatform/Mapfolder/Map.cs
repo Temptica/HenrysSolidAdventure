@@ -90,7 +90,15 @@ namespace ProjectPlatform.Mapfolder
             if (coinToDestroy != null) Coins?.Remove(coinToDestroy);
             Shop?.Update(gameTime);
             Enemies?.ForEach(enemy => enemy.Update(gameTime));
-            
+            var remove = Enemies?.Where(enemy => enemy.Remove).ToList();
+            if (remove != null)
+            {
+                foreach (var enemy in remove)
+                {
+                    Enemies.Remove(enemy);
+                }
+            }
+
         }
         public Tile GetTile(int i)
         {
@@ -115,6 +123,7 @@ namespace ProjectPlatform.Mapfolder
             Decorations  = null;
             Shop = null;
             Spawn = Vector2.One;
+            Enemies = null;
         }
     }
 }

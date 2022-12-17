@@ -14,41 +14,69 @@ namespace ProjectPlatform.EnemyFolder
     internal class Skeleton:RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform
         public static Dictionary<State, Texture2D> Textures;//list as some of the spritesheets are bigger than others due to the big "sword" making it very difficult having them on one sprite
-        Vector2 _maxLeftPosition;
-        private Vector2 _maxRightPosition;
-        public Skeleton(Vector2 position):base()
+        private Vector2 spawnPosition;
+        public Skeleton(Vector2 position)
         {
-            Position = position;
+            
+            Position = spawnPosition = position;
             Animations = new()
             {//https://jesse-m.itch.io/skeleton-pack
-                new Animation(Textures[State.Idle], State.Idle,Textures[State.Idle].Width/11, Textures[State.Idle].Width, Textures[State.Idle].Height, 0, 0,5),
-                new Animation(Textures[State.Walking], State.Walking,Textures[State.Walking].Width/13, Textures[State.Walking].Width, Textures[State.Walking].Height, 0, 0,5),
-                new Animation(Textures[State.Attacking], State.Attacking,Textures[State.Attacking].Width/18, Textures[State.Attacking].Width, Textures[State.Attacking].Height, 0, 0,5),
-                new Animation(Textures[State.Hit], State.Hit,Textures[State.Hit].Width/8, Textures[State.Hit].Width, Textures[State.Hit].Height, 0, 0,5),
-                new Animation(Textures[State.Dead], State.Dead,Textures[State.Dead].Width/15, Textures[State.Dead].Width, Textures[State.Dead].Height, 0, 0,5),
-                new Animation(Textures[State.Other], State.Other,Textures[State.Other].Width/4, Textures[State.Other].Width, Textures[State.Other].Height, 0, 0,5)//when skeleton detects Otter
+                new Animation(Textures[State.Idle], State.Idle,11, Textures[State.Idle].Width/11, Textures[State.Idle].Height, 0, 0,7),
+                new Animation(Textures[State.Walking],State.Walking, 13, Textures[State.Walking].Width/13, Textures[State.Walking].Height, 0, 0,6),
+                new Animation(Textures[State.Attacking], State.Attacking,18, Textures[State.Attacking].Width/18, Textures[State.Attacking].Height, 0, 0,10),
+                new Animation(Textures[State.Hit], State.Hit,8, Textures[State.Hit].Width/8, Textures[State.Hit].Height, 0, 0,5),
+                new Animation(Textures[State.Dead], State.Dead,15, Textures[State.Dead].Width/15, Textures[State.Dead].Height, 0, 0,5),
+                new Animation(Textures[State.Other], State.Other,4, Textures[State.Other].Width/4, Textures[State.Other].Height, 0, 0,7)//when skeleton detects Otter
             };
-            SetWalkBounds();
-        }
-
-        private void SetWalkBounds()
-        {
-            Map map = Map.Instance;
-            //get tile the enemy will be standing on
+            DefineWalkablePath();
+            CurrentHp = BaseHp = 12;
+            Speed = 8f;
+            CanAttack = true;
+            IsWalking = true;
         }
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            SetState();
+            Position = new Vector2(Position.X,
+                spawnPosition.Y + (Textures[State.Idle].Height - Textures[State].Height));
+            if(State is State.Walking) Move(gameTime);
+            CurrentAnimation.Update(gameTime);
+            if (State is State.Dead && CurrentAnimation.IsFinished) Remove = true;
+
         }
 
+        private void SetState()
+        {
+            if (IsDead) State = State.Dead;
+            else if (IsHit) State = State.Hit;
+            if (State is State.Dead || IsDead) return;
+            if ((State is State.Hit && !CurrentAnimation.IsFinished)||(!CurrentAnimation.IsFinished && State == State.Attacking))
+            {
+                CanAttack = false;
+                return;
+            };
+            if (State is State.Hit && CurrentAnimation.IsFinished)
+            {
+                IsHit = false;
+                CanAttack = true;
+            }
+            IsAttacking = IsAttacking ? !CurrentAnimation.IsFinished : CheckAttack();
+            if (IsAttacking) State = State.Attacking;
+            else if (IsWalking) State = State.Walking;
+            else State = State.Idle;
+        }
         public override void Draw(Sprites spriteBatch)
         {
-            throw new NotImplementedException();
+            CurrentAnimation.Draw(spriteBatch, Position, IsFacingLeft? SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f);
         }
-
-        public override void Move(GameTime gameTime)
+        public bool CheckAttack()
         {
-            throw new NotImplementedException();
+            if (!CanAttack) return false;
+            var hitBox = Otter.Instance.HitBox;
+            if (hitBox.Top >= HitBox.Bottom || hitBox.Bottom <= HitBox.Top) return false;
+            return hitBox.Center.X < HitBox.Center.X
+                ? hitBox.Right < HitBox.Left - 30
+                : hitBox.Left < HitBox.Right + 30; //if otter is left, then check left distance is 30 or less, otherwise do opposite
         }
     }
 }

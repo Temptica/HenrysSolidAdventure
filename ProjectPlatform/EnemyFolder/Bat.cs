@@ -23,6 +23,7 @@ namespace ProjectPlatform.EnemyFolder
 
         public static Texture2D Texture;
         Vector2 _velocity;
+        public override Rectangle HitBox { get; set ; }
         //const float flyingSpeed = 0.5f;
         //const float roamingSpeed = 0.5f;
         //public Pathfinding _pathFinding;
@@ -44,9 +45,30 @@ namespace ProjectPlatform.EnemyFolder
             //_pathFinding = new Pathfinding();
             //_pathFinding.Initialise(this, Otter.Instance);
         }
+
+        private float timer = 0;
+        private float rotation = 0;
         public override void Update(GameTime gameTime)
         {
-            
+            if (IsDead) State = State.Dead;
+            if (State is State.Dead)
+            {
+                if (timer >= 4000) Remove = true;
+                _velocity = new Vector2(0, 0.2f * gameTime.ElapsedGameTime.Milliseconds);
+                Position += _velocity;
+                HitBox = new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
+                timer+= gameTime.ElapsedGameTime.Milliseconds;
+                //rotate so it goes downwards
+                if (rotation <= (Math.PI / 2))
+                {
+                    rotation += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
+                }
+                else
+                {
+                    rotation = (float)Math.PI / 2;
+                }
+                return;
+            }
             CurrentAnimation.Update(gameTime);
             Move(gameTime);
         }
@@ -54,11 +76,7 @@ namespace ProjectPlatform.EnemyFolder
         
         public override void Draw(Sprites spriteBatch)
         {
-            if (State is State.Dead)
-            {
-                
-            }
-            else CurrentAnimation.Draw(spriteBatch, Position, SpriteEffects.None, 1f);
+            CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,rotation);
         }
         private Random rng;
         public override void Move(GameTime gameTime)

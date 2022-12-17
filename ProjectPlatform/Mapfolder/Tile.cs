@@ -14,7 +14,7 @@ namespace ProjectPlatform.Mapfolder
     }
     public class Tile
     {
-        
+        public const float TileSize = 24;
         public Texture2D Texture { get; }
         public Rectangle Rectangle { get; }
         public TileType Type { get; }

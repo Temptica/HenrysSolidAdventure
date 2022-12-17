@@ -8,6 +8,7 @@ using ProjectPlatform.Animations;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Interface;
 using ProjectPlatform.EnemyFolder;
+using System.Diagnostics;
 
 namespace ProjectPlatform
 {
@@ -33,7 +34,6 @@ namespace ProjectPlatform
             get => GetHitBox();
             set => throw new NotImplementedException();
         }
-        public int MoveSpeed { get; private set; }
         public int Health { get; private set; }
         public float HealthPercentage => (float)Math.Round(Health / (double)MaxHealth*100,0);
         public int MaxHealth { get; private set; }
@@ -52,7 +52,7 @@ namespace ProjectPlatform
         private Vector2 _velocity;
         private bool _canJump;
         private bool _canWalk;
-        private bool _lookingLeft = false;
+        private bool _lookingLeft;
         private bool _IsWalking;
         private bool _IsRunning;
         private bool _IsJumping;
@@ -63,6 +63,7 @@ namespace ProjectPlatform
         #endregion
         //signleton 
         private static Otter _instance;
+        private bool _canAttack = true;
         public static Otter Instance => _instance??= new Otter();   
 
         private Otter()
@@ -96,22 +97,30 @@ namespace ProjectPlatform
         private void SetState()
         {
             if (State is State.Dead || _IsDead || (State is State.Hit && _IsHit)) return;
-            //attack>Jump>sprint>walk>idle
-            else if (_IsAttacking) State = State.Attacking;
+            if (State is State.Attacking)
+            {
+                if (!CurrentAnimation.IsFinished) return;
+                _IsAttacking = false;
+            }
+            else
+            {
+                _IsAttacking = InputController.Attack;
+            }
+            
+            
+            if (_IsAttacking && _canAttack) State = State.Attacking;
             else if (_IsJumping) State = State.Jumping;
             else if (_IsRunning) State = State.Running;
             else if (_IsWalking) State = State.Walking;
             else State = State.Idle;
-
-
         }
-
+        
         private void CheckEnemies()
         {
             if (Enemy.Enemies.Count <= 0) return;
             foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State != State.Dead).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
             {
-                if (/*State == State.Attacking*/ true)
+                if (State == State.Attacking)
                 {
                     if (!enemy.GetDamage(Damage)) continue;
                     Coins += 1;
@@ -178,7 +187,7 @@ namespace ProjectPlatform
                     _IsRunning = false;
                 }
                 _IsWalking = true;
-                _lookingLeft = false;
+                _lookingLeft = false;                
             }
             else
             {
@@ -192,10 +201,7 @@ namespace ProjectPlatform
                 _velocity.Y = -JumpForce;
                 _canJump = false;
             }
-            else if (_canJump)
-            {
-            }
-            else
+            else if (!_canJump)
             {
                 var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                 _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
@@ -219,7 +225,7 @@ namespace ProjectPlatform
                 if (tile != null)
                 {
                     _velocity.Y = 0f;
-                    nextPosition = new(nextPosition.X, tile.HitBox.Bottom);
+                    nextPosition = new(nextPosition.X, tile.HitBox.Bottom+1);
                 }
                 else
                 {
@@ -277,7 +283,6 @@ namespace ProjectPlatform
                 {
                     _velocity.Y = 0f;
                     _canJump = true;
-                    nextPosition = new((int)result.X, (int)result.Y);
                     nextHitBox = new Rectangle((int)result.X, (int)result.Y, nextHitBox.Width, nextHitBox.Height);
                 }
                 else
@@ -293,6 +298,7 @@ namespace ProjectPlatform
                 }
             }
             Position = new(nextHitBox.X, nextHitBox.Y);
+            
         }
         
         public Vector2 OnGround(Rectangle hitbox)
@@ -319,15 +325,10 @@ namespace ProjectPlatform
             if (_lookingLeft)
             {//invert hitbox
                 //return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale- CurrentAnimation.CurrentFrame.HitBox.Width * Scale)
-            return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
+                return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
 
             }
             return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
-        }
-
-        public void Draw(GameTime gameTime)
-        {
-            throw new NotImplementedException();
         }
     }
     

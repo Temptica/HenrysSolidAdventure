@@ -15,7 +15,7 @@ namespace ProjectPlatform.Animations
         public Frame CurrentFrame => Frames[CurrentFrameIndex];
         public override int FrameCount => Frames.Length;
 
-        public bool IsFinished { get; internal set; }
+        
 
         internal State State;
 
@@ -36,9 +36,9 @@ namespace ProjectPlatform.Animations
             }
         }        
 
-        public override void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
+        public override void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0f)
         {
-            spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, Color.White, 0f, Vector2.Zero, scale, spriteEffects, 0f);
+            spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, Color.White, rotation, Vector2.Zero, scale, spriteEffects, 0f);
         }
 
     }

@@ -94,8 +94,8 @@ namespace ProjectPlatform
             Rectangle collisionRectangle = Rectangle.Intersect(otter.HitBox, enemy.HitBox);
             if (collisionRectangle.Width == 0 || collisionRectangle.Height == 0) return false;
             //get the start and end points of the collision rectangle
-            int startX = collisionRectangle.Left - otter.HitBox.Left;
-            int startY = collisionRectangle.Top - otter.HitBox.Top;
+            int startX = collisionRectangle.Left;
+            int startY = collisionRectangle.Top;
             int endX = startX + collisionRectangle.Width;
             int endY = startY + collisionRectangle.Height;
             //check every pixel in the collision rectangle
@@ -104,13 +104,21 @@ namespace ProjectPlatform
                 for (int y = startY; y < endY; y++)
                 {
                     //if both pixels are not transparent, there is a collision
-                    if (otterPixels2D[x, y].A != 0 && enemyPixels2D[x, y].A != 0)
+                    try
                     {
-                        return true;
+                        if (otterPixels2D[(int)Math.Abs(x - otter.Position.X), (int)Math.Abs(y - otter.Position.Y)].A !=
+                            0 && enemyPixels2D[(int)Math.Abs(x - enemy.Position.X),
+                                (int)Math.Abs(y - enemy.Position.Y - 1)].A != 0)
+                        {
+                            return true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //ignore
                     }
                 }
             }
-
             return false;
 
         }

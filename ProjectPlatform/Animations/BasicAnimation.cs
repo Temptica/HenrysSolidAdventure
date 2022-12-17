@@ -14,6 +14,7 @@ namespace ProjectPlatform.Animations
         public Texture2D Texture { get; private set; }
         public string Identifier { get; private set; }
         public int CurrentFrameIndex { get; private set; }
+        public bool IsFinished { get; private set; }
         public float FrameRate { get; }
         public virtual int FrameCount { get; private set; }
         private Rectangle FrameRectangle => new(CurrentFrameIndex * FrameWidth, BeginHeight, FrameWidth, FrameHeight);
@@ -49,13 +50,15 @@ namespace ProjectPlatform.Animations
             if (CurrentFrameIndex >= FrameCount)
             {
                 CurrentFrameIndex = 0;
+                IsFinished = true;
             }
+            else IsFinished = false;           
             
             _time = 0;
         }
-        public virtual void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale)
+        public virtual void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0)
         {
-              spriteBatch.Draw(Texture, position, FrameRectangle, Color.White, 0f, Vector2.Zero, scale, spriteEffects, 0f);
+              spriteBatch.Draw(Texture, position, FrameRectangle, Color.White, rotation, Vector2.Zero, scale, spriteEffects, 0f);
         }
     }
 }
