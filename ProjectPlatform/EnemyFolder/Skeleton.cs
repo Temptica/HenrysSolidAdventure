@@ -40,6 +40,11 @@ namespace ProjectPlatform.EnemyFolder
             Position = new Vector2(Position.X,
                 spawnPosition.Y + (Textures[State.Idle].Height - Textures[State].Height));
             if(State is State.Walking) Move(gameTime);
+            if (State is State.Attacking)
+            {
+                //look at Otter while attacking
+                IsFacingLeft = HitBox.Center.X >= Otter.Instance.HitBox.Center.X;
+            }
             CurrentAnimation.Update(gameTime);
             if (State is State.Dead && CurrentAnimation.IsFinished) Remove = true;
 
@@ -61,6 +66,7 @@ namespace ProjectPlatform.EnemyFolder
                 CanAttack = true;
             }
             IsAttacking = IsAttacking ? !CurrentAnimation.IsFinished : CheckAttack();
+            
             if (IsAttacking) State = State.Attacking;
             else if (IsWalking) State = State.Walking;
             else State = State.Idle;

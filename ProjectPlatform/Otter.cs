@@ -118,7 +118,7 @@ namespace ProjectPlatform
         private void CheckEnemies()
         {
             if (Enemy.Enemies.Count <= 0) return;
-            foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State != State.Dead).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
+            foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State is not State.Dead or State.Hit).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
             {
                 if (State == State.Attacking)
                 {
