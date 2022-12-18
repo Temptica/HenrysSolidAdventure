@@ -8,9 +8,10 @@ using System.Linq;
 using ProjectPlatform.Mapfolder;
 using ProjectPlatform.Shop;
 using System.Threading;
-using ProjectPlatform.Audio;
 using ProjectPlatform.EnemyFolder;
 using ProjectPlatform.Graphics;
+using ProjectPlatform.Controller;
+using ProjectPlatform.OtterFolder;
 
 namespace ProjectPlatform
 {
@@ -22,7 +23,7 @@ namespace ProjectPlatform
         private BackGround _backGround;
         private SpriteFont _font;
         private GameState _gameState;
-        private Otter _otter;
+        private OtterFolder.Otter _otter;
         private List<Button> _buttons;
         private Texture2D _hitbox;
         private SpriteBatch _sprite;

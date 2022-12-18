@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
-using ProjectPlatform.Mapfolder;
 using ProjectPlatform.Animations;
+using ProjectPlatform.Controller;
+using ProjectPlatform.EnemyFolder;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Interface;
-using ProjectPlatform.EnemyFolder;
-using System.Diagnostics;
+using ProjectPlatform.Mapfolder;
 
-namespace ProjectPlatform
+namespace ProjectPlatform.OtterFolder
 {
     //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
-    internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead,Hit, Other }
+    internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Hit, Other }
     internal class Otter : IAnimatable, IGameObject
     {
         #region Consts
@@ -35,14 +35,14 @@ namespace ProjectPlatform
             set => throw new NotImplementedException();
         }
         public int Health { get; private set; }
-        public float HealthPercentage => (float)Math.Round(Health / (double)MaxHealth*100,0);
+        public float HealthPercentage => (float)Math.Round(Health / (double)MaxHealth * 100, 0);
         public int MaxHealth { get; private set; }
         public int MaxCondition { get; private set; }
         public int Condition { get; set; }
         public int Damage { get; set; }
         public int AttackRange { get; set; }
         public State State { get; set; }
-        public float Gravity { get; private set; }        
+        public float Gravity { get; private set; }
         public float Scale { get; set; }
         public float Coins { get; private set; }
 
@@ -59,12 +59,12 @@ namespace ProjectPlatform
         private bool _IsAttacking;
         private bool _IsSleeping;
         private bool _IsDead;
-        private bool _IsHit;        
+        private bool _IsHit;
         #endregion
         //signleton 
         private static Otter _instance;
         private bool _canAttack = true;
-        public static Otter Instance => _instance??= new Otter();   
+        public static Otter Instance => _instance ??= new Otter();
 
         private Otter()
         {
@@ -96,7 +96,7 @@ namespace ProjectPlatform
 
         private void SetState()
         {
-            if (State is State.Dead || _IsDead || (State is State.Hit && _IsHit)) return;
+            if (State is State.Dead || _IsDead || State is State.Hit && _IsHit) return;
             if (State is State.Attacking)
             {
                 if (!CurrentAnimation.IsFinished) return;
@@ -106,15 +106,15 @@ namespace ProjectPlatform
             {
                 _IsAttacking = InputController.Attack;
             }
-            
-            
+
+
             if (_IsAttacking && _canAttack) State = State.Attacking;
             else if (_IsJumping) State = State.Jumping;
             else if (_IsRunning) State = State.Running;
             else if (_IsWalking) State = State.Walking;
             else State = State.Idle;
         }
-        
+
         private void CheckEnemies()
         {
             if (Enemy.Enemies.Count <= 0) return;
@@ -159,7 +159,7 @@ namespace ProjectPlatform
                     if (_velocity.X < -RunningSpeed)
                         _velocity.X = -RunningSpeed;
                     _IsRunning = true;
-                    
+
                 }
                 else
                 {
@@ -187,7 +187,7 @@ namespace ProjectPlatform
                     _IsRunning = false;
                 }
                 _IsWalking = true;
-                _lookingLeft = false;                
+                _lookingLeft = false;
             }
             else
             {
@@ -195,7 +195,7 @@ namespace ProjectPlatform
                 _IsWalking = false;
                 _IsRunning = false;
             }
-            
+
             if (InputController.JumpInput && _canJump) //jump
             {
                 _velocity.Y = -JumpForce;
@@ -225,7 +225,7 @@ namespace ProjectPlatform
                 if (tile != null)
                 {
                     _velocity.Y = 0f;
-                    nextPosition = new(nextPosition.X, tile.HitBox.Bottom+1);
+                    nextPosition = new(nextPosition.X, tile.HitBox.Bottom + 1);
                 }
                 else
                 {
@@ -298,17 +298,17 @@ namespace ProjectPlatform
                 }
             }
             Position = new(nextHitBox.X, nextHitBox.Y);
-            
+
         }
-        
+
         public Vector2 OnGround(Rectangle hitbox)
         {
             var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 10);
             //checks if any tile in map.currentMap has collision with the bottom of the otter if so set otter to the tile height            
             var tile = OtterCollision.OtterGroundHit(groundBox, Map.Instance.FrontMap);
-            if (tile ==-1) return Vector2.Zero;
+            if (tile == -1) return Vector2.Zero;
             //set the otter position so the otter is on the tile
-            return new Vector2(hitbox.X, tile- hitbox.Height- CurrentAnimation.CurrentFrame.HitBox.Y*Scale);
+            return new Vector2(hitbox.X, tile - hitbox.Height - CurrentAnimation.CurrentFrame.HitBox.Y * Scale);
         }
 
         public void Draw(Sprites spriteBatch)
@@ -318,7 +318,7 @@ namespace ProjectPlatform
 
         public void SetWalk(bool canWalk)
         {
-            this._canWalk = canWalk;
+            _canWalk = canWalk;
         }
         private Rectangle GetHitBox()
         {
@@ -331,5 +331,5 @@ namespace ProjectPlatform
             return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
         }
     }
-    
+
 }

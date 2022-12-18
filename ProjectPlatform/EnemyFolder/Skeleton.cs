@@ -8,17 +8,18 @@ using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.Animations;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Mapfolder;
+using ProjectPlatform.OtterFolder;
 
 namespace ProjectPlatform.EnemyFolder
 {
     internal class Skeleton:RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform
         public static Dictionary<State, Texture2D> Textures;//list as some of the spritesheets are bigger than others due to the big "sword" making it very difficult having them on one sprite
-        private Vector2 spawnPosition;
+        private readonly Vector2 _spawnPosition;
         public Skeleton(Vector2 position)
         {
             
-            Position = spawnPosition = position;
+            Position = _spawnPosition = position;
             Animations = new()
             {//https://jesse-m.itch.io/skeleton-pack
                 new Animation(Textures[State.Idle], State.Idle,11, Textures[State.Idle].Width/11, Textures[State.Idle].Height, 0, 0,7),
@@ -29,7 +30,8 @@ namespace ProjectPlatform.EnemyFolder
                 new Animation(Textures[State.Other], State.Other,4, Textures[State.Other].Width/4, Textures[State.Other].Height, 0, 0,7)//when skeleton detects Otter
             };
             DefineWalkablePath();
-            CurrentHp = BaseHp = 12;
+            CurrentHp = BaseHp = 14;
+            Damage = 5;
             Speed = 8f;
             CanAttack = true;
             IsWalking = true;
@@ -38,12 +40,12 @@ namespace ProjectPlatform.EnemyFolder
         {
             SetState();
             Position = new Vector2(Position.X,
-                spawnPosition.Y + (Textures[State.Idle].Height - Textures[State].Height));
+                _spawnPosition.Y + (Textures[State.Idle].Height - Textures[State].Height));
             if(State is State.Walking) Move(gameTime);
             if (State is State.Attacking)
             {
                 //look at Otter while attacking
-                IsFacingLeft = HitBox.Center.X >= Otter.Instance.HitBox.Center.X;
+                IsFacingLeft = HitBox.Center.X >= OtterFolder.Otter.Instance.HitBox.Center.X;
             }
             CurrentAnimation.Update(gameTime);
             if (State is State.Dead && CurrentAnimation.IsFinished) Remove = true;
@@ -60,14 +62,17 @@ namespace ProjectPlatform.EnemyFolder
                 CanAttack = false;
                 return;
             };
-            if (State is State.Hit && CurrentAnimation.IsFinished)
+            if (State is State.Hit or State.Attacking && CurrentAnimation.IsFinished)
             {
                 IsHit = false;
                 CanAttack = true;
             }
             IsAttacking = IsAttacking ? !CurrentAnimation.IsFinished : CheckAttack();
-            
-            if (IsAttacking) State = State.Attacking;
+
+            if (IsAttacking)
+            {
+                State = State.Attacking;
+            }
             else if (IsWalking) State = State.Walking;
             else State = State.Idle;
         }
@@ -78,7 +83,7 @@ namespace ProjectPlatform.EnemyFolder
         public bool CheckAttack()
         {
             if (!CanAttack) return false;
-            var hitBox = Otter.Instance.HitBox;
+            var hitBox = OtterFolder.Otter.Instance.HitBox;
             if (hitBox.Top >= HitBox.Bottom || hitBox.Bottom <= HitBox.Top) return false;
             return hitBox.Center.X < HitBox.Center.X
                 ? hitBox.Right < HitBox.Left - 30

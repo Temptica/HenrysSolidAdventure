@@ -13,6 +13,8 @@ using ProjectPlatform.Interface;
 using Roy_T.AStar.Graphs;
 using Roy_T.AStar.Primitives;
 using Roy_T.AStar.Paths;
+using ProjectPlatform.OtterFolder;
+
 //https://github.com/roy-t/AStar
 
 namespace ProjectPlatform.EnemyFolder

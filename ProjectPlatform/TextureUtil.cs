@@ -19,8 +19,7 @@ namespace ProjectPlatform
         }
         public static Color[,] GetCurrentPixels2D(Texture2D texture, Rectangle rectangle)
         {
-            Color[] Pixels = new Color[rectangle.Width * rectangle.Height];
-            texture.GetData(0, rectangle, Pixels, 0, Pixels.Length);
+            Color[] Pixels = GetCurrentPixels(texture, rectangle);
             Color[,] Pixels2D = new Color[rectangle.Width, rectangle.Height];
             for (int x = 0; x < rectangle.Width; x++)
             {

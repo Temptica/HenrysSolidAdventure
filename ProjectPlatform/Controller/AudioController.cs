@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 
-namespace ProjectPlatform.Audio
+namespace ProjectPlatform.Controller
 {
     internal class AudioController
     {

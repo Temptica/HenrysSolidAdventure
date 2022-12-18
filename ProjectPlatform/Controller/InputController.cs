@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectPlatform
+namespace ProjectPlatform.Controller
 {
     internal static class InputController
     {
@@ -39,7 +39,7 @@ namespace ProjectPlatform
 
             if (layout == "00000409")//querty
             {
-                LeftInput = LeftInput? LeftInput: keyboard.IsKeyDown(Keys.A);
+                LeftInput = LeftInput ? LeftInput : keyboard.IsKeyDown(Keys.A);
                 Attack = keyboard.IsKeyDown(Keys.Q);
                 JumpInput = JumpInput ? JumpInput : keyboard.IsKeyDown(Keys.W);
 
@@ -63,6 +63,6 @@ namespace ProjectPlatform
             NextInput = keyboard.IsKeyDown(Keys.N) && keyboard.IsKeyDown(Keys.LeftControl);
             PreviousInput = keyboard.IsKeyDown(Keys.B) && keyboard.IsKeyDown(Keys.LeftControl);
 #endif
-        }        
+        }
     }
 }

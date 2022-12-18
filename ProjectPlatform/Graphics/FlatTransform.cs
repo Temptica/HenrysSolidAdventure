@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace ProjectPlatform
+namespace ProjectPlatform.Graphics
 {
     public struct FlatTransform
     {

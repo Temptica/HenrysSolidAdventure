@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.EnemyFolder;
+using ProjectPlatform.OtterFolder;
 using ProjectPlatform.Shop;
 
 namespace ProjectPlatform.Mapfolder
@@ -57,7 +58,7 @@ namespace ProjectPlatform.Mapfolder
             map.Enemies = new List<Enemy>();
             foreach (var spawn in spawns)
             {
-                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height);
+                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - OtterFolder.Otter.Texture.Height);
                 if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
             }           
