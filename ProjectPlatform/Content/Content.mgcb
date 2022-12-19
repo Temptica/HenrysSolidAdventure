@@ -10,6 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:C:\Users\NicoV\.nuget\packages\monogame.extended.content.pipeline\3.8.0\tools\MonoGame.Extended.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -78,6 +79,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Buttons/StartButton.png
+
+#begin Character/otter_sprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Character/otter_sprite.png
 
 #begin Character/Otterly Idle.png
 /importer:TextureImporter
@@ -373,6 +386,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Items/Coin.png
+
+#begin Level/Level1.json
+/importer:JsonContentImporter
+/processor:JsonContentProcessor
+/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReader, ProjectPlatform 
+/build:Level/Level1.json
+
+#begin Level/Level2.json
+/importer:JsonContentImporter
+/processor:JsonContentProcessor
+/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReader, ProjectPlatform 
+/build:Level/Level2.json
+
+#begin Level/Level3.json
+/importer:JsonContentImporter
+/processor:JsonContentProcessor
+/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReader, ProjectPlatform 
+/build:Level/Level3.json
 
 #begin Tiles/oak_woods_tileset_fixed.png
 /importer:TextureImporter

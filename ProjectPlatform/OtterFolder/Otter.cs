@@ -40,7 +40,6 @@ namespace ProjectPlatform.OtterFolder
         public int MaxCondition { get; private set; }
         public int Condition { get; set; }
         public int Damage { get; set; }
-        public int AttackRange { get; set; }
         public State State { get; set; }
         public float Gravity { get; private set; }
         public float Scale { get; set; }
@@ -101,14 +100,13 @@ namespace ProjectPlatform.OtterFolder
             {
                 if (!CurrentAnimation.IsFinished) return;
                 _IsAttacking = false;
+                _canAttack = true;
             }
             else
             {
                 _IsAttacking = InputController.Attack;
             }
-
-
-            if (_IsAttacking && _canAttack) State = State.Attacking;
+            if (_IsAttacking) State = State.Attacking;
             else if (_IsJumping) State = State.Jumping;
             else if (_IsRunning) State = State.Running;
             else if (_IsWalking) State = State.Walking;
@@ -118,11 +116,13 @@ namespace ProjectPlatform.OtterFolder
         private void CheckEnemies()
         {
             if (Enemy.Enemies.Count <= 0) return;
+            bool attacked = false;
             foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State is not State.Dead or State.Hit).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
             {
-                if (State == State.Attacking)
+                attacked = true;
+                if (State == State.Attacking && _canAttack)
                 {
-                    if (!enemy.GetDamage(Damage)) continue;
+                    if (!enemy.GetDamage(Damage)) {continue;}
                     Coins += 1;
                     var coin = new Coin(enemy.Position);
                     Map.Instance.Coins.Add(coin);
@@ -133,6 +133,7 @@ namespace ProjectPlatform.OtterFolder
                     Health -= enemy.Attack();
                 }
             }
+            if (attacked) _canAttack = false;
         }
 
         private void CheckCoins()

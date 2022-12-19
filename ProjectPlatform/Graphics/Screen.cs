@@ -104,5 +104,7 @@ namespace ProjectPlatform.Graphics
             Rectangle result = new Rectangle((int)rx, (int)ry, (int)rw, (int)rh);
             return result;
         }
+
+        
     }
 }

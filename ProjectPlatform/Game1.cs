@@ -48,8 +48,6 @@ namespace ProjectPlatform
             _sprite = new SpriteBatch(_graphics.GraphicsDevice);
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //_graphics.PreferredBackBufferWidth = 1200;
-            //_graphics.PreferredBackBufferHeight = 675;
             _graphics.ApplyChanges();
             _screen = new Screen(this, 1200, 675);
             _camera = new Camera(_screen);
@@ -69,7 +67,6 @@ namespace ProjectPlatform
             Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
             map.Initialise(Content, _screen);
-            //_otter = new Otter(Content.Load<Texture2D>("Character/Otterly Idle"), new Vector2(100, 100), 0.0005f, 0.20f);
             _otter = Otter.Instance;
             _otter.Initialise(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
 
@@ -90,8 +87,8 @@ namespace ProjectPlatform
             
             if (InputController.ExitInput) Exit();
             int hit = _buttons.First(button => button.Name == "StartButton")
-                .CheckHit(Vector2.Transform(Mouse.GetState().Position.ToVector2(), Matrix.Identity),
-                    Mouse.GetState().LeftButton == ButtonState.Pressed);
+                .CheckHit(MouseController.GetScreenPosition(_screen),
+                    MouseController.IsLeftClicked);
             if (hit == 1) BeginGame();
             if (hit == -1) Mouse.SetCursor(MouseCursor.Arrow);
             if (Keyboard.GetState().IsKeyDown(Keys.R) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
@@ -100,7 +97,7 @@ namespace ProjectPlatform
                 {
                     if (InputController.ShiftInput)
                     {
-                        MapLoader.LoadMap(_screen.Height);
+                        MapLoader.LoadMap(_screen.Height, Content);
                     }
                     _otter.Position = Map.Instance.Spawn;
                 }
@@ -180,7 +177,6 @@ namespace ProjectPlatform
                     break;
             }
             _buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_sprites));// draw active buttons
-            //_sprites.Draw(_hitbox, _buttons[0].HitBox, Color.Red);
 
             _sprites.End();
             _sprite.End();
@@ -200,7 +196,7 @@ namespace ProjectPlatform
         }
         public void BeginGame()
         {
-            MapLoader.LoadMap(_screen.Height);
+            MapLoader.LoadMap(_screen.Height,Content);
             _gameState = GameState.Playing;
             _otter.Position = Map.Instance.Spawn;
             _backGround.Reset();

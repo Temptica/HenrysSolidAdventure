@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.EnemyFolder;
 using ProjectPlatform.OtterFolder;
@@ -18,16 +19,18 @@ namespace ProjectPlatform.Mapfolder
         private static float mapOffset;
         private static int MapID = 1;
         private static int mapCount = 3;
-        private static string mapPath = "Map/Level";
-        public static void LoadMap(int screenheight)
+        static ContentManager _content;
+        public static void LoadMap(int screenheight, ContentManager content = null)
         {
-            var location = @$"{Directory.GetCurrentDirectory()}..\..\..\..\..\..\Map\Level{MapID}.json";
+            if (content != null)
+            {
+                _content = content;
+            }
+            
             MapReaderObject mapFromFile = null;
             try
             {
-                mapFromFile =
-                    Newtonsoft.Json.JsonConvert.DeserializeObject<MapReaderObject>(
-                        System.IO.File.ReadAllText(location));
+                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");
                 if (mapFromFile is null) throw new ArgumentNullException("file is empty or incorrect");
             }
             catch (ArgumentNullException)
@@ -58,7 +61,7 @@ namespace ProjectPlatform.Mapfolder
             map.Enemies = new List<Enemy>();
             foreach (var spawn in spawns)
             {
-                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - OtterFolder.Otter.Texture.Height);
+                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height);
                 if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
             }           

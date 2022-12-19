@@ -58,7 +58,7 @@ namespace ProjectPlatform.EnemyFolder
 
         public virtual void Update(GameTime gameTime)
         {
-            if(State == State.Attacking && CurrentAnimation.IsFinished)
+            if((State == State.Attacking && CurrentAnimation.IsFinished) || State is not State.Attacking)
             {
                 CanAttack = true;
             }
