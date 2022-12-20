@@ -24,6 +24,7 @@ namespace ProjectPlatform.Controller
 #if DEBUG
         internal static bool NextInput { get; private set; }
         internal static bool PreviousInput { get; private set; }
+        public static bool DeadInput { get; internal set; }
 #endif
         internal static void Update()
         {
@@ -35,7 +36,7 @@ namespace ProjectPlatform.Controller
             LeftInput = keyboard.IsKeyDown(Keys.Left);
             RightInput = keyboard.IsKeyDown(Keys.Right);
             JumpInput = keyboard.IsKeyDown(Keys.Up) || keyboard.IsKeyDown(Keys.Space);
-
+            DeadInput = keyboard.IsKeyDown(Keys.OemBackslash) && keyboard.IsKeyDown(Keys.K);
 
             if (layout == "00000409")//querty
             {

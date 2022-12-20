@@ -37,8 +37,21 @@ namespace ProjectPlatform.Graphics
                 var height = Font.MeasureString(text).Y;
                 var halfWidth = Texture.Width / 2f;
                 var halfHeight = Texture.Height / 2f;
-                var textPosition = new Vector2((Position.X + halfWidth - length / 2)+15, (Position.Y + halfHeight - height / 2)+8);
-                Text = new Text(textPosition, text, Color.Black, 1f, 0f, Font);
+                
+                
+                var scale = 1f;
+                if (length > Texture.Width - 40)
+                {
+                    scale = (Texture.Width - 40) / length;
+                    //move text to the right
+                    length *= scale;
+                    height *= scale;
+                }
+                var textPosition = new Vector2((Position.X + halfWidth - length / 2) + 15, (Position.Y + halfHeight - height / 2) + 8);
+
+                Text = new Text(textPosition, text, Color.Black, scale, 0f, Font);
+                //rescale text if too long with 20 pixels margin left and right
+                
             }
             else Text = null;
         }

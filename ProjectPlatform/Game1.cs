@@ -84,30 +84,7 @@ namespace ProjectPlatform
 
         protected override void Update(GameTime gameTime)
         {
-            if (_stateChanged)
-            {
-                switch (_gameState)
-                {
-                    case GameState.Playing when currentScreen is PausedScreen screen:
-                        currentScreen = screen._playingScreen;
-                        return;
-                    case GameState.Playing:
-                        currentScreen = new PlayingScreen(_screen, Content, _font);
-                        break;
-                    case GameState.Menu:
-                        currentScreen = new StartScreen(_screen, Content, _font);
-                        break;
-                    case GameState.Paused:
-                        currentScreen = new PausedScreen(_screen, _font, Content, (PlayingScreen)currentScreen);
-                        break;
-                    case GameState.GameOver:
-                        currentScreen = new GameOverScreen(_screen, Content, _font);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);
-                }
-                _stateChanged = false;
-            }
+            
             #region Controlls
 
             InputController.Update();
@@ -146,7 +123,32 @@ namespace ProjectPlatform
             //        _otter.Update(gameTime);
             //        break;
             //}
-            currentScreen.Update(gameTime);
+            currentScreen?.Update(gameTime);
+            if (_stateChanged)
+            {
+                switch (_gameState)
+                {
+                    case GameState.Playing when currentScreen is PausedScreen screen:
+                        currentScreen = screen._playingScreen;
+                        return;
+                    case GameState.Playing:
+                        currentScreen = new PlayingScreen(_screen, Content, _font);
+                        break;
+                    case GameState.Menu:
+                        currentScreen = new StartScreen(_screen, Content, _font);
+                        break;
+                    case GameState.Paused:
+                        currentScreen = new PausedScreen(_screen, _font, Content, (PlayingScreen)currentScreen);
+                        break;
+                    case GameState.GameOver:
+                        currentScreen = new GameOverScreen(_screen, Content, _font);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);
+                }
+                _stateChanged = false;
+                currentScreen?.Update(gameTime);
+            }
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)

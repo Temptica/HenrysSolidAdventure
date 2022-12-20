@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
 using ProjectPlatform.Controller;
+using Microsoft.Xna.Framework.Input;
 
 namespace ProjectPlatform.GameScreens
 {
@@ -31,7 +32,9 @@ namespace ProjectPlatform.GameScreens
             var startTexture = content.Load<Texture2D>("buttons/EmptyButton");
             _buttons = new List<Button>
             {
-                new("Menu", startTexture, new Vector2(halfWidth, halfHeight), "Menu")
+                new("Menu", startTexture, new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f), "Menu"),
+                new("Restart", startTexture, new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f+startTexture.Height + 20f), "Restart")
+
             };
         }
 
@@ -45,7 +48,24 @@ namespace ProjectPlatform.GameScreens
         public void Update(GameTime gameTime)
         {
             if (InputController.InteractInput) Game1.SetState(GameState.Menu);
-            _buttons.ForEach(b => b.CheckHit(MouseController.GetScreenPosition(_screen)));
+            var selected = _buttons.Where(b => b.CheckHit(MouseController.GetScreenPosition(_screen))).ToList();
+            if (selected.Count == 0)
+            {
+                Mouse.SetCursor(MouseCursor.Arrow);
+                return;
+            }
+            Mouse.SetCursor(MouseCursor.Hand);
+            if (MouseController.IsLeftClicked)
+            {
+                if (selected[0].Name == "Menu")
+                {
+                    Game1.SetState(GameState.Menu);
+                }
+                if (selected[0].Name == "Restart")
+                {
+                    Game1.SetState(GameState.Playing);
+                }
+            }
         }
     }
 }

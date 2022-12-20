@@ -23,8 +23,10 @@ namespace ProjectPlatform.GameScreens
         Text _titleBackGround;
         Vector2 _textPosition;
         float moveSpeed = 0.2f;
+        bool _loaded;
         public StartScreen(Screen screen, ContentManager content, SpriteFont font)
         {
+            _loaded = true;
             _screen = screen;
             _backGround = BackGround.Instance;
             _font = font; 
@@ -63,6 +65,7 @@ namespace ProjectPlatform.GameScreens
 
         public void Update(GameTime gameTime)
         {
+            
             //move title to _textPosition
             if (_title.Position.X < _textPosition.X)
             {
@@ -75,6 +78,11 @@ namespace ProjectPlatform.GameScreens
             var startButton = _buttons.First(b => b.Name == "StartButton");
             Otter.Instance.MenuUpdate(gameTime, startButton.Position.X, startButton.Position.X + startButton.Texture.Width,startButton.Position.Y);
             var selected = _buttons.Where(button => button.CheckHit(MouseController.GetScreenPosition(_screen))).ToList();
+            if(_loaded && MouseController.IsLeftClicked)//avoids going back to the game when pressing menu button too long on game-over screen
+            {
+                return;
+            }
+            _loaded = false;
             if (selected.Count == 0)
             {
                 Mouse.SetCursor(MouseCursor.Arrow);
