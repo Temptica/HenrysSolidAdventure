@@ -17,17 +17,19 @@ namespace ProjectPlatform.GameScreens
     {
         List<Text> _texts;
         public PlayingScreen _playingScreen { get; }
+        bool _loaded;
         public PausedScreen(Screen screen,SpriteFont font, ContentManager content, PlayingScreen playScreen)
         {
+            _loaded = true;
             _playingScreen = playScreen;
             var halfWidth = screen.Width / 2f;
             var halfHeight = screen.Height / 2f;
-            string title = "press enter to resume";
+            string title = "Press \"E\" or \"enter\" to resume.";
             var length = font.MeasureString(title).Length();
-            Vector2 textPosition = new(halfWidth - length / 2, screen.Height / 2f);
+            Vector2 textPosition = new(halfWidth - length / 2 * 0.5f, screen.Height / 2f);
 
             _texts = new List<Text> {
-            new(textPosition,"Press \"E\" or \"enter\" to resume" , Color.White, 1f, 0f, font)
+            new(textPosition,"Press \"E\" or \"enter\" to resume. \nPress \"Escape\" to go to menu." , Color.White, 0.5f, 0f, font)
             };
         }
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
@@ -38,9 +40,16 @@ namespace ProjectPlatform.GameScreens
 
         public void Update(GameTime gameTime)
         {
+            _texts.ForEach(text => text.Color = Color.Lerp(Color.White, Color.Transparent, (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds)));
+            if (_loaded && InputController.ExitInput) return;
+            _loaded = false;
             if (InputController.InteractInput)
             {
                 Game1.SetState(GameState.Playing);
+            }
+            if (InputController.ExitInput)
+            {
+                Game1.SetState(GameState.Menu);
             }
         }
     }

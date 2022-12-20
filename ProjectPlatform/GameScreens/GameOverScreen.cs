@@ -36,6 +36,7 @@ namespace ProjectPlatform.GameScreens
                 new("Restart", startTexture, new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f+startTexture.Height + 20f), "Restart")
 
             };
+            AudioController.Instance.PlaySong("GameOver");
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)

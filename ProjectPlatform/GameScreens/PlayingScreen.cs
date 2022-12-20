@@ -56,6 +56,7 @@ namespace ProjectPlatform.GameScreens
             };
             Map.Instance.Update(gameTime);
             Otter.Instance.Update(gameTime);
+            if (InputController.ExitInput) Game1.SetState(GameState.Paused);
             if (InputController.DeadInput) Game1.SetState(GameState.GameOver);
         }
     }

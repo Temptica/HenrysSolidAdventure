@@ -12,7 +12,7 @@ namespace ProjectPlatform.Graphics
     {
         public Vector2 Position { get; set; }
         string TextString { get; set; }
-        Color Color { get; set; }
+        public Color Color { get; set; }
         float Scale { get; set; }
         float Rotation { get; set; }
         SpriteFont Font { get; set; }

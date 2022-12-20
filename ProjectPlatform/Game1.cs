@@ -33,6 +33,7 @@ namespace ProjectPlatform
         private Sprites _sprites;
         private Camera _camera;
         private IGameScreen currentScreen;
+        private static bool _exit = false;
 
         public Game1()
         {
@@ -84,12 +85,10 @@ namespace ProjectPlatform
 
         protected override void Update(GameTime gameTime)
         {
-            
+            if (_exit) Exit();
             #region Controlls
 
             InputController.Update();
-            
-            if (InputController.ExitInput) Exit();
             if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 _graphics.ToggleFullScreen();
@@ -110,19 +109,7 @@ namespace ProjectPlatform
 #endif
 #endregion
 
-            //switch (_gameState)
-            //{
-            //    case GameState.Menu:
-            //        _backGround.Update(gameTime);
-            //        _otter.CurrentAnimation.Update(gameTime);
-            //        break;
-            //    case GameState.Paused:
-            //        break;
-            //    case GameState.Playing:
-            //        Map.Instance.Update(gameTime);
-            //        _otter.Update(gameTime);
-            //        break;
-            //}
+            
             currentScreen?.Update(gameTime);
             if (_stateChanged)
             {
@@ -172,6 +159,10 @@ namespace ProjectPlatform
         {
             _gameState = state;
             _stateChanged = true;
+        }
+        internal static void ExitGame()
+        {
+            _exit = true;
         }
     }
 }

@@ -44,14 +44,13 @@ namespace ProjectPlatform.GameScreens
             _textPosition = new(halfWidth - length / 2, _screen.Height / 10f);
             _title = new Text(new Vector2(-length,_textPosition.Y), title, Color.SandyBrown, 1f, 0f, font);
             _titleBackGround = new Text(new Vector2(-length, _textPosition.Y) + new Vector2(5, 5), title, Color.Black, 1f, 0f, font);
-            
+            Otter.Instance.Reset();
             Otter.Instance.Position = _buttons.First(b=>b.Name=="StartButton").Position + new Vector2(0,Otter.Instance.HitBox.Height);
             Otter.Instance.SetWalk(true);
             
             _backGround.Reset();
             _buttons.ForEach(button => button.UpdateActive(true));
             AudioController.Instance.PlaySong("MainMenu");
-            //_start = new Text(_buttons[0].Position, "START", Color.Black, 1f, 0f, font);
         }
         public void Draw(SpriteBatch sprite, Sprites sprites)
         {
@@ -78,11 +77,15 @@ namespace ProjectPlatform.GameScreens
             var startButton = _buttons.First(b => b.Name == "StartButton");
             Otter.Instance.MenuUpdate(gameTime, startButton.Position.X, startButton.Position.X + startButton.Texture.Width,startButton.Position.Y);
             var selected = _buttons.Where(button => button.CheckHit(MouseController.GetScreenPosition(_screen))).ToList();
-            if(_loaded && MouseController.IsLeftClicked)//avoids going back to the game when pressing menu button too long on game-over screen
+            if(_loaded && (MouseController.IsLeftClicked||InputController.ExitInput))//avoids going back to the game when pressing menu button or esc too long on game-over/paused screen
             {
                 return;
             }
             _loaded = false;
+            if (InputController.ExitInput)
+            {
+                Game1.ExitGame();
+            }
             if (selected.Count == 0)
             {
                 Mouse.SetCursor(MouseCursor.Arrow);
@@ -96,6 +99,7 @@ namespace ProjectPlatform.GameScreens
                     Game1.SetState(GameState.Playing);
                 }
             }
+            
 
         }
     }
