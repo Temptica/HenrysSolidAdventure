@@ -12,17 +12,19 @@ using ProjectPlatform.EnemyFolder;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Controller;
 using ProjectPlatform.OtterFolder;
+using ProjectPlatform.GameScreens;
 
 namespace ProjectPlatform
 {
-    enum GameState { Menu, Paused, Playing }
+    enum GameState { Menu, Paused, Playing, GameOver }
     public class Game1 : Game
     {       
         
         private readonly GraphicsDeviceManager _graphics;
         private BackGround _backGround;
         private SpriteFont _font;
-        private GameState _gameState;
+        private static GameState _gameState;
+        private static bool _stateChanged;
         private OtterFolder.Otter _otter;
         private List<Button> _buttons;
         private Texture2D _hitbox;
@@ -30,7 +32,7 @@ namespace ProjectPlatform
         private Screen _screen;
         private Sprites _sprites;
         private Camera _camera;
-        private Bat bat;
+        private IGameScreen currentScreen;
 
         public Game1()
         {
@@ -51,7 +53,7 @@ namespace ProjectPlatform
             _graphics.ApplyChanges();
             _screen = new Screen(this, 1200, 675);
             _camera = new Camera(_screen);
-            _sprites = new Sprites(this);
+            _sprites = new Sprites(this);            
 
             base.Initialize();
 
@@ -63,78 +65,88 @@ namespace ProjectPlatform
             _backGround.Initialise(Content);
             _font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
             var startTexture = Content.Load<Texture2D>("buttons/StartButton");
-            _buttons.Add(new Button("StartButton", startTexture, new Vector2((_screen.Width - startTexture.Width)/2f, (_screen.Height- startTexture.Height)/2f), GameState.Menu));
+            //_buttons.Add(new Button("StartButton", startTexture, new Vector2((_screen.Width - startTexture.Width)/2f, (_screen.Height- startTexture.Height)/2f),"START"));
             Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
             map.Initialise(Content, _screen);
             _otter = Otter.Instance;
             _otter.Initialise(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
-
+            Button.Font = _font;
             _hitbox = new Texture2D(GraphicsDevice, 1, 1);
             _hitbox.SetData(new[] { Color.White });
             AudioController.Initialise(Content);
 
-            SetMenu();
+            _gameState = GameState.Menu;
+            _stateChanged = true;
 
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
+            if (_stateChanged)
+            {
+                switch (_gameState)
+                {
+                    case GameState.Playing when currentScreen is PausedScreen screen:
+                        currentScreen = screen._playingScreen;
+                        return;
+                    case GameState.Playing:
+                        currentScreen = new PlayingScreen(_screen, Content, _font);
+                        break;
+                    case GameState.Menu:
+                        currentScreen = new StartScreen(_screen, Content, _font);
+                        break;
+                    case GameState.Paused:
+                        currentScreen = new PausedScreen(_screen, _font, Content, (PlayingScreen)currentScreen);
+                        break;
+                    case GameState.GameOver:
+                        currentScreen = new GameOverScreen(_screen, Content, _font);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);
+                }
+                _stateChanged = false;
+            }
             #region Controlls
 
             InputController.Update();
             
             if (InputController.ExitInput) Exit();
-            int hit = _buttons.First(button => button.Name == "StartButton")
-                .CheckHit(MouseController.GetScreenPosition(_screen),
-                    MouseController.IsLeftClicked);
-            if (hit == 1) BeginGame();
-            if (hit == -1) Mouse.SetCursor(MouseCursor.Arrow);
-            if (Keyboard.GetState().IsKeyDown(Keys.R) && Keyboard.GetState().IsKeyDown(Keys.LeftControl))
-            {
-                if(_gameState is GameState.Playing)
-                {
-                    if (InputController.ShiftInput)
-                    {
-                        MapLoader.LoadMap(_screen.Height, Content);
-                    }
-                    _otter.Position = Map.Instance.Spawn;
-                }
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 _graphics.ToggleFullScreen();
                 _graphics.ApplyChanges();
             }
 #if DEBUG
-            if (_gameState is GameState.Playing)
-            {
-                if (InputController.NextInput)
-                {
-                    MapLoader.LoadNextMap(_screen.Height);
-                }
-                else if (InputController.PreviousInput)
-                {
-                    MapLoader.LoadPreviousMap(_screen.Height);
-                }
-            }
+            //if (_gameState is GameState.Playing)
+            //{
+            //    if (InputController.NextInput)
+            //    {
+            //        MapLoader.LoadNextMap(_screen.Height);
+            //    }
+            //    else if (InputController.PreviousInput)
+            //    {
+            //        MapLoader.LoadPreviousMap(_screen.Height);
+            //    }
+            //}
 #endif
 #endregion
 
-            switch (_gameState)
-            {
-                case GameState.Menu:
-                    _backGround.Update(gameTime);
-                    _otter.CurrentAnimation.Update(gameTime);
-                    break;
-                case GameState.Paused:
-                    break;
-                case GameState.Playing:
-                    Map.Instance.Update(gameTime);
-                    _otter.Update(gameTime);
-                    break;
-            }
+            //switch (_gameState)
+            //{
+            //    case GameState.Menu:
+            //        _backGround.Update(gameTime);
+            //        _otter.CurrentAnimation.Update(gameTime);
+            //        break;
+            //    case GameState.Paused:
+            //        break;
+            //    case GameState.Playing:
+            //        Map.Instance.Update(gameTime);
+            //        _otter.Update(gameTime);
+            //        break;
+            //}
+            currentScreen.Update(gameTime);
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
@@ -144,39 +156,8 @@ namespace ProjectPlatform
                 
             _sprites.Begin(_camera,true);
             _sprite.Begin();
-            _backGround.Draw(_sprites, new Vector2(_screen.Width, _screen.Height));
-            switch (_gameState)
-            {
-                case GameState.Menu:
-                    string title = "Otterly Adventure";
-                    var length = _font.MeasureString(title).Length();
-                    var halfWidth = _screen.Width/2f;
-                    var halfHeight = _screen.Height/2f;
-                    Vector2 textPosition = new(halfWidth-length/2, _screen.Height/10f);
-
-                    _sprite.DrawString(_font, title,
-                        textPosition + new Vector2(5,5)//center text
-                        , Color.Black);//background
-                    
-                    _sprite.DrawString(_font, title,
-                        textPosition //center text
-                        , Color.SandyBrown);//foreground
-                    
-                    _otter.Position = new Vector2(50, halfHeight);
-                    _otter.Draw(_sprites); //draw otter                   
-
-                    break;
-                case GameState.Paused:
-                    _sprite.DrawString(_font, "Press Enter to resume", new Vector2(100, 100), Color.White);
-                    break;
-                case GameState.Playing:
-                    Map.Instance.Draw(_sprites);
-                    _otter.Draw(_sprites);
-                    _sprite.DrawString(_font, $"Coins: {_otter.Coins}", new Vector2(20, 20), Color.White,0f, Vector2.One, 0.25f, SpriteEffects.None,0f);
-                    _sprite.DrawString(_font, $"HP: {_otter.Health}. HP%: {_otter.HealthPercentage}" , new Vector2(20, 40), Color.White, 0f, Vector2.One, 0.25f, SpriteEffects.None, 0f);
-                    break;
-            }
-            _buttons.Where(button => button.IsActive).ToList().ForEach(button => button.Draw(_sprites));// draw active buttons
+            
+            currentScreen.Draw(_sprite, _sprites);
 
             _sprites.End();
             _sprite.End();
@@ -184,25 +165,11 @@ namespace ProjectPlatform
             _screen.Present(_sprites, false);
             base.Draw(gameTime);
         }
-        public void SetMenu()
+        
+        internal static void SetState(GameState state)
         {
-            _gameState = GameState.Menu;
-            var halfHeight = _screen.Height / 2f;
-            _otter.Position = new Vector2(50, halfHeight);
-            _otter.SetWalk(false);
-            _backGround.Reset();
-            _buttons.ForEach(button => button.UpdateActive(_gameState));
-            AudioController.Instance.PlaySong("MainMenu");
-        }
-        public void BeginGame()
-        {
-            MapLoader.LoadMap(_screen.Height,Content);
-            _gameState = GameState.Playing;
-            _otter.Position = Map.Instance.Spawn;
-            _backGround.Reset();
-            _buttons.ForEach(button => button.UpdateActive(_gameState));
-            _otter.SetWalk(true);
-            AudioController.Instance.PlaySong("GamePlay");
+            _gameState = state;
+            _stateChanged = true;
         }
     }
 }

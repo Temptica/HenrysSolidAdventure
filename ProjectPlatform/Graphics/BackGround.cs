@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using ProjectPlatform.Graphics;
 
-namespace ProjectPlatform
+namespace ProjectPlatform.Graphics
 {
     internal class BackGround
     {//from same bundle as tileset, decoration and nature
@@ -16,6 +15,7 @@ namespace ProjectPlatform
         float[] scroll;
         float scale;
         float scrollSpeed = 0.05f;
+
 
         //singleton
         private static BackGround instance;
@@ -43,23 +43,26 @@ namespace ProjectPlatform
             scroll = new float[Backgrounds.Length];
         }
 
-        public void Draw(Sprites spriteBatch, Vector2 ScreenSize)
+        public void Draw(Sprites spriteBatch, Vector2 ScreenSize = default)
         {
-            scale = ScreenSize.X / Backgrounds[0].Width;
-            for (int i = 0; i<Backgrounds.Length; i++)
+            if (ScreenSize != default)
+            {
+                scale = ScreenSize.X / Backgrounds[0].Width;
+            }
+            for (int i = 0; i < Backgrounds.Length; i++)
             {
                 spriteBatch.Draw(Backgrounds[i], new Vector2(scroll[i], 0), new Rectangle(0, 0, Backgrounds[i].Width, Backgrounds[i].Height), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0f);//scrolled background
-                spriteBatch.Draw(Backgrounds[i], new Vector2((-Backgrounds[i].Width * scale) + scroll[i], 0), new Rectangle(0, 0, Backgrounds[i].Width, Backgrounds[i].Height), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0f); //replace another background next to the other one
+                spriteBatch.Draw(Backgrounds[i], new Vector2(-Backgrounds[i].Width * scale + scroll[i], 0), new Rectangle(0, 0, Backgrounds[i].Width, Backgrounds[i].Height), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0f); //replace another background next to the other one
             }
-            
+
         }
-        
+
         public void Update(GameTime time)
         {
             //scroll all backgrounds
             for (int i = 0; i < scroll.Length; i++)
             {
-                scroll[i] += (float)(scrollSpeed * time.ElapsedGameTime.TotalMilliseconds)*(i+1);
+                scroll[i] += (float)(scrollSpeed * time.ElapsedGameTime.TotalMilliseconds) * (i + 1);
                 if (scroll[i] >= Backgrounds[0].Width * scale)
                 {
                     scroll[i] -= Backgrounds[0].Width * scale;

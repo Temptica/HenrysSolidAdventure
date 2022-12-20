@@ -78,20 +78,28 @@ namespace ProjectPlatform.OtterFolder
             {
                 new(Texture, State, 6, Texture.Width/6, Texture.Height,0, 0,4, scale)
             };
-            Health = MaxHealth = 20;
-            Damage = 7;
+            Reset();
         }
 
         public void Update(GameTime gameTime)
         {
-            Map map = Map.Instance;
             SetState();
             CurrentAnimation.Update(gameTime);//update the animation
-            MoveUpdate(gameTime, map);
+            MoveUpdate(gameTime, Map.Instance);
             CheckCoins();
             CheckEnemies();
             _velocity.X = 0;
         }
+
+        internal void MenuUpdate(GameTime gameTime, float leftBound, float rightBound, float bottomBound)
+        {
+            SetState();
+            CurrentAnimation.Update(gameTime);//update the animation
+            MoveUpdate(gameTime, leftBound, rightBound, bottomBound);
+            _velocity.X = 0;
+        }
+
+        
 
         private void SetState()
         {
@@ -134,6 +142,12 @@ namespace ProjectPlatform.OtterFolder
                 }
             }
             if (attacked) _canAttack = false;
+            if (Health <= 0)
+            {
+                _IsDead = true;
+                Game1.SetState(GameState.GameOver);
+            }
+            
         }
 
         private void CheckCoins()
@@ -144,69 +158,47 @@ namespace ProjectPlatform.OtterFolder
                 Coins++;
             }
         }
+        private void MoveUpdate(GameTime gameTime, float leftBound, float rightBound, float bottomBound)
+        {
+            GetVelocity(gameTime);
+            
+            float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * _velocity.X);
 
+            var nextPosition = Position;
+            if (velocityXDelta != 0)
+            {
+                nextPosition.X += velocityXDelta;
+            }
+            if (_velocity.Y != 0)
+            {
+                nextPosition.Y += (float)(_velocity.Y* gameTime.ElapsedGameTime.TotalMilliseconds);
+            }
+            var nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
+
+            if (_velocity.X > 0 && nextHitBox.Right > rightBound)
+            {
+                nextPosition.X = rightBound - HitBox.Width;
+            }
+            else if (_velocity.X < 0 && nextHitBox.Left < leftBound)
+            {
+                nextPosition.X = leftBound;
+            }
+            if (_velocity.Y > 0 && nextHitBox.Bottom > bottomBound)
+            {
+                nextPosition.Y = bottomBound - HitBox.Height;
+                _velocity.Y = 0;
+                _canJump = true;
+            }
+            else if (_velocity.Y < 0 && nextHitBox.Top < 0)
+            {
+                nextPosition.Y = 0;
+            }
+            Position = nextPosition;
+        }
         public void MoveUpdate(GameTime gameTime, Map map)
         {
-            if (!_canWalk)
-            {
-                _velocity.X = 0;
-            }
-            else if (InputController.LeftInput) //left
-            {
-                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                if (InputController.ShiftInput)
-                {
-                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X < -RunningSpeed)
-                        _velocity.X = -RunningSpeed;
-                    _IsRunning = true;
-
-                }
-                else
-                {
-                    if (_velocity.X < -WalkSpeed)
-                        _velocity.X = -WalkSpeed;
-                    _IsRunning = false;
-                }
-                _lookingLeft = true;
-                _IsWalking = true;
-            }
-            else if (InputController.RightInput)//right
-            {
-                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                if (InputController.ShiftInput)
-                {
-                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X > RunningSpeed)
-                        _velocity.X = RunningSpeed;
-                    _IsRunning = true;
-                }
-                else
-                {
-                    if (_velocity.X > WalkSpeed)
-                        _velocity.X = WalkSpeed;
-                    _IsRunning = false;
-                }
-                _IsWalking = true;
-                _lookingLeft = false;
-            }
-            else
-            {
-                _velocity.X = 0;
-                _IsWalking = false;
-                _IsRunning = false;
-            }
-
-            if (InputController.JumpInput && _canJump) //jump
-            {
-                _velocity.Y = -JumpForce;
-                _canJump = false;
-            }
-            else if (!_canJump)
-            {
-                var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
-                _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
-            }
+            GetVelocity(gameTime);
+            
             float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * _velocity.X);
 
             var nextPosition = Position;
@@ -288,6 +280,12 @@ namespace ProjectPlatform.OtterFolder
                 }
                 else
                 {
+                    if (OtterCollision.LeavingBottomMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Height))
+                    {
+                        Position = nextPosition = Map.Instance.Spawn;
+                        Health -= MaxHealth / 4;
+                        return;
+                    }
                     _canJump = false;
                     var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                     _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
@@ -302,6 +300,70 @@ namespace ProjectPlatform.OtterFolder
 
         }
 
+        private void GetVelocity(GameTime gameTime)
+        {
+            if (!_canWalk)
+            {
+                _velocity.X = 0;
+            }
+            else if (InputController.LeftInput) //left
+            {
+                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (InputController.ShiftInput)
+                {
+                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X < -RunningSpeed)
+                        _velocity.X = -RunningSpeed;
+                    _IsRunning = true;
+
+                }
+                else
+                {
+                    if (_velocity.X < -WalkSpeed)
+                        _velocity.X = -WalkSpeed;
+                    _IsRunning = false;
+                }
+                _lookingLeft = true;
+                _IsWalking = true;
+            }
+            else if (InputController.RightInput)//right
+            {
+                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                if (InputController.ShiftInput)
+                {
+                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (_velocity.X > RunningSpeed)
+                        _velocity.X = RunningSpeed;
+                    _IsRunning = true;
+                }
+                else
+                {
+                    if (_velocity.X > WalkSpeed)
+                        _velocity.X = WalkSpeed;
+                    _IsRunning = false;
+                }
+                _IsWalking = true;
+                _lookingLeft = false;
+            }
+            else
+            {
+                _velocity.X = 0;
+                _IsWalking = false;
+                _IsRunning = false;
+            }
+
+            if (InputController.JumpInput && _canJump) //jump
+            {
+                _velocity.Y = -JumpForce;
+                _canJump = false;
+            }
+            else if (!_canJump)
+            {
+                var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
+            }
+        }
+
         public Vector2 OnGround(Rectangle hitbox)
         {
             var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 10);
@@ -312,9 +374,16 @@ namespace ProjectPlatform.OtterFolder
             return new Vector2(hitbox.X, tile - hitbox.Height - CurrentAnimation.CurrentFrame.HitBox.Y * Scale);
         }
 
+
         public void Draw(Sprites spriteBatch)
         {
             CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale);
+
+        }
+        public void Draw(Sprites spriteBatch, float scale )
+        {
+            CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, scale);
+            
         }
 
         public void SetWalk(bool canWalk)
@@ -330,6 +399,12 @@ namespace ProjectPlatform.OtterFolder
 
             }
             return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
+        }
+        public void Reset()
+        {
+            Coins = 0;
+            Health = MaxHealth = 20;
+            Damage = 7;
         }
     }
 

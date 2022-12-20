@@ -84,7 +84,7 @@ namespace ProjectPlatform.OtterFolder
 
         }
 
-        public static bool PixelBasedHit(OtterFolder.Otter otter, Enemy enemy)
+        public static bool PixelBasedHit(Otter otter, Enemy enemy)
         {
             Color[,] otterPixels2D = GetCurrentPixels2D(otter);
             Color[,] enemyPixels2D = GetCurrentPixels2D(enemy);
@@ -121,7 +121,7 @@ namespace ProjectPlatform.OtterFolder
 
         }
 
-        private static Color[] GetCurrentPixels(OtterFolder.Otter otter)
+        private static Color[] GetCurrentPixels(Otter otter)
         {
             Color[] pixels = new Color[otter.CurrentAnimation.CurrentFrame.FrameRectangle.Width * otter.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
             otter.CurrentAnimation.Texture.GetData(0, otter.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
@@ -137,7 +137,7 @@ namespace ProjectPlatform.OtterFolder
             return pixels;
         }
 
-        private static Color[,] GetCurrentPixels2D(OtterFolder.Otter otter)
+        private static Color[,] GetCurrentPixels2D(Otter otter)
         {
             Color[] otterPixels = GetCurrentPixels(otter);
             var width = otter.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
@@ -179,6 +179,10 @@ namespace ProjectPlatform.OtterFolder
         public static bool LeavingRightMapBorder(Rectangle otter, int x)
         {
             return otter.Right > x;
+        }
+        public static bool LeavingBottomMapBorder(Rectangle otter, int y)
+        {
+            return otter.Bottom > y;
         }
     }
 }
