@@ -18,6 +18,7 @@ namespace ProjectPlatform.Controller
         internal static AudioController Instance => _uAudio ??= new AudioController();
         private Dictionary<string, Song> _songs;
         private Dictionary<string, SoundEffect> _soundEffects;
+        public static float Volume { get { return MediaPlayer.Volume; } set { MediaPlayer.Volume = value; } }
 
         public static void Initialise(ContentManager content)
         {
@@ -28,9 +29,7 @@ namespace ProjectPlatform.Controller
                 {"GamePlay", content.Load<Song>(@"Audio\Music\The_Aquaticans")}
             };
             MediaPlayer.IsRepeating = true;
-            //MediaPlayer.Volume -= 0.9f;
-            MediaPlayer.Volume = 0;
-
+            Volume = 1f;
 
         }
 

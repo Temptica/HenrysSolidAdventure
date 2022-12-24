@@ -1,6 +1,0 @@
-﻿TODO:
-1. make map
-2. add all assets
-3. animate hero
-4. animate enemies
-
