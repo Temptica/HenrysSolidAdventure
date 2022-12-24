@@ -38,7 +38,6 @@ namespace ProjectPlatform.GameScreens
             };
 
             var halfWidth = _screen.Width / 2f;
-            var halfHeight = _screen.Height / 2f;
             string title = "Otterly Adventure";
             var length = _font.MeasureString(title).Length();
             _textPosition = new(halfWidth - length / 2, _screen.Height / 10f);

@@ -48,7 +48,8 @@ namespace ProjectPlatform.GameScreens
 
         public void Update(GameTime gameTime)
         {
-            if (InputController.InteractInput) Game1.SetState(GameState.Menu);
+
+            BackGround.Instance.Update(gameTime);
             var selected = _buttons.Where(b => b.CheckHit(MouseController.GetScreenPosition(_screen))).ToList();
             if (selected.Count == 0)
             {

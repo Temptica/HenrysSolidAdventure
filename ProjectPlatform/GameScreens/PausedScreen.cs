@@ -43,14 +43,21 @@ namespace ProjectPlatform.GameScreens
             _texts.ForEach(text => text.Color = Color.Lerp(Color.White, Color.Transparent, (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds)));
             if (_loaded && InputController.ExitInput) return;
             _loaded = false;
+            if (InputController.ShiftInput && InputController.ExitInput)
+            {
+                Game1.SetState(GameState.Settings);
+                return;
+            }
             if (InputController.InteractInput)
             {
                 Game1.SetState(GameState.Playing);
+                return;
             }
             if (InputController.ExitInput)
             {
                 Game1.SetState(GameState.Menu);
             }
+            
         }
     }
 }

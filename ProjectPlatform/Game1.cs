@@ -16,7 +16,7 @@ using ProjectPlatform.GameScreens;
 
 namespace ProjectPlatform
 {
-    enum GameState { Menu, Paused, Playing, GameOver }
+    enum GameState { Menu, Paused, Playing, GameOver, Settings }
     public class Game1 : Game
     {       
         
@@ -25,13 +25,13 @@ namespace ProjectPlatform
         private SpriteFont _font;
         private static GameState _gameState;
         private static bool _stateChanged;
-        private OtterFolder.Otter _otter;
         private List<Button> _buttons;
         private Texture2D _hitbox;
         private SpriteBatch _sprite;
         private Screen _screen;
         private Sprites _sprites;
         private Camera _camera;
+        private static bool _isFullScreen;
         private IGameScreen currentScreen;
         private static bool _exit = false;
 
@@ -52,12 +52,24 @@ namespace ProjectPlatform
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             _graphics.ApplyChanges();
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += Window_ClientSizeChanged;
             _screen = new Screen(this, 1200, 675);
             _camera = new Camera(_screen);
-            _sprites = new Sprites(this);            
-
+            _sprites = new Sprites(this);
             base.Initialize();
 
+        }
+
+        internal static void SetFullScreen(bool isClicked)
+        {
+            _isFullScreen = isClicked;
+        }
+
+        private void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+            _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
         }
 
         protected override void LoadContent()
@@ -65,13 +77,15 @@ namespace ProjectPlatform
             _backGround = BackGround.Instance;
             _backGround.Initialise(Content);
             _font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
-            var startTexture = Content.Load<Texture2D>("buttons/StartButton");
-            //_buttons.Add(new Button("StartButton", startTexture, new Vector2((_screen.Width - startTexture.Width)/2f, (_screen.Height- startTexture.Height)/2f),"START"));
+            StateButton.ClickedTexture = Content.Load<Texture2D>("Buttons/knobSelected");
+            StateButton.UnClickedTexture = Content.Load<Texture2D>("Buttons/KnobNotSelected");
+            Slider.SliderTexture = Content.Load<Texture2D>("Buttons/slider");
+            Slider.SliderKnobTexture = Content.Load<Texture2D>("Buttons/sliderKnob");
+
             Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
             map.Initialise(Content, _screen);
-            _otter = Otter.Instance;
-            _otter.Initialise(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
+            Otter.Instance.Initialise(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
             Button.Font = _font;
             _hitbox = new Texture2D(GraphicsDevice, 1, 1);
             _hitbox.SetData(new[] { Color.White });
@@ -80,59 +94,68 @@ namespace ProjectPlatform
             _gameState = GameState.Menu;
             _stateChanged = true;
 
+            Settings.Instance.Initialise(Directory.GetCurrentDirectory() + "/settings.txt");
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (_exit) Exit();
-            #region Controlls
-
-            InputController.Update();
-            if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            if (_isFullScreen && !_graphics.IsFullScreen)
             {
-                _graphics.ToggleFullScreen();
+                _graphics.IsFullScreen = true;
                 _graphics.ApplyChanges();
             }
-#if DEBUG
-            //if (_gameState is GameState.Playing)
-            //{
-            //    if (InputController.NextInput)
-            //    {
-            //        MapLoader.LoadNextMap(_screen.Height);
-            //    }
-            //    else if (InputController.PreviousInput)
-            //    {
-            //        MapLoader.LoadPreviousMap(_screen.Height);
-            //    }
-            //}
-#endif
-#endregion
+            else if (!_isFullScreen && _graphics.IsFullScreen)
+            {
+                _graphics.IsFullScreen = false;
+                _graphics.ApplyChanges();
+            }
+            InputController.Update();
 
             
             currentScreen?.Update(gameTime);
             if (_stateChanged)
             {
-                switch (_gameState)
+                if (currentScreen is SettingsScreen settingsScreen)
                 {
-                    case GameState.Playing when currentScreen is PausedScreen screen:
-                        currentScreen = screen._playingScreen;
-                        return;
-                    case GameState.Playing:
-                        currentScreen = new PlayingScreen(_screen, Content, _font);
-                        break;
-                    case GameState.Menu:
-                        currentScreen = new StartScreen(_screen, Content, _font);
-                        break;
-                    case GameState.Paused:
-                        currentScreen = new PausedScreen(_screen, _font, Content, (PlayingScreen)currentScreen);
-                        break;
-                    case GameState.GameOver:
-                        currentScreen = new GameOverScreen(_screen, Content, _font);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);
+                    currentScreen = settingsScreen.LastScreen;
+                    _gameState = currentScreen switch
+                    {
+                        PlayingScreen => GameState.Playing,
+                        StartScreen => GameState.Menu,
+                        GameOverScreen => GameState.GameOver,
+                        PausedScreen => GameState.Paused,
+                        _ => _gameState
+                    };
                 }
+                else
+                {
+                    switch (_gameState)
+                    {
+                        case GameState.Playing when currentScreen is PausedScreen screen:
+                            currentScreen = screen._playingScreen;
+                            return;
+                        case GameState.Playing:
+                            currentScreen = new PlayingScreen(_screen, Content, _font);
+                            break;
+                        case GameState.Menu:
+                            currentScreen = new StartScreen(_screen, Content, _font);
+                            break;
+                        case GameState.Paused:
+                            currentScreen = new PausedScreen(_screen, _font, Content, (PlayingScreen)currentScreen);
+                            break;
+                        case GameState.GameOver:
+                            currentScreen = new GameOverScreen(_screen, Content, _font);
+                            break;
+                        case GameState.Settings:
+                            currentScreen = new SettingsScreen(currentScreen, _screen, _font);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);
+                    }
+                }
+                
                 _stateChanged = false;
                 currentScreen?.Update(gameTime);
             }
