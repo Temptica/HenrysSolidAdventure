@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Mapfolder;
+using ProjectPlatform.OtterFolder;
 
 namespace ProjectPlatform.EnemyFolder
 {
@@ -67,6 +68,11 @@ namespace ProjectPlatform.EnemyFolder
         public override void Move(GameTime gameTime)
         {
             var x = Position.X;
+            Rectangle otterHb = Otter.Instance.HitBox;
+            if (otterHb.Top <= HitBox.Bottom && otterHb.Bottom >= HitBox.Top && otterHb.Right > _maxLeftPosition && otterHb.Left < _maxRightPosition )
+            {
+                IsFacingLeft = otterHb.Center.X < HitBox.Center.X;
+            }
             if (IsFacingLeft)
             {
                 if (x <= _maxLeftPosition)

@@ -16,8 +16,6 @@ namespace ProjectPlatform.Animations
         public Frame CurrentFrame => Frames[CurrentFrameIndex];
         public override int FrameCount => Frames.Length;
 
-        
-
         internal State State;
 
         public Animation(Texture2D texture, int framecount, int fps, float scale = 1f):this(texture, State.Idle, framecount, texture.Width/framecount, texture.Height, 0,0,fps, scale)
@@ -35,11 +33,12 @@ namespace ProjectPlatform.Animations
             {
                 Frames[i] = new Frame(new Rectangle(i * framewidth+beginWidth, beginHeight, framewidth, frameheight), Texture, scale);
             }
-        }        
+        }
 
-        public override void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0f)
+        public override void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0f, Color color = default)
         {
-            spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, Color.White, rotation, Vector2.Zero, scale, spriteEffects, 0f);
+            if (color == default) color = Color.White;
+            spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, color, rotation, Vector2.Zero, scale, spriteEffects, 0f);
         }
 
     }

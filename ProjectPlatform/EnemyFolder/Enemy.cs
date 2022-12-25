@@ -19,15 +19,16 @@ namespace ProjectPlatform.EnemyFolder
         {
             Enemies ??= new List<Enemy>();
             Enemies.Add(this);
+            CanAttack = true;
         }
 
         internal bool IsFacingLeft;
         internal bool IsAttacking;
         internal bool IsWalking;
-        internal bool IsIdle;
         internal bool IsDead;
         internal bool IsHit;
         internal bool CanAttack;
+        internal bool CanDamage;
         public int BaseHp { get; set; }
         public int Damage { get; set; }
         public float CurrentHp { get; set; }
@@ -78,8 +79,8 @@ namespace ProjectPlatform.EnemyFolder
         
         public virtual int Attack()
         {
-            if (CanAttack) {
-                CanAttack = false;
+            if (CanDamage && State is State.Attacking) {
+                CanDamage = false; //attacked once so can't damage anymore till next attack;
                 return Damage; 
             }
             return 0;

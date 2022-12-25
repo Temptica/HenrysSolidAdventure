@@ -103,7 +103,16 @@ namespace ProjectPlatform.OtterFolder
 
         private void SetState()
         {
-            if (State is State.Dead || _IsDead || State is State.Hit && _IsHit) return;
+            if (State is State.Dead || _IsDead) return;
+            if (State is State.Hit)
+            {
+                _IsHit = !CurrentAnimation.IsFinished;
+            }
+            if (_IsHit)
+            {
+                State = State.Hit;
+                return;
+            }
             if (State is State.Attacking)
             {
                 if (!CurrentAnimation.IsFinished) return;
@@ -124,29 +133,32 @@ namespace ProjectPlatform.OtterFolder
         private void CheckEnemies()
         {
             if (Enemy.Enemies.Count <= 0) return;
-            bool attacked = false;
-            foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State is not State.Dead or State.Hit).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
+            foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
             {
-                attacked = true;
+                
                 if (State == State.Attacking && _canAttack)
                 {
+                    _canAttack = false;
                     if (!enemy.GetDamage(Damage)) {continue;}
                     Coins += 1;
                     var coin = new Coin(enemy.Position);
                     Map.Instance.Coins.Add(coin);
                     coin.Collect();
+                    continue;
                 }
-                else
+                var damage = enemy.Attack();
+                if (damage > 0)
                 {
-                    Health -= enemy.Attack();
+                    _IsHit = true;
+                    Health -= damage;
+                }
+                if (Health <= 0)
+                {
+                    _IsDead = true;
+                    Game1.SetState(GameState.GameOver);
                 }
             }
-            if (attacked) _canAttack = false;
-            if (Health <= 0)
-            {
-                _IsDead = true;
-                Game1.SetState(GameState.GameOver);
-            }
+            
             
         }
 
@@ -377,7 +389,9 @@ namespace ProjectPlatform.OtterFolder
 
         public void Draw(Sprites spriteBatch)
         {
-            CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale);
+            Color color = Color.White;
+            if (State is State.Hit) color = Color.Red;
+            CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
 
         }
         public void Draw(Sprites spriteBatch, float scale )
@@ -405,6 +419,7 @@ namespace ProjectPlatform.OtterFolder
             Coins = 0;
             Health = MaxHealth = 20;
             Damage = 7;
+            State = State.Idle;
         }
     }
 

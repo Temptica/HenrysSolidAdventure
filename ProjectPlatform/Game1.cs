@@ -170,7 +170,7 @@ namespace ProjectPlatform
             _sprite.Begin();
             
             currentScreen.Draw(_sprite, _sprites);
-
+            _sprites.Draw(_hitbox, OtterCollision.LastHit, Color.Red);
             _sprites.End();
             _sprite.End();
             _screen.UnSet();

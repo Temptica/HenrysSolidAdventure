@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using ProjectPlatform.EnemyFolder;
+using ProjectPlatform.Interface;
 using ProjectPlatform.Mapfolder;
 
 namespace ProjectPlatform.OtterFolder
 {
     internal static class OtterCollision
     {
+        public static Rectangle LastHit = new(1,1,1,1);
         public static float OtterGroundHit(Rectangle otterHitBox, List<MapTile> maptiles)
         {
             var MainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(otterHitBox) && (tile.HitBox.Top <= otterHitBox.Bottom && otterHitBox.Bottom - tile.HitBox.Top < 50 || tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with enemy (main hitbox based)
@@ -86,10 +88,10 @@ namespace ProjectPlatform.OtterFolder
 
         public static bool PixelBasedHit(Otter otter, Enemy enemy)
         {
-            Color[,] otterPixels2D = GetCurrentPixels2D(otter);
-            Color[,] enemyPixels2D = GetCurrentPixels2D(enemy);
+            var otterPixels2D = GetCurrentPixels2D(otter);
+            var enemyPixels2D = GetCurrentPixels2D(enemy);
             //get the rectangle wherein both collide
-            Rectangle collisionRectangle = Rectangle.Intersect(otter.HitBox, enemy.HitBox);
+            var collisionRectangle = Rectangle.Intersect(otter.HitBox, enemy.HitBox);
             if (collisionRectangle.Width == 0 || collisionRectangle.Height == 0) return false;
             //get the start and end points of the collision rectangle
             int startX = collisionRectangle.Left;
@@ -102,12 +104,15 @@ namespace ProjectPlatform.OtterFolder
                 for (int y = startY; y < endY; y++)
                 {
                     //if both pixels are not transparent, there is a collision
+                    var otterx = x - otter.HitBox.Left;
+                    var ottery = y - otter.HitBox.Top;
+                    var enemyx = x - enemy.HitBox.Left;
+                    var enemyy = y - enemy.HitBox.Top;
                     try
                     {
-                        if (otterPixels2D[(int)Math.Abs(x - otter.Position.X), (int)Math.Abs(y - otter.Position.Y)].A !=
-                            0 && enemyPixels2D[(int)Math.Abs(x - enemy.Position.X),
-                                (int)Math.Abs(y - enemy.Position.Y - 1)].A != 0)
+                        if (otterPixels2D[otterx,ottery].A != 0 && enemyPixels2D[enemyx,enemyy].A != 0)
                         {
+                            LastHit = collisionRectangle;
                             return true;
                         }
                     }
@@ -121,45 +126,20 @@ namespace ProjectPlatform.OtterFolder
 
         }
 
-        private static Color[] GetCurrentPixels(Otter otter)
+        private static Color[] GetCurrentPixels(IAnimatable animatable)
         {
-            Color[] pixels = new Color[otter.CurrentAnimation.CurrentFrame.FrameRectangle.Width * otter.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
-            otter.CurrentAnimation.Texture.GetData(0, otter.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
-
-            return pixels;
-        }
-        private static Color[] GetCurrentPixels(Enemy enemy)
-        {
-            Color[] pixels = new Color[enemy.CurrentAnimation.CurrentFrame.FrameRectangle.Width * enemy.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
-
-            enemy.CurrentAnimation.Texture.GetData(0, enemy.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
+            Color[] pixels = new Color[animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Width * animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
+            animatable.CurrentAnimation.Texture.GetData(0, animatable.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
 
             return pixels;
         }
 
-        private static Color[,] GetCurrentPixels2D(Otter otter)
+        private static Color[,] GetCurrentPixels2D(IAnimatable animatable)
         {
-            Color[] otterPixels = GetCurrentPixels(otter);
-            var width = otter.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
-            var height = otter.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
+            Color[] otterPixels = GetCurrentPixels(animatable);
+            var width = animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
+            var height = animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
             //convert otterPixels to 2d array to from a Rectangle
-            Color[,] otterPixels2D = new Color[width, height];
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    otterPixels2D[x, y] = otterPixels[x + y * width];
-                }
-            }
-
-            return otterPixels2D;
-        }
-        private static Color[,] GetCurrentPixels2D(Enemy enemy)
-        {
-            Color[] otterPixels = GetCurrentPixels(enemy);
-            //convert otterPixels to 2d array to from a Rectangle
-            var width = enemy.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
-            var height = enemy.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
             Color[,] otterPixels2D = new Color[width, height];
             for (int x = 0; x < width; x++)
             {

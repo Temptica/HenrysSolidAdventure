@@ -39,38 +39,50 @@ namespace ProjectPlatform.EnemyFolder
         public override void Update(GameTime gameTime)
         {
             SetState();
+            CurrentAnimation.Update(gameTime);
             Position = new Vector2(Position.X,
                 _spawnPosition.Y + (Textures[State.Idle].Height - Textures[State].Height));
-            if(State is State.Walking) Move(gameTime);
+            if (State is State.Walking)
+            {
+                
+                Move(gameTime);
+
+            }
             if (State is State.Attacking)
             {
                 //look at Otter while attacking
-                IsFacingLeft = HitBox.Center.X >= OtterFolder.Otter.Instance.HitBox.Center.X;
+                IsFacingLeft = HitBox.Center.X >= Otter.Instance.HitBox.Center.X;
             }
-            CurrentAnimation.Update(gameTime);
-            if (State is State.Dead && CurrentAnimation.IsFinished) Remove = true;
-
         }
 
         private void SetState()
         {
+            if (State is State.Dead && CurrentAnimation.IsFinished)
+            {
+                Remove = true;
+                return;
+            }
             if (IsDead) State = State.Dead;
             else if (IsHit) State = State.Hit;
             if (State is State.Dead || IsDead) return;
             if ((State is State.Hit && !CurrentAnimation.IsFinished)||(!CurrentAnimation.IsFinished && State == State.Attacking))
             {
                 CanAttack = false;
+                if (State is State.Attacking && CurrentAnimation.CurrentFrameIndex > 8) CanDamage = false;//after 8th frame, skeleton can't damage otter as it lifts up his weapon
                 return;
             };
             if (State is State.Hit or State.Attacking && CurrentAnimation.IsFinished)
             {
                 IsHit = false;
                 CanAttack = true;
+                State = State.Idle;
             }
-            IsAttacking = IsAttacking ? !CurrentAnimation.IsFinished : CheckAttack();
+            IsAttacking = CheckAttack();
 
             if (IsAttacking)
             {
+                if (State == State.Attacking) return;
+                CanDamage = true;//first time attacking animation starts
                 State = State.Attacking;
             }
             else if (IsWalking) State = State.Walking;
@@ -83,10 +95,10 @@ namespace ProjectPlatform.EnemyFolder
         public bool CheckAttack()
         {
             if (!CanAttack) return false;
-            var hitBox = OtterFolder.Otter.Instance.HitBox;
+            var hitBox = Otter.Instance.HitBox;
             if (hitBox.Top >= HitBox.Bottom || hitBox.Bottom <= HitBox.Top) return false;
             return hitBox.Center.X < HitBox.Center.X
-                ? hitBox.Right < HitBox.Left - 30
+                ? hitBox.Right > HitBox.Left - 30
                 : hitBox.Left < HitBox.Right + 30; //if otter is left, then check left distance is 30 or less, otherwise do opposite
         }
     }

@@ -29,7 +29,7 @@ namespace ProjectPlatform.Controller
                 {"GamePlay", content.Load<Song>(@"Audio\Music\The_Aquaticans")}
             };
             MediaPlayer.IsRepeating = true;
-            Volume = 1f;
+            
 
         }
 

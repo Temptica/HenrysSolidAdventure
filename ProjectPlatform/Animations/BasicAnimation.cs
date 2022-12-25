@@ -56,9 +56,10 @@ namespace ProjectPlatform.Animations
             
             _time = 0;
         }
-        public virtual void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0)
+        public virtual void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0, Color color = default)
         {
-              spriteBatch.Draw(Texture, position, FrameRectangle, Color.White, rotation, Vector2.Zero, scale, spriteEffects, 0f);
+            if (color == default) color = Color.White;
+            spriteBatch.Draw(Texture, position, FrameRectangle, color, rotation, Vector2.Zero, scale, spriteEffects, 0f);
         }
     }
 }
