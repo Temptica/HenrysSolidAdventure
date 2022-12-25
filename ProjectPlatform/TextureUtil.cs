@@ -30,7 +30,88 @@ namespace ProjectPlatform
             }
             return Pixels2D;
         }
+        public static Rectangle SetPixelBasedHitBox(Texture2D texture, Rectangle rectangle)
+        {
+            //get the lowest pixel in teh rectangle
+            var color = TextureUtil.GetCurrentPixels2D(texture, rectangle);
+            int mostLeftPixel = 0;
 
+            //find left most pixel
+            for (int x = 0; x < rectangle.Width; x++)
+            {
+                for (int y = 0; y < rectangle.Height; y++)
+                {
+                    if (color[x, y].A == 0) continue;
+                    mostLeftPixel = x;
+                    break;
+                }
+                if (mostLeftPixel != 0) break;
+            }
+            //find right most pixel
+            int mostRightPixel = 0;
+            for (int x = rectangle.Width - 1; x >= 0; x--)
+            {
+                for (int y = 0; y < rectangle.Height; y++)
+                {
+                    if (color[x, y].A == 0) continue;
+                    mostRightPixel = x;
+                    break;
+                }
+                if (mostRightPixel != 0) break;
+            }
+            //find highest pixel
+            int highestPixel = 0;
+            for (int y = 0; y < rectangle.Height; y++)
+            {
+                for (int x = 0; x < rectangle.Width; x++)
+                {
+                    if (color[x, y].A == 0) continue;
+                    highestPixel = y;
+                    break;
+                }
+                if (highestPixel != 0) break;
+            }
+            //find lowest pixel
+            int lowestPixel = 0;
+            for (int y = rectangle.Height - 1; y >= 0; y--)
+            {
+                for (int x = 0; x < rectangle.Width; x++)
+                {
+                    if (color[x, y].A == 0) continue;
+                    lowestPixel = y;
+                    break;
+                }
+                if (lowestPixel != 0) break;
+            }
+            //set hitbox
+            return new Rectangle(mostLeftPixel, (int)(highestPixel), (int)((mostRightPixel - mostLeftPixel)), (int)((lowestPixel - highestPixel)));
+        }
+        
+        //{
+        //    Color[,] pixels = GetCurrentPixels2D(texture, rectangle);
+        //    int left = 0;
+        //    int right = 0;
+        //    int top = 0;
+        //    int bottom = 0;
+        //    for (int x = 0; x<rectangle.Width; x++)
+        //    {
+        //        for (int y = 0; y<rectangle.Height; y++)
+        //        {
+        //            if (pixels[x, y].A != 0)
+        //            {
+        //                if (left == 0) left = x;
+        //                if (right == 0) right = x;
+        //                if (top == 0) top = y;
+        //                if (bottom == 0) bottom = y;
+        //                if (x<left) left = x;
+        //                if (x > right) right = x;
+        //                if (y<top) top = y;
+        //                if (y > bottom) bottom = y;
+        //            }
+        //        }
+        //    }
+        //    HitBox = new Rectangle(rectangme.X + left, rectangme.Y + top, right - left, bottom - top);
+        //}
 
     }
 }

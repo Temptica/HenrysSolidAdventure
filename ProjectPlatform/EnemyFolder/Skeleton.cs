@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.Animations;
 using ProjectPlatform.Graphics;
-using ProjectPlatform.Mapfolder;
 using ProjectPlatform.OtterFolder;
+using System.Collections.Generic;
 
 namespace ProjectPlatform.EnemyFolder
 {
@@ -68,7 +63,7 @@ namespace ProjectPlatform.EnemyFolder
             if ((State is State.Hit && !CurrentAnimation.IsFinished)||(!CurrentAnimation.IsFinished && State == State.Attacking))
             {
                 CanAttack = false;
-                if (State is State.Attacking && CurrentAnimation.CurrentFrameIndex > 8) CanDamage = false;//after 8th frame, skeleton can't damage otter as it lifts up his weapon
+                if (State is State.Attacking && CurrentAnimation.CurrentFrameIndex >= 9 && CurrentAnimation.CurrentFrameIndex <= 6) CanDamage = false;//after 8th frame, skeleton can't damage otter as it lifts up his weapon
                 return;
             };
             if (State is State.Hit or State.Attacking && CurrentAnimation.IsFinished)

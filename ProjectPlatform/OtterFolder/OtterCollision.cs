@@ -118,7 +118,7 @@ namespace ProjectPlatform.OtterFolder
                     }
                     catch (Exception)
                     {
-                        //ignore
+                        return false;
                     }
                 }
             }
