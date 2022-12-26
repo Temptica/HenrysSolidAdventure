@@ -33,7 +33,7 @@ namespace OtterlyAdventure
         public static Rectangle SetPixelBasedHitBox(Texture2D texture, Rectangle rectangle)
         {
             //get the lowest pixel in teh rectangle
-            var color = TextureUtil.GetCurrentPixels2D(texture, rectangle);
+            var color = GetCurrentPixels2D(texture, rectangle);
             int mostLeftPixel = 0;
 
             //find left most pixel

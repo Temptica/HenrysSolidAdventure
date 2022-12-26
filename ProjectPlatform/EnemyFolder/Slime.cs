@@ -22,26 +22,30 @@ namespace OtterlyAdventure.EnemyFolder
             var frameHeight = Texture.Height/3;
             Animations = new List<Animation>
             {
-                new(Texture, OtterFolder.State.Idle, 4, frameWidth, frameHeight, 0, 0, 8),
-                new(Texture, OtterFolder.State.Walking, 4, frameWidth, frameHeight, 0, frameWidth * 4, 8),
-                new(Texture, OtterFolder.State.Attacking, 5, frameWidth, frameHeight, frameHeight, 0, 8),
-                new(Texture, OtterFolder.State.Hit, 4, frameWidth, frameHeight, frameHeight, frameWidth * 5, 8),
-                new(Texture, OtterFolder.State.Dead, 4, frameWidth, frameHeight, frameHeight * 2, frameWidth, 8)
+                new(Texture, State.Idle, 4, frameWidth, frameHeight, 0, 0, 8),
+                new(Texture, State.Walking, 4, frameWidth, frameHeight, 0, frameWidth * 4, 8),
+                new(Texture, State.Attacking, 5, frameWidth, frameHeight, frameHeight, 0, 8),
+                new(Texture, State.Hit, 4, frameWidth, frameHeight, frameHeight, frameWidth * 5, 8),
+                new(Texture, State.Dead, 4, frameWidth, frameHeight, frameHeight * 2, frameWidth, 8)
             };
             CurrentHp = BaseHp = 6;
             Damage = 3;
+            IsWalking = true;
+            CanAttack = true;
+            Speed = 16f;
             DefineWalkablePath();
         }
-        //public override void Update(GameTime gameTime)
-        //{
-        //    base.Update(gameTime);
-        //}
+        public override void Update(GameTime gameTime)
+        {
+            SetState();
+            base.Update(gameTime);
+        }
 
-        //public override void Draw(Sprites spriteBatch)
-        //{
-        //    base.Draw(spriteBatch);
-        //}
+        public override void Draw(Sprites spriteBatch)
+        {//texture is flipped compared to other enemies
+            CurrentAnimation.Draw(spriteBatch, Position, !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
+        }
 
-        
+
     }
 }

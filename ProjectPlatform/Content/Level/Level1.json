@@ -142,18 +142,6 @@
                  "y":1104
                 }, 
                 {
-                 "class":"Slime",
-                 "gid":372,
-                 "height":25,
-                 "id":45,
-                 "name":"",
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":792,
-                 "y":1056
-                },
-                {
                  "class":"Bat",
                  "gid":366,
                  "height":44,
@@ -176,6 +164,18 @@
                  "width":24,
                  "x":552,
                  "y":912
+                }, 
+                {
+                 "class":"Slime",
+                 "gid":372,
+                 "height":25,
+                 "id":45,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":792,
+                 "y":1056
                 }],
          "opacity":1,
          "type":"objectgroup",

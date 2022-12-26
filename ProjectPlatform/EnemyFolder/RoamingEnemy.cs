@@ -101,9 +101,40 @@ namespace OtterlyAdventure.EnemyFolder
         public override void Update(GameTime gameTime)
         {
             CurrentAnimation.Update(gameTime);
+            if (State is State.Walking)
+            {
+
+                Move(gameTime);
+
+            }
             base.Update(gameTime);
         }
 
+        internal virtual void SetState()
+        {
+            if (State is State.Dead && CurrentAnimation.IsFinished)
+            {
+                Remove = true;
+                return;
+            }
+            if (IsDead) State = State.Dead;
+            else if (IsHit) State = State.Hit;
+            if (State is State.Dead || IsDead) return;
+            if ((State is State.Hit && !CurrentAnimation.IsFinished) || (!CurrentAnimation.IsFinished && State == State.Attacking))
+            {
+                CanAttack = false;
+
+                return;
+            };
+            if (State is State.Hit or State.Attacking && CurrentAnimation.IsFinished)
+            {
+                IsHit = false;
+                CanAttack = true;
+                State = State.Idle;
+            }
+            if (IsWalking) State = State.Walking;
+            else State = State.Idle;
+        }
         public override void Draw(Sprites spriteBatch)
         {
             CurrentAnimation.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);

@@ -14,12 +14,12 @@ namespace OtterlyAdventure.Graphics
 
         public int Width
         {
-            get { return this.target.Width; }
+            get { return target.Width; }
         }
 
         public int Height
         {
-            get { return this.target.Height; }
+            get { return target.Height; }
         }
 
         public Screen(Game game, int width, int height)
@@ -27,41 +27,41 @@ namespace OtterlyAdventure.Graphics
 
             this.game = game ?? throw new ArgumentNullException("game");
 
-            this.target = new RenderTarget2D(this.game.GraphicsDevice, width, height);
-            this.isSet = false;
+            target = new RenderTarget2D(this.game.GraphicsDevice, width, height);
+            isSet = false;
         }
 
         public void Dispose()
         {
-            if(this.isDisposed)
+            if(isDisposed)
             {
                 return;
             }
 
-            this.target?.Dispose();
-            this.isDisposed = true;
+            target?.Dispose();
+            isDisposed = true;
         }
 
         public void Set()
         {
-            if (this.isSet)
+            if (isSet)
             {
                 throw new Exception("Render target is already set.");
             }
 
-            this.game.GraphicsDevice.SetRenderTarget(this.target);
-            this.isSet = true;
+            game.GraphicsDevice.SetRenderTarget(target);
+            isSet = true;
         }
 
         public void UnSet()
         {
-            if (!this.isSet)
+            if (!isSet)
             {
                 throw new Exception("Render target is not set.");
             }
 
-            this.game.GraphicsDevice.SetRenderTarget(null);
-            this.isSet = false;
+            game.GraphicsDevice.SetRenderTarget(null);
+            isSet = false;
         }
 
         public void Present(Sprites sprites, bool textureFiltering = true)
@@ -71,20 +71,20 @@ namespace OtterlyAdventure.Graphics
                 throw new ArgumentNullException("sprites");
             }
             
-            this.game.GraphicsDevice.Clear(Color.Black);
+            game.GraphicsDevice.Clear(Color.Black);
 
-            Rectangle destinationRectangle = this.CalculateDestinationRectangle();
+            Rectangle destinationRectangle = CalculateDestinationRectangle();
 
             sprites.Begin(null,textureFiltering);
-            sprites.Draw(this.target, null, destinationRectangle, Color.White);
+            sprites.Draw(target, null, destinationRectangle, Color.White);
             sprites.End();
         }
         
         internal Rectangle CalculateDestinationRectangle()
         {
-            Rectangle backbufferBounds = this.game.GraphicsDevice.PresentationParameters.Bounds;
+            Rectangle backbufferBounds = game.GraphicsDevice.PresentationParameters.Bounds;
             int backbufferAspectRatio = backbufferBounds.Width / backbufferBounds.Height;
-            int screenAspectRatio = this.Width / this.Height;
+            int screenAspectRatio = Width / Height;
 
             float rx = 0f;
             float ry = 0f;

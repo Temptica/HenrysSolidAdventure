@@ -52,8 +52,8 @@ namespace OtterlyAdventure.EnemyFolder
         private float rotation = 0;
         public override void Update(GameTime gameTime)
         {
-            if (IsDead) State = OtterFolder.State.Dead;
-            if (State is OtterFolder.State.Dead)
+            if (IsDead) State = State.Dead;
+            if (State is State.Dead)
             {
                 if (timer == 0)
                 {
@@ -81,7 +81,7 @@ namespace OtterlyAdventure.EnemyFolder
         
         public override void Draw(Sprites spriteBatch)
         {
-            CurrentAnimation.Draw(spriteBatch, Position, State is OtterFolder.State.Dead?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,rotation);
+            CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,rotation);
         }
         private Random rng;
         public virtual void Move(GameTime gameTime)

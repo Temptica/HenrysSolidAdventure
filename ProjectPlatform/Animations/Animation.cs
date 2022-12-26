@@ -25,13 +25,20 @@ namespace OtterlyAdventure.Animations
         {
             Frames = new Frame[framecount];
             State = state;
-            MakeAnimation(framewidth, frameheight, beginHeight, beginWidth, scale);
+            MakeAnimation(texture.Width,framewidth, frameheight, beginHeight, beginWidth, scale);
         }
-        private void MakeAnimation(int framewidth, int frameheight, int beginHeight, int beginWidth, float scale)
+        private void MakeAnimation(int textureWidth,int framewidth, int frameheight, int beginHeight, int beginWidth, float scale)
         {
+            int frameX = beginWidth;
+            int frameY = beginHeight;
             for (int i = 0; i < Frames.Length; i++)
             {
-                Frames[i] = new Frame(new Rectangle(i * framewidth+beginWidth, beginHeight, framewidth, frameheight), Texture, scale);
+                if (frameX >= textureWidth) {
+                    frameY += frameheight;//if on end of texture width, go to next height
+                    frameX = 0;
+                }
+                Frames[i] = new Frame(new Rectangle(frameX, frameY, framewidth, frameheight), Texture, scale);
+                frameX += framewidth;
             }
         }
 

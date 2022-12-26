@@ -30,7 +30,7 @@ namespace OtterlyAdventure.Mapfolder
             MapReaderObject mapFromFile = null;
             try
             {
-                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");//ProjectPlatform.Mapfolder.MapReaderObject, ProjectPlatform
+                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");//OtterlyAdventure.Mapfolder.MapReader, ProjectPlatform
                 if (mapFromFile is null) throw new ArgumentNullException("file is empty or incorrect");
             }
             catch (ArgumentNullException)
