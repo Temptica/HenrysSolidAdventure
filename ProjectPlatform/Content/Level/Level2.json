@@ -164,6 +164,18 @@
                  "width":24,
                  "x":816,
                  "y":936
+                }, 
+                {
+                 "class":"Slime",
+                 "gid":368,
+                 "height":25,
+                 "id":33,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":528,
+                 "y":840
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -540,7 +552,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":33,
+ "nextobjectid":34,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -573,6 +585,10 @@
         {
          "firstgid":366,
          "source":"..\/..\/..\/..\/Map\/Skeleton.tsx"
+        }, 
+        {
+         "firstgid":368,
+         "source":"..\/..\/..\/..\/Map\/Slime.tsx"
         }],
  "tilewidth":24,
  "type":"map",

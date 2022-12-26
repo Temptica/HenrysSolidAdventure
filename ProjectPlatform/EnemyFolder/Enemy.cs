@@ -15,7 +15,7 @@ namespace ProjectPlatform.EnemyFolder
     internal abstract class Enemy : IAnimatable, IGameObject
     {
         public static List<Enemy> Enemies;
-        internal Enemy()
+        protected Enemy()
         {
             Enemies ??= new List<Enemy>();
             Enemies.Add(this);
@@ -66,8 +66,7 @@ namespace ProjectPlatform.EnemyFolder
             
         }
         public abstract void Draw(Sprites spriteBatch);
-        public abstract void Move(GameTime gameTime);
-        
+
         public virtual bool GetDamage(float i)
         {
             CurrentHp -= i;

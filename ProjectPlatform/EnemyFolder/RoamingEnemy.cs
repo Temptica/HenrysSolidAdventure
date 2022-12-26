@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ProjectPlatform.Graphics;
 using ProjectPlatform.Mapfolder;
 using ProjectPlatform.OtterFolder;
@@ -15,10 +16,10 @@ namespace ProjectPlatform.EnemyFolder
     {
         private float _maxLeftPosition;
         private float _maxRightPosition;
-        public RoamingEnemy()
+
+        protected RoamingEnemy()
         {
             
-
         }
 
         internal void DefineWalkablePath()
@@ -65,7 +66,7 @@ namespace ProjectPlatform.EnemyFolder
 
 
         }
-        public override void Move(GameTime gameTime)
+        public virtual void Move(GameTime gameTime)
         {
             var x = Position.X;
             Rectangle otterHb = Otter.Instance.HitBox;
@@ -96,6 +97,16 @@ namespace ProjectPlatform.EnemyFolder
                 }
             }
             Position = new Vector2(x, Position.Y );
+        }
+        public override void Update(GameTime gameTime)
+        {
+            CurrentAnimation.Update(gameTime);
+            base.Update(gameTime);
+        }
+
+        public override void Draw(Sprites spriteBatch)
+        {
+            CurrentAnimation.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
         }
 
     }

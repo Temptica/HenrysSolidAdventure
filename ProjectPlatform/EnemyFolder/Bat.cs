@@ -87,7 +87,7 @@ namespace ProjectPlatform.EnemyFolder
             CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,rotation);
         }
         private Random rng;
-        public override void Move(GameTime gameTime)
+        public virtual void Move(GameTime gameTime)
         {
             _velocity = new Vector2(_velocity.X * gameTime.ElapsedGameTime.Milliseconds, _velocity.Y *gameTime.ElapsedGameTime.Milliseconds);
             Position += _velocity;

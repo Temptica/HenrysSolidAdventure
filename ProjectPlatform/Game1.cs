@@ -170,9 +170,6 @@ namespace ProjectPlatform
             _sprite.Begin();
             
             currentScreen.Draw(_sprite, _sprites);
-            //Vector2 hit = new(OtterCollision.LastHit.X, OtterCollision.LastHit.Y);
-            //var hitscale = new Vector2(_hitbox.Width / (float)OtterCollision.LastHit.Width, _hitbox.Height / (float)OtterCollision.LastHit.Height);
-            //_sprites.Draw(_hitbox,null, Vector2.One, hit,0f, hitscale, Color.Red);
             _sprites.End();
             _sprite.End();
             _screen.UnSet();

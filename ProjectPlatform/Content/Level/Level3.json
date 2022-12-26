@@ -126,53 +126,6 @@
         }, 
         {
          "draworder":"topdown",
-         "id":3,
-         "name":"Otter & enemies",
-         "objects":[
-                {
-                 "class":"Spawn",
-                 "gid":316,
-                 "height":48,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "visible":true,
-                 "width":48,
-                 "x":0,
-                 "y":1176
-                }, 
-                {
-                 "class":"Skeleton",
-                 "gid":367,
-                 "height":32,
-                 "id":68,
-                 "name":"",
-                 "rotation":0,
-                 "visible":true,
-                 "width":24,
-                 "x":1032,
-                 "y":1056
-                }, 
-                {
-                 "class":"Skeleton",
-                 "gid":367,
-                 "height":32,
-                 "id":70,
-                 "name":"",
-                 "rotation":0,
-                 "visible":true,
-                 "width":24,
-                 "x":888,
-                 "y":816
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
          "id":4,
          "name":"Coins",
          "objects":[
@@ -587,9 +540,68 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"Otter & enemies",
+         "objects":[
+                {
+                 "class":"Spawn",
+                 "gid":316,
+                 "height":48,
+                 "id":1,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":0,
+                 "y":1176
+                }, 
+                {
+                 "class":"Skeleton",
+                 "gid":367,
+                 "height":32,
+                 "id":68,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":24,
+                 "x":1032,
+                 "y":1056
+                }, 
+                {
+                 "class":"Slime",
+                 "gid":368,
+                 "height":25,
+                 "id":71,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":888,
+                 "y":816
+                }, 
+                {
+                 "class":"Slime",
+                 "gid":368,
+                 "height":25,
+                 "id":72,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":240,
+                 "y":960
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":71,
+ "nextobjectid":74,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -622,6 +634,10 @@
         {
          "firstgid":366,
          "source":"..\/..\/..\/..\/Map\/Skeleton.tsx"
+        }, 
+        {
+         "firstgid":368,
+         "source":"..\/..\/..\/..\/Map\/Slime.tsx"
         }],
  "tilewidth":24,
  "type":"map",

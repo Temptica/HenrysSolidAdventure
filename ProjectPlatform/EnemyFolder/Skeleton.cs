@@ -10,11 +10,11 @@ namespace ProjectPlatform.EnemyFolder
     internal class Skeleton:RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform
         public static Dictionary<State, Texture2D> Textures;//list as some of the spritesheets are bigger than others due to the big "sword" making it very difficult having them on one sprite
-        private readonly Vector2 _spawnPosition;
+        private float fixedYPosition;
         public Skeleton(Vector2 position)
         {
-            
-            Position = _spawnPosition = position;
+            Position = position;
+            fixedYPosition = Position.Y;
             Animations = new()
             {//https://jesse-m.itch.io/skeleton-pack
                 new Animation(Textures[State.Idle], State.Idle,11, Textures[State.Idle].Width/11, Textures[State.Idle].Height, 0, 0,7),
@@ -24,30 +24,27 @@ namespace ProjectPlatform.EnemyFolder
                 new Animation(Textures[State.Dead], State.Dead,15, Textures[State.Dead].Width/15, Textures[State.Dead].Height, 0, 0,5),
                 new Animation(Textures[State.Other], State.Other,4, Textures[State.Other].Width/4, Textures[State.Other].Height, 0, 0,7)//when skeleton detects Otter
             };
-            DefineWalkablePath();
             CurrentHp = BaseHp = 14;
             Damage = 5;
             Speed = 8f;
             CanAttack = true;
             IsWalking = true;
+            DefineWalkablePath();
+
         }
         public override void Update(GameTime gameTime)
         {
             SetState();
-            CurrentAnimation.Update(gameTime);
+            
             Position = new Vector2(Position.X,
-                _spawnPosition.Y + (Textures[State.Idle].Height - Textures[State].Height));
+                fixedYPosition + (Textures[State.Idle].Height - Textures[State].Height));//makes position correct, even tho texture is higher
             if (State is State.Walking)
             {
-                
+
                 Move(gameTime);
 
             }
-            if (State is State.Attacking)
-            {
-                //look at Otter while attacking
-                IsFacingLeft = HitBox.Center.X >= Otter.Instance.HitBox.Center.X;
-            }
+            base.Update(gameTime);
         }
 
         private void SetState()
@@ -82,10 +79,6 @@ namespace ProjectPlatform.EnemyFolder
             }
             else if (IsWalking) State = State.Walking;
             else State = State.Idle;
-        }
-        public override void Draw(Sprites spriteBatch)
-        {
-            CurrentAnimation.Draw(spriteBatch, Position, IsFacingLeft? SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f);
         }
         public bool CheckAttack()
         {

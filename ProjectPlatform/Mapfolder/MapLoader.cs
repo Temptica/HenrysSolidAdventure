@@ -30,7 +30,7 @@ namespace ProjectPlatform.Mapfolder
             MapReaderObject mapFromFile = null;
             try
             {
-                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");
+                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");//ProjectPlatform.Mapfolder.MapReaderObject, ProjectPlatform
                 if (mapFromFile is null) throw new ArgumentNullException("file is empty or incorrect");
             }
             catch (ArgumentNullException)
@@ -64,6 +64,7 @@ namespace ProjectPlatform.Mapfolder
                 if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height);
                 if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
+                if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));
             }           
         }
 

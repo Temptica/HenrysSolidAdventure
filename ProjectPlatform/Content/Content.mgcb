@@ -440,19 +440,19 @@
 #begin Level/Level1.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReader, ProjectPlatform 
+/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReaderObject, ProjectPlatform
 /build:Level/Level1.json
 
 #begin Level/Level2.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReader, ProjectPlatform 
+/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReaderObject, ProjectPlatform
 /build:Level/Level2.json
 
 #begin Level/Level3.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReader, ProjectPlatform 
+/processorParam:ContentType=ProjectPlatform.Mapfolder.MapReaderObject, ProjectPlatform
 /build:Level/Level3.json
 
 #begin Tiles/oak_woods_tileset_fixed.png

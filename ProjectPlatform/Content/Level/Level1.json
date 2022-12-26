@@ -142,6 +142,18 @@
                  "y":1104
                 }, 
                 {
+                 "class":"Slime",
+                 "gid":372,
+                 "height":25,
+                 "id":45,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":792,
+                 "y":1056
+                },
+                {
                  "class":"Bat",
                  "gid":366,
                  "height":44,
@@ -480,7 +492,7 @@
          "y":0
         }],
  "nextlayerid":23,
- "nextobjectid":45,
+ "nextobjectid":46,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -517,6 +529,10 @@
         {
          "firstgid":370,
          "source":"..\/..\/..\/..\/Map\/Skeleton.tsx"
+        }, 
+        {
+         "firstgid":372,
+         "source":"..\/..\/..\/..\/Map\/Slime.tsx"
         }],
  "tilewidth":24,
  "type":"map",

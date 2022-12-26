@@ -12,7 +12,7 @@ namespace ProjectPlatform.EnemyFolder
 {
     internal abstract class TrackingEnemy : Enemy
     {        
-        public TrackingEnemy() : base()
+        public TrackingEnemy()
         {            
         }
     }
