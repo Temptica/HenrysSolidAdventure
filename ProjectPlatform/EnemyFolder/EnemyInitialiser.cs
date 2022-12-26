@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.OtterFolder;
+using OtterlyAdventure.OtterFolder;
 
-namespace ProjectPlatform.EnemyFolder
+namespace OtterlyAdventure.EnemyFolder
 {
     internal static class EnemyInitialiser
     {

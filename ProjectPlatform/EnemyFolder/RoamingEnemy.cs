@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.Mapfolder;
-using ProjectPlatform.OtterFolder;
+using OtterlyAdventure.Graphics;
+using OtterlyAdventure.Mapfolder;
+using OtterlyAdventure.OtterFolder;
 
-namespace ProjectPlatform.EnemyFolder
+namespace OtterlyAdventure.EnemyFolder
 {
     internal abstract class RoamingEnemy:Enemy
     {

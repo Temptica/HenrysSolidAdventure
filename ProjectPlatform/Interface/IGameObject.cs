@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using ProjectPlatform.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.Interface
+namespace OtterlyAdventure.Interface
 {
     internal interface IGameObject
     {        

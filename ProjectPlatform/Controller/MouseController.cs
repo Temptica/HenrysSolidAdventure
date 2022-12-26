@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using ProjectPlatform.Graphics;
 using Microsoft.Xna.Framework.Input;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.Controller
+namespace OtterlyAdventure.Controller
 {
     internal static class MouseController
     {

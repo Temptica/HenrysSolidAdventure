@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Controller;
+using OtterlyAdventure.Controller;
 
-namespace ProjectPlatform.Graphics
+namespace OtterlyAdventure.Graphics
 {
     internal class StateButton
     {

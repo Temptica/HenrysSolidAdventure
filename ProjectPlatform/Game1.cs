@@ -5,16 +5,16 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ProjectPlatform.Mapfolder;
-using ProjectPlatform.Shop;
+using OtterlyAdventure.Shop;
 using System.Threading;
-using ProjectPlatform.EnemyFolder;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.Controller;
-using ProjectPlatform.OtterFolder;
-using ProjectPlatform.GameScreens;
+using OtterlyAdventure.Controller;
+using OtterlyAdventure.EnemyFolder;
+using OtterlyAdventure.GameScreens;
+using OtterlyAdventure.Graphics;
+using OtterlyAdventure.Mapfolder;
+using OtterlyAdventure.OtterFolder;
 
-namespace ProjectPlatform
+namespace OtterlyAdventure
 {
     enum GameState { Menu, Paused, Playing, GameOver, Settings }
     public class Game1 : Game

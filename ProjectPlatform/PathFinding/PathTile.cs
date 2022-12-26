@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using ProjectPlatform.Mapfolder;
+using OtterlyAdventure.Mapfolder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectPlatform.PathFinding
+namespace OtterlyAdventure.PathFinding
 {
     internal class PathPoint
     {

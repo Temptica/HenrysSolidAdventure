@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectPlatform.GameScreens
+namespace OtterlyAdventure.GameScreens
 {
     internal class ScreenUtil
     {

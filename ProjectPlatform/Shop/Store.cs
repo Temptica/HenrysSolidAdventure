@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Animations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProjectPlatform.Graphics;
+using OtterlyAdventure.Animations;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.Shop
+namespace OtterlyAdventure.Shop
 {
     internal class Store
     {

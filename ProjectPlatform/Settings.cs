@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProjectPlatform.Controller;
+using OtterlyAdventure.Controller;
 
-namespace ProjectPlatform
+namespace OtterlyAdventure
 {
     internal class Settings
     {

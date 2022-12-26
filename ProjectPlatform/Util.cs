@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using ProjectPlatform.Graphics;
+using OtterlyAdventure.Graphics;
+
 //using Microsoft.Xna.Framework.Graphics;
 
-namespace ProjectPlatform
+namespace OtterlyAdventure
 {
     public static class Util
     {

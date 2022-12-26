@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Mapfolder;
+using OtterlyAdventure.Mapfolder;
 
-namespace ProjectPlatform
+namespace OtterlyAdventure
 {
     public static class TextureUtil
     {

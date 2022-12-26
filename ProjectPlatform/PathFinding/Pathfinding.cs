@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using ProjectPlatform.Interface;
-using ProjectPlatform.Mapfolder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using OtterlyAdventure.Interface;
+using OtterlyAdventure.Mapfolder;
 
-namespace ProjectPlatform.PathFinding
+namespace OtterlyAdventure.PathFinding
 {
     internal class Pathfinding
     {

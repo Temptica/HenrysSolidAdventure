@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.EnemyFolder;
-using ProjectPlatform.OtterFolder;
-using ProjectPlatform.Shop;
+using OtterlyAdventure.EnemyFolder;
+using OtterlyAdventure.OtterFolder;
+using OtterlyAdventure.Shop;
 
-namespace ProjectPlatform.Mapfolder
+namespace OtterlyAdventure.Mapfolder
 {
     internal static class MapLoader
     {
@@ -34,10 +34,6 @@ namespace ProjectPlatform.Mapfolder
                 if (mapFromFile is null) throw new ArgumentNullException("file is empty or incorrect");
             }
             catch (ArgumentNullException)
-            {
-                return;
-            }
-            catch (Exception)
             {
                 return;
             }

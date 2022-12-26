@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Animations;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.OtterFolder;
+using OtterlyAdventure.Graphics;
 using System.Collections.Generic;
+using OtterlyAdventure.Animations;
+using OtterlyAdventure.OtterFolder;
 
-namespace ProjectPlatform.EnemyFolder
+namespace OtterlyAdventure.EnemyFolder
 {
     internal class Skeleton:RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform
@@ -17,12 +17,12 @@ namespace ProjectPlatform.EnemyFolder
             fixedYPosition = Position.Y;
             Animations = new()
             {//https://jesse-m.itch.io/skeleton-pack
-                new Animation(Textures[State.Idle], State.Idle,11, Textures[State.Idle].Width/11, Textures[State.Idle].Height, 0, 0,7),
-                new Animation(Textures[State.Walking],State.Walking, 13, Textures[State.Walking].Width/13, Textures[State.Walking].Height, 0, 0,6),
-                new Animation(Textures[State.Attacking], State.Attacking,18, Textures[State.Attacking].Width/18, Textures[State.Attacking].Height, 0, 0,10),
-                new Animation(Textures[State.Hit], State.Hit,8, Textures[State.Hit].Width/8, Textures[State.Hit].Height, 0, 0,5),
-                new Animation(Textures[State.Dead], State.Dead,15, Textures[State.Dead].Width/15, Textures[State.Dead].Height, 0, 0,5),
-                new Animation(Textures[State.Other], State.Other,4, Textures[State.Other].Width/4, Textures[State.Other].Height, 0, 0,7)//when skeleton detects Otter
+                new Animation(Textures[OtterFolder.State.Idle], OtterFolder.State.Idle,11, Textures[OtterFolder.State.Idle].Width/11, Textures[OtterFolder.State.Idle].Height, 0, 0,7),
+                new Animation(Textures[OtterFolder.State.Walking],OtterFolder.State.Walking, 13, Textures[OtterFolder.State.Walking].Width/13, Textures[OtterFolder.State.Walking].Height, 0, 0,6),
+                new Animation(Textures[OtterFolder.State.Attacking], OtterFolder.State.Attacking,18, Textures[OtterFolder.State.Attacking].Width/18, Textures[OtterFolder.State.Attacking].Height, 0, 0,10),
+                new Animation(Textures[OtterFolder.State.Hit], OtterFolder.State.Hit,8, Textures[OtterFolder.State.Hit].Width/8, Textures[OtterFolder.State.Hit].Height, 0, 0,5),
+                new Animation(Textures[OtterFolder.State.Dead], OtterFolder.State.Dead,15, Textures[OtterFolder.State.Dead].Width/15, Textures[OtterFolder.State.Dead].Height, 0, 0,5),
+                new Animation(Textures[OtterFolder.State.Other], OtterFolder.State.Other,4, Textures[OtterFolder.State.Other].Width/4, Textures[OtterFolder.State.Other].Height, 0, 0,7)//when skeleton detects Otter
             };
             CurrentHp = BaseHp = 14;
             Damage = 5;
@@ -37,8 +37,8 @@ namespace ProjectPlatform.EnemyFolder
             SetState();
             
             Position = new Vector2(Position.X,
-                fixedYPosition + (Textures[State.Idle].Height - Textures[State].Height));//makes position correct, even tho texture is higher
-            if (State is State.Walking)
+                fixedYPosition + (Textures[OtterFolder.State.Idle].Height - Textures[State].Height));//makes position correct, even tho texture is higher
+            if (State is OtterFolder.State.Walking)
             {
 
                 Move(gameTime);
@@ -49,36 +49,36 @@ namespace ProjectPlatform.EnemyFolder
 
         private void SetState()
         {
-            if (State is State.Dead && CurrentAnimation.IsFinished)
+            if (State is OtterFolder.State.Dead && CurrentAnimation.IsFinished)
             {
                 Remove = true;
                 return;
             }
-            if (IsDead) State = State.Dead;
-            else if (IsHit) State = State.Hit;
-            if (State is State.Dead || IsDead) return;
-            if ((State is State.Hit && !CurrentAnimation.IsFinished)||(!CurrentAnimation.IsFinished && State == State.Attacking))
+            if (IsDead) State = OtterFolder.State.Dead;
+            else if (IsHit) State = OtterFolder.State.Hit;
+            if (State is OtterFolder.State.Dead || IsDead) return;
+            if ((State is OtterFolder.State.Hit && !CurrentAnimation.IsFinished)||(!CurrentAnimation.IsFinished && State == OtterFolder.State.Attacking))
             {
                 CanAttack = false;
-                if (State is State.Attacking && CurrentAnimation.CurrentFrameIndex >= 9 && CurrentAnimation.CurrentFrameIndex <= 6) CanDamage = false;//after 8th frame, skeleton can't damage otter as it lifts up his weapon
+                if (State is OtterFolder.State.Attacking && CurrentAnimation.CurrentFrameIndex >= 9 && CurrentAnimation.CurrentFrameIndex <= 6) CanDamage = false;//after 8th frame, skeleton can't damage otter as it lifts up his weapon
                 return;
             };
-            if (State is State.Hit or State.Attacking && CurrentAnimation.IsFinished)
+            if (State is OtterFolder.State.Hit or OtterFolder.State.Attacking && CurrentAnimation.IsFinished)
             {
                 IsHit = false;
                 CanAttack = true;
-                State = State.Idle;
+                State = OtterFolder.State.Idle;
             }
             IsAttacking = CheckAttack();
 
             if (IsAttacking)
             {
-                if (State == State.Attacking) return;
+                if (State == OtterFolder.State.Attacking) return;
                 CanDamage = true;//first time attacking animation starts
-                State = State.Attacking;
+                State = OtterFolder.State.Attacking;
             }
-            else if (IsWalking) State = State.Walking;
-            else State = State.Idle;
+            else if (IsWalking) State = OtterFolder.State.Walking;
+            else State = OtterFolder.State.Idle;
         }
         public bool CheckAttack()
         {

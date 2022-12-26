@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ProjectPlatform.Graphics
+namespace OtterlyAdventure.Graphics
 {
     public sealed class Camera
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectPlatform.Mapfolder
+namespace OtterlyAdventure.Mapfolder
 {
     internal class MapReader:JsonContentTypeReader<MapReaderObject>
     {

@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Animations;
-using ProjectPlatform.Graphics;
+using OtterlyAdventure.Animations;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.EnemyFolder
+namespace OtterlyAdventure.EnemyFolder
 {
     internal class Boss : Enemy
     {//https://luizmelo.itch.io/evil-wizard-2

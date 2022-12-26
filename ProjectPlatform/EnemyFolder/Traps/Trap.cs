@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using ProjectPlatform.Animations;
-using ProjectPlatform.Interface;
+using OtterlyAdventure.Animations;
+using OtterlyAdventure.Interface;
 
-namespace ProjectPlatform.EnemyFolder.Traps
+namespace OtterlyAdventure.EnemyFolder.Traps
 {
     internal abstract class Trap: IAnimatable
     {

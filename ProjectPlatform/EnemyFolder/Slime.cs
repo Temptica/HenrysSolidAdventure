@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Animations;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.Interface;
-using ProjectPlatform.OtterFolder;
+using OtterlyAdventure.Animations;
+using OtterlyAdventure.Graphics;
+using OtterlyAdventure.Interface;
+using OtterlyAdventure.OtterFolder;
 
-namespace ProjectPlatform.EnemyFolder
+namespace OtterlyAdventure.EnemyFolder
 {
     internal class Slime:RoamingEnemy
     {//slimes are dumb and won't track
@@ -22,11 +22,11 @@ namespace ProjectPlatform.EnemyFolder
             var frameHeight = Texture.Height/3;
             Animations = new List<Animation>
             {
-                new(Texture, State.Idle, 4, frameWidth, frameHeight, 0, 0, 8),
-                new(Texture, State.Walking, 4, frameWidth, frameHeight, 0, frameWidth * 4, 8),
-                new(Texture, State.Attacking, 5, frameWidth, frameHeight, frameHeight, 0, 8),
-                new(Texture, State.Hit, 4, frameWidth, frameHeight, frameHeight, frameWidth * 5, 8),
-                new(Texture, State.Dead, 4, frameWidth, frameHeight, frameHeight * 2, frameWidth, 8)
+                new(Texture, OtterFolder.State.Idle, 4, frameWidth, frameHeight, 0, 0, 8),
+                new(Texture, OtterFolder.State.Walking, 4, frameWidth, frameHeight, 0, frameWidth * 4, 8),
+                new(Texture, OtterFolder.State.Attacking, 5, frameWidth, frameHeight, frameHeight, 0, 8),
+                new(Texture, OtterFolder.State.Hit, 4, frameWidth, frameHeight, frameHeight, frameWidth * 5, 8),
+                new(Texture, OtterFolder.State.Dead, 4, frameWidth, frameHeight, frameHeight * 2, frameWidth, 8)
             };
             CurrentHp = BaseHp = 6;
             Damage = 3;

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Controller;
-using ProjectPlatform.Graphics;
+using OtterlyAdventure.Controller;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.GameScreens
+namespace OtterlyAdventure.GameScreens
 {
     internal class SettingsScreen: IGameScreen
     {

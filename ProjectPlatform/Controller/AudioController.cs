@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 
-namespace ProjectPlatform.Controller
+namespace OtterlyAdventure.Controller
 {
     internal class AudioController
     {

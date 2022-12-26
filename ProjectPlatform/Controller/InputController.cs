@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectPlatform.Controller
+namespace OtterlyAdventure.Controller
 {
     internal static class InputController
     {

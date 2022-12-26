@@ -1,17 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Controller;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.Mapfolder;
-using ProjectPlatform.OtterFolder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OtterlyAdventure.Controller;
+using OtterlyAdventure.Graphics;
+using OtterlyAdventure.Mapfolder;
+using OtterlyAdventure.OtterFolder;
 
-namespace ProjectPlatform.GameScreens
+namespace OtterlyAdventure.GameScreens
 {
     internal class PlayingScreen : IGameScreen
     {

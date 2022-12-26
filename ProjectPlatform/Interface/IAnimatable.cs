@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using ProjectPlatform.Animations;
+using OtterlyAdventure.Animations;
 
-namespace ProjectPlatform.Interface
+namespace OtterlyAdventure.Interface
 {
     internal interface IAnimatable
     {

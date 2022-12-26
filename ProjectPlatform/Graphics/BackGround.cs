@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace ProjectPlatform.Graphics
+namespace OtterlyAdventure.Graphics
 {
     internal class BackGround
     {//from same bundle as tileset, decoration and nature

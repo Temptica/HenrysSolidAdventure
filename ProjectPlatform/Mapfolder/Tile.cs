@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ProjectPlatform.Mapfolder
+namespace OtterlyAdventure.Mapfolder
 {
     public enum TileType
     {

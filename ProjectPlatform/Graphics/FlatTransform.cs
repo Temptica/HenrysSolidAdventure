@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 
-namespace ProjectPlatform.Graphics
+namespace OtterlyAdventure.Graphics
 {
     public struct FlatTransform
     {

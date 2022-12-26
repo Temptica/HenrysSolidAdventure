@@ -1,17 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.Mapfolder;
-using ProjectPlatform.OtterFolder;
+using OtterlyAdventure.Mapfolder;
+using OtterlyAdventure.OtterFolder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProjectPlatform.Controller;
+using OtterlyAdventure.Controller;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.GameScreens
+namespace OtterlyAdventure.GameScreens
 {
     internal class PausedScreen : IGameScreen
     {

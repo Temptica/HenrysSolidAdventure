@@ -1,4 +1,4 @@
-﻿namespace ProjectPlatform.Interface;
+﻿namespace OtterlyAdventure.Interface;
 
 public interface IStats
 {

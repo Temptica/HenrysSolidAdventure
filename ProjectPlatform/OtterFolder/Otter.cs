@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Animations;
-using ProjectPlatform.Controller;
-using ProjectPlatform.EnemyFolder;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.Interface;
-using ProjectPlatform.Mapfolder;
+using OtterlyAdventure.Animations;
+using OtterlyAdventure.Controller;
+using OtterlyAdventure.EnemyFolder;
+using OtterlyAdventure.Graphics;
+using OtterlyAdventure.Interface;
+using OtterlyAdventure.Mapfolder;
 
-namespace ProjectPlatform.OtterFolder
+namespace OtterlyAdventure.OtterFolder
 {
     //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
     internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Hit, Other }

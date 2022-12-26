@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.GameScreens
+namespace OtterlyAdventure.GameScreens
 {
     internal interface IGameScreen
     {

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProjectPlatform.Graphics;
+using OtterlyAdventure.Graphics;
 
-namespace ProjectPlatform.Mapfolder
+namespace OtterlyAdventure.Mapfolder
 {
     internal class Decoration
     {

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.EnemyFolder;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.Shop;
+using OtterlyAdventure.EnemyFolder;
+using OtterlyAdventure.Graphics;
+using OtterlyAdventure.Shop;
 
-namespace ProjectPlatform.Mapfolder
+namespace OtterlyAdventure.Mapfolder
 {
     //TODO: Make map scaled to screen with fixed raster of 50X50 for example
     //TODO: Read from a string (from folder)

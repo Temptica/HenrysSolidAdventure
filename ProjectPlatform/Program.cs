@@ -1,3 +1,3 @@
 ﻿
-using var game = new ProjectPlatform.Game1();
+using var game = new OtterlyAdventure.Game1();
 game.Run();

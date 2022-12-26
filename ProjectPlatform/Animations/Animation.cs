@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ProjectPlatform.Graphics;
-using ProjectPlatform.OtterFolder;
+using OtterlyAdventure.Graphics;
+using OtterlyAdventure.OtterFolder;
 
-namespace ProjectPlatform.Animations
+namespace OtterlyAdventure.Animations
 {
     internal class Animation: BasicAnimation
     {
