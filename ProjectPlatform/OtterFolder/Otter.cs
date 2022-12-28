@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
+using OtterlyAdventure.Characters;
 using OtterlyAdventure.Controller;
-using OtterlyAdventure.EnemyFolder;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Interface;
 using OtterlyAdventure.Mapfolder;
 
 namespace OtterlyAdventure.OtterFolder
 {
     //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
     internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Hit, Other }
-    internal class Otter : IAnimatable, IGameObject
+    internal class Otter : Character
     {
         #region Consts
         private const float JumpForce = 0.35f;
@@ -419,28 +417,19 @@ namespace OtterlyAdventure.OtterFolder
             if (State is State.Hit) color = Color.Red;
             else if (State is State.Attacking) color = Color.Yellow;
             else if (State is State.Dead) color = Color.Black;
-            CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
+            Animations.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
 
         }
         public void Draw(Sprites spriteBatch, float scale )
         {
-            CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, scale);
+            Animations.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, scale);
         }
 
         public void SetWalk(bool canWalk)
         {
             _canWalk = canWalk;
         }
-        private Rectangle GetHitBox()
-        {
-            if (_lookingLeft)
-            {//invert hitbox
-                //return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale- CurrentAnimation.CurrentFrame.HitBox.Width * Scale)
-                return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
-
-            }
-            return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Width * Scale), (int)(CurrentAnimation.CurrentFrame.HitBox.Height * Scale));
-        }
+        
         public void Reset()
         {
             Coins = 0;

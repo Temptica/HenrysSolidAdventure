@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Interface;
 using OtterlyAdventure.OtterFolder;
 
 namespace OtterlyAdventure.Animations
@@ -14,12 +10,12 @@ namespace OtterlyAdventure.Animations
     internal class FrameList<T> : List<T> where T: Frame
     {
 
-        private int animationIndex;
-        public Frame CurrentFrame => this[animationIndex];
+        private int _animationIndex;
+        public Frame CurrentFrame => this[_animationIndex];
 
         public void ResetIndex()
         {
-            animationIndex = 0;
+            _animationIndex = 0;
         }
     }
 
@@ -38,8 +34,8 @@ namespace OtterlyAdventure.Animations
         {
             if (_currentAnimation != state)
             {
+                CurrentAnimation.Frames.ResetIndex();
                 _currentAnimation = state;
-                ResetAnimations();
             }
             CurrentAnimation.Update(gameTime);
         }

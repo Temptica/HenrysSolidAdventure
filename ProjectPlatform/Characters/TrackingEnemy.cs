@@ -1,15 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OtterlyAdventure.OtterFolder;
 
-namespace OtterlyAdventure.EnemyFolder
+namespace OtterlyAdventure.Characters
 {
     internal abstract class TrackingEnemy : Enemy
     {

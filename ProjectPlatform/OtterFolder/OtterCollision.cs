@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using OtterlyAdventure.EnemyFolder;
-using OtterlyAdventure.Interface;
+using OtterlyAdventure.Characters;
 using OtterlyAdventure.Mapfolder;
 
 namespace OtterlyAdventure.OtterFolder

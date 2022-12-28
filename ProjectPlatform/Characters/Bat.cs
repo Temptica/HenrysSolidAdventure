@@ -1,20 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Interface;
-using OtterlyAdventure.PathFinding;
-using OtterlyAdventure.Mapfolder;
 using OtterlyAdventure.OtterFolder;
 
 //https://github.com/roy-t/AStar
 
-namespace OtterlyAdventure.EnemyFolder
+namespace OtterlyAdventure.Characters
 {
     internal class Bat : TrackingEnemy
     {

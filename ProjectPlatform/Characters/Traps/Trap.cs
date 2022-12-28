@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using OtterlyAdventure.Animations;
-using OtterlyAdventure.Interface;
 
-namespace OtterlyAdventure.EnemyFolder.Traps
+namespace OtterlyAdventure.Characters.Traps
 {
     internal abstract class Trap: IAnimatable
     {

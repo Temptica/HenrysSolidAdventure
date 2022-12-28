@@ -1,14 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using OtterlyAdventure.Shop;
-using System.Threading;
+using OtterlyAdventure.Characters;
 using OtterlyAdventure.Controller;
-using OtterlyAdventure.EnemyFolder;
 using OtterlyAdventure.GameScreens;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.Mapfolder;
@@ -25,7 +20,6 @@ namespace OtterlyAdventure
         private SpriteFont _font;
         private static GameState _gameState;
         private static bool _stateChanged;
-        private List<Button> _buttons;
         private Texture2D _hitbox;
         private SpriteBatch _sprite;
         private Screen _screen;
@@ -44,9 +38,6 @@ namespace OtterlyAdventure
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            _buttons = new List<Button>();
-            // _graphics.IsFullScreen = true;
             _gameState = GameState.Menu;
             _sprite = new SpriteBatch(_graphics.GraphicsDevice);
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;

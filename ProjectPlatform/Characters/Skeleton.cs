@@ -1,11 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Graphics;
-using System.Collections.Generic;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.OtterFolder;
 
-namespace OtterlyAdventure.EnemyFolder
+namespace OtterlyAdventure.Characters
 {
     internal class Skeleton:RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform

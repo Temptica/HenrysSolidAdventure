@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.Mapfolder;
 using OtterlyAdventure.OtterFolder;
 
-namespace OtterlyAdventure.EnemyFolder
+namespace OtterlyAdventure.Characters
 {
     internal abstract class RoamingEnemy:Enemy
     {
@@ -28,7 +24,7 @@ namespace OtterlyAdventure.EnemyFolder
         {
             //get the tile the enemy is on
             //find how far left you can go without having a gap or a wall. Then same for right
-            Rectangle hitbox = new Rectangle(0, HitBox.Y, Map.Instance.ScreenRectangle.Right, 200);
+            Rectangle hitbox = new (0, HitBox.Y, Map.Instance.ScreenRectangle.Right, 200);
             
             var walkableMap = Map.Instance.FrontMap.FindAll(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Bottom>= hitbox.Top && hitbox.Intersects(tile.HitBox));
             var sortedList = walkableMap.OrderBy(tile => Vector2.Distance(tile.Position, Position)).ToList();
@@ -146,7 +142,7 @@ namespace OtterlyAdventure.EnemyFolder
         }
         public override void Draw(Sprites spriteBatch)
         {
-            CurrentAnimation.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
+            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
         }
 
     }

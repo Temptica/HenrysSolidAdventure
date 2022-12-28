@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.EnemyFolder
+namespace OtterlyAdventure.Characters
 {
     internal class Boss : Enemy
     {//https://luizmelo.itch.io/evil-wizard-2

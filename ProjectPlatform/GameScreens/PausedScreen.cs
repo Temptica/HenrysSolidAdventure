@@ -1,13 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Mapfolder;
-using OtterlyAdventure.OtterFolder;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OtterlyAdventure.Controller;
 using OtterlyAdventure.Graphics;
 

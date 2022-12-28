@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Interface;
 using OtterlyAdventure.OtterFolder;
 
-namespace OtterlyAdventure.EnemyFolder
+namespace OtterlyAdventure.Characters
 {
     internal class Slime:RoamingEnemy
     {//slimes are dumb and won't track enemies. (perhaps make them run onto slopes?)
@@ -43,7 +37,7 @@ namespace OtterlyAdventure.EnemyFolder
 
         public override void Draw(Sprites spriteBatch)
         {//texture is flipped compared to other enemies
-            CurrentAnimation.Draw(spriteBatch, Position, !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
+            Animations.Draw(spriteBatch, Position, !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
         }
         public override bool CheckDamage()
         {

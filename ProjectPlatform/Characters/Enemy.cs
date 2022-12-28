@@ -1,43 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Interface;
 using OtterlyAdventure.OtterFolder;
 
-namespace OtterlyAdventure.EnemyFolder
+namespace OtterlyAdventure.Characters
 {
-    internal abstract class Enemy : IAnimatable, IGameObject
+    internal abstract class Enemy:Character
     {
         protected Enemy()
         {
             CanAttack = true;
         }
-
-        internal bool IsFacingLeft;
-        internal bool IsAttacking;
-        internal bool IsWalking;
-        internal bool IsDead;
-        internal bool IsHit;
-        internal bool CanAttack;
-        internal bool CanDamage;
-        public int BaseHp { get; set; }
-        public int Damage { get; set; }
-        public float CurrentHp { get; set; }
-        public float Speed { get; set; }
         public bool Remove { get; set; }
-        public AnimationList<Animation> Animations { get; set; }
         public Animation CurrentAnimation=> Animations.CurrentAnimation;
-        public virtual Rectangle HitBox
-        {
-            get => GetHitBox();
-            set => throw new NotImplementedException();
-        }
+        
         public Vector2 Position { get; set; }
         internal State State { get; set; }
 
