@@ -28,8 +28,8 @@ namespace OtterlyAdventure.Characters
         public Vector2 Position { get; set; }
         internal Rectangle GetHitBox()
         {
-            var x = Position.X + Animations.CurrentAnimation.CurrentFrame.HitBox.X;
-            var y = Position.Y + Animations.CurrentAnimation.CurrentFrame.HitBox.Y;
+            var x = Position.X - Animations.CurrentAnimation.CurrentFrame.HitBox.X;
+            var y = Position.Y - Animations.CurrentAnimation.CurrentFrame.HitBox.Y;
             var width = Animations.CurrentAnimation.CurrentFrame.HitBox.Width;
             var height = Animations.CurrentAnimation.CurrentFrame.HitBox.Height;
             if (IsFacingLeft)

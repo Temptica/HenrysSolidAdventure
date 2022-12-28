@@ -20,7 +20,7 @@ namespace OtterlyAdventure
         private SpriteFont _font;
         private static GameState _gameState;
         private static bool _stateChanged;
-        private Texture2D _hitbox;
+        public static Texture2D _hitbox;
         private SpriteBatch _sprite;
         private Screen _screen;
         private Sprites _sprites;

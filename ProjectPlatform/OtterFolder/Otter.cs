@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,7 +33,12 @@ namespace OtterlyAdventure.OtterFolder
                 return ani ?? Animations?.FirstOrDefault();//if ani is default, it will take standard animation
             }
         }
-        public int Health { get; private set; }
+        public int Health
+        {
+            get => _healt;
+            private set => _healt = Util.Clamp(value, 0, MaxHealth);
+        }
+
         public float HealthPercentage => (float)Math.Round(Health / (double)MaxHealth * 100, 0);
         public int MaxHealth { get; private set; }
         public int MaxCondition { get; private set; }
@@ -49,6 +55,7 @@ namespace OtterlyAdventure.OtterFolder
         private bool _isRunning;
         private bool _canWalk;
         private bool _isJumping;
+        private int _healt;
         public static Otter Instance => _instance ??= new Otter();
 
         private Otter()//use last texture height to correct position
@@ -214,17 +221,17 @@ namespace OtterlyAdventure.OtterFolder
             GetVelocity(gameTime);
             
             float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Velocity.X);
-
+            
             var nextPosition = Position;
             if (velocityXDelta != 0)
             {
-                nextPosition.X += velocityXDelta;
+                nextPosition.X+= velocityXDelta;
             }
             if (Velocity.Y != 0)
             {
                 nextPosition.Y += Velocity.Y;
             }
-            var nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
+            var nextHitBox = new Rectangle((int)Math.Round(nextPosition.X), (int)Math.Round(nextPosition.Y), HitBox.Width, HitBox.Height);
 
             if (Velocity.Y < 0)//going up
             {
@@ -232,7 +239,7 @@ namespace OtterlyAdventure.OtterFolder
                 if (tile != null)
                 {
                     Velocity.Y = 0f;
-                    nextPosition = new(nextPosition.X, tile.HitBox.Bottom + 1);
+                    nextPosition = new(nextPosition.X, tile.HitBox.Bottom + 3);
                 }
                 else
                 {
@@ -245,7 +252,6 @@ namespace OtterlyAdventure.OtterFolder
 
             if (Velocity.X > 0)//to right
             {
-                //make new hitbox that will check if there will be a collision
 
                 var tile = OtterCollision.OtterRightHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
@@ -276,10 +282,9 @@ namespace OtterlyAdventure.OtterFolder
                     Velocity.X = 0;
                     nextPosition = new Vector2(1, nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
-                    return;
                 }
             }
-            if (Velocity.Y >= 0) //jump/falling mechanism
+            if (Velocity.Y >= 0) //falling mechanism
             {
                 var result = OnGround(nextHitBox);
                 if (result != Vector2.Zero)
@@ -393,7 +398,10 @@ namespace OtterlyAdventure.OtterFolder
             if (State is State.Hit) color = Color.Red;
             else if (State is State.Attacking) color = Color.Yellow;
             else if (State is State.Dead) color = Color.Black;
+            
+
             Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
+            
 
         }
 

@@ -15,6 +15,7 @@ namespace OtterlyAdventure.GameScreens
         List<Button> _buttons;
         List<Text> _texts;
         SpriteFont _font;
+        HealthBar _healthBar;
         public PlayingScreen(Screen screen, ContentManager content, SpriteFont font)
         {
             MapLoader.SetMapId(1);
@@ -29,10 +30,12 @@ namespace OtterlyAdventure.GameScreens
             //_buttons.ForEach(button => button.UpdateActive(_gameState));
             Otter.Instance.SetWalk(true);
             AudioController.Instance.PlaySong("GamePlay");
+            HealthBar.Texture ??= content.Load<Texture2D>("Items/HealthBarEmpty");
+            HealthBar.BarTexture ??= content.Load<Texture2D>("Items/HealthBar");
+            _healthBar = new HealthBar(new Vector2(20, 40),2f);
             _texts = new List<Text>
             {
-                new(new Vector2(20, 20), $"Coins: {Otter.Instance.Coins}", Color.White, 0.2f, 0f, font),
-                new(new Vector2(20, 40), $"HP: {Otter.Instance.Health}. HP%: {Otter.Instance.HealthPercentage}", Color.White, 0.2f, 0f, font)
+                new(new Vector2(20, 20), $"Coins: {Otter.Instance.Coins}", Color.White, 0.2f, 0f, font)
             };
         }
 
@@ -42,14 +45,15 @@ namespace OtterlyAdventure.GameScreens
             Map.Instance.Draw(sprites);
             Otter.Instance.Draw(sprites);
             _texts.ForEach(text => text.Draw(spriteBatch));
+            _healthBar.Draw(sprites);
         }
 
         public void Update(GameTime gameTime)
         {
+            _healthBar.SetHealth(Otter.Instance.HealthPercentage);
             _texts = new List<Text>
             {
-                new(new Vector2(20, 20), $"Coins: {Otter.Instance.Coins}", Color.White, 0.2f, 0f, _font),
-                new(new Vector2(20, 40), $"HP: {Otter.Instance.Health}. HP%: {Otter.Instance.HealthPercentage}", Color.White, 0.2f, 0f, _font)
+                new(new Vector2(20, 20), $"Coins: {Otter.Instance.Coins}", Color.White, 0.2f, 0f, _font)
             };
             Map.Instance.Update(gameTime);
             Otter.Instance.Update(gameTime);

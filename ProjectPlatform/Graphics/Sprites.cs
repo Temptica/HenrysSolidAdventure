@@ -69,12 +69,12 @@ namespace OtterlyAdventure.Graphics
 
         public void Draw(Texture2D texture, Vector2 origin, Vector2 position, Color color)
         {
-            sprites.Draw(texture, Util.Transform(position, flatTransform), null, color, 0f, origin, 1f, SpriteEffects.FlipVertically, 0f);
+            sprites.Draw(texture, Util.Transform(position, flatTransform), null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
         }
 
         public void Draw(Texture2D texture, Rectangle? sourceRectangle, Vector2 origin, Vector2 position, float rotation, Vector2 scale, Color color)
         {
-            sprites.Draw(texture, Util.Transform(position, flatTransform), sourceRectangle, color, rotation, origin, scale, SpriteEffects.FlipVertically, 0f);
+            sprites.Draw(texture, Util.Transform(position, flatTransform), sourceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0f);
         }
 
         public void Draw(Texture2D texture, Rectangle? sourceRectangle, Rectangle destinationRectangle, Color color)

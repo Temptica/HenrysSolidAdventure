@@ -27,7 +27,8 @@ namespace OtterlyAdventure.GameScreens
             _screen = screen;
             _backGround = BackGround.Instance;
             _font = font; 
-            var startTexture = content.Load<Texture2D>("buttons/EmptyButton");
+            var startTexture = content.Load<Texture2D>("Buttons/EmptyButton");
+            
             _buttons = new List<Button>
             {
                 new("StartButton", startTexture,
@@ -41,7 +42,7 @@ namespace OtterlyAdventure.GameScreens
             _title = new Text(new Vector2(-length,_textPosition.Y), title, Color.SandyBrown, 1f, 0f, font);
             _titleBackGround = new Text(new Vector2(-length, _textPosition.Y) + new Vector2(5, 5), title, Color.Black, 1f, 0f, font);
             Otter.Instance.Reset();
-            Otter.Instance.Position = _buttons.First(b=>b.Name=="StartButton").Position + new Vector2(0,Otter.Instance.HitBox.Height);
+            Otter.Instance.Position = _buttons.First(b=>b.Name=="StartButton").Position - new Vector2(0,Otter.Instance.HitBox.Height);
             Otter.Instance.SetWalk(true);
             
             _backGround.Reset();
