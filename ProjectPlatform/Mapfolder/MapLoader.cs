@@ -18,7 +18,7 @@ namespace OtterlyAdventure.Mapfolder
         //"D:\ap\22-23\ProjGameDev\Map\Level1.json"
         private static float mapOffset;
         private static int MapID = 1;
-        private static int mapCount = 3;
+        private static int mapCount = 4;
         static ContentManager _content;
         public static void LoadMap(int screenheight, ContentManager content = null)
         {
@@ -30,7 +30,7 @@ namespace OtterlyAdventure.Mapfolder
             MapReaderObject mapFromFile = null;
             try
             {
-                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");//OtterlyAdventure.Mapfolder.MapReader, ProjectPlatform
+                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");//OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
                 if (mapFromFile is null) throw new ArgumentNullException("file is empty or incorrect");
             }
             catch (ArgumentNullException)
@@ -57,7 +57,7 @@ namespace OtterlyAdventure.Mapfolder
             map.Enemies = new List<Enemy>();
             foreach (var spawn in spawns)
             {
-                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height);
+                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height/3f);
                 if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
                 if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));
@@ -122,6 +122,11 @@ namespace OtterlyAdventure.Mapfolder
             if (MapID == mapCount) return;
             MapID++;
             LoadMap(screenHeight);
+        }
+
+        public static void SetMapId(int mapId)
+        {
+            MapID = mapId;
         }
     }
 }

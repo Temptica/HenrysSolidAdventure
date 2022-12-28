@@ -21,6 +21,7 @@ namespace OtterlyAdventure.GameScreens
         SpriteFont _font;
         public PlayingScreen(Screen screen, ContentManager content, SpriteFont font)
         {
+            MapLoader.SetMapId(1);
             MapLoader.LoadMap(screen.Height, content);
             //_gameState = GameState.Playing;
             Otter.Instance.Position = Map.Instance.Spawn;

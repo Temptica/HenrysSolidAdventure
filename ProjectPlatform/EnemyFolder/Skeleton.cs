@@ -35,33 +35,18 @@ namespace OtterlyAdventure.EnemyFolder
         public override void Update(GameTime gameTime)
         {
             SetState();
-            
             Position = new Vector2(Position.X,
                 fixedYPosition + (Textures[State.Idle].Height - Textures[State].Height));//makes position correct, even tho texture is higher
             
             base.Update(gameTime);
         }
 
-        internal override void SetState()
-        {            
-            
-            IsAttacking = CheckAttack();
-
-            if (IsAttacking)
-            {
-                if (State == State.Attacking) return;
-                CanDamage = true;//first time attacking animation starts
-                State = State.Attacking;
-            }
-            base.SetState();
-            
-        }
-
-        public void CheckDamage()
+        public override bool CheckDamage()
         {
-            if (State is State.Attacking && CurrentAnimation.CurrentFrameIndex >= 9 && CurrentAnimation.CurrentFrameIndex <= 6) CanDamage = false;//after 8th frame, skeleton can't damage otter as it lifts up his weapon
+            return State is State.Attacking && CurrentAnimation.CurrentFrameIndex < 10 && CurrentAnimation.CurrentFrameIndex > 6; 
+            //before 7th frame, it's lifting up it's weapon after 9th frame, skeleton can't damage otter as it lifts up his weapon
         }
-        public bool CheckAttack()
+        public override bool CheckAttack()
         {
             if (!CanAttack) return false;
             var hitBox = Otter.Instance.HitBox;

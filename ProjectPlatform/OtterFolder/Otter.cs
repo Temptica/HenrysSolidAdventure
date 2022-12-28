@@ -28,7 +28,15 @@ namespace OtterlyAdventure.OtterFolder
         public Vector2 Position { get; set; }
         public static Texture2D Texture { get; set; }
         public List<Animation> Animations { get; set; }
-        public Animation CurrentAnimation => /*Animations?.Where(a => a.AnimationState == State).FirstOrDefault();*/ Animations[0];
+        public Animation CurrentAnimation
+        {
+            get
+            {
+                var ani = Animations?.Where(a => a.State == State).FirstOrDefault();
+                return ani ?? Animations?.FirstOrDefault();//if ani is default, it will take standard animation
+            }
+        }
+
         public Rectangle HitBox
         {
             get => GetHitBox();
@@ -59,13 +67,14 @@ namespace OtterlyAdventure.OtterFolder
         private bool _IsSleeping;
         private bool _IsDead;
         private bool _IsHit;
+        //private float lastTextureHeight;
         #endregion
         //signleton 
         private static Otter _instance;
         private bool _canAttack = true;
         public static Otter Instance => _instance ??= new Otter();
 
-        private Otter()
+        private Otter()//use last texture height to correct position
         {
         }
         public void Initialise(Texture2D otter, Vector2 position, float gravity, float scale)
@@ -74,9 +83,14 @@ namespace OtterlyAdventure.OtterFolder
             Position = position;
             Gravity = gravity;
             Scale = scale;
-            Animations = new List<Animation>()
-            {
-                new(Texture, State, 6, Texture.Width/6, Texture.Height,0, 0,4, scale)
+            var widthHeight = Texture.Width / 5;//is squared
+            Animations = new List<Animation>()//idea: textures for run, jump and attack from online, keep idle and walk from self drawn. make hit and dead myself
+            {//0,0-4 + 
+                new(Texture, State.Walking, 6, widthHeight, widthHeight,0, 0,6, scale),
+                new(Texture, State.Idle, 9, widthHeight, widthHeight, widthHeight, widthHeight,4, scale),
+                new(Texture, State.Jumping, 6, widthHeight, widthHeight,0, 0,6, scale),
+                new(Texture, State.Running, 6,widthHeight, widthHeight,0, 0,12, scale),
+                new(Texture, State.Attacking,9, widthHeight, widthHeight, widthHeight, widthHeight,4, scale)
             };
             Reset();
         }
@@ -84,7 +98,7 @@ namespace OtterlyAdventure.OtterFolder
         public void Update(GameTime gameTime)
         {
             SetState();
-            CurrentAnimation.Update(gameTime);//update the animation
+            CurrentAnimation.Update(gameTime);
             MoveUpdate(gameTime, Map.Instance);
             CheckCoins();
             CheckEnemies();
@@ -103,7 +117,15 @@ namespace OtterlyAdventure.OtterFolder
 
         private void SetState()
         {
-            if (State is State.Dead || _IsDead) return;
+            if (State is State.Dead || _IsDead)
+            {
+                if (CurrentAnimation.IsFinished)
+                {
+                    Game1.SetState(GameState.GameOver);
+                }
+                return;
+            }
+                
             if (State is State.Hit)
             {
                 _IsHit = !CurrentAnimation.IsFinished;
@@ -121,9 +143,14 @@ namespace OtterlyAdventure.OtterFolder
             }
             else
             {
-                _IsAttacking = InputController.Attack;
+                _IsAttacking = _canAttack && InputController.Attack;
             }
-            if (_IsAttacking) State = State.Attacking;
+
+            if (_IsAttacking)
+            {
+                State = State.Attacking;
+                _canAttack = false;
+            }
             else if (_IsJumping) State = State.Jumping;
             else if (_IsRunning) State = State.Running;
             else if (_IsWalking) State = State.Walking;
@@ -132,11 +159,11 @@ namespace OtterlyAdventure.OtterFolder
 
         private void CheckEnemies()
         {
-            if (Enemy.Enemies.Count <= 0) return;
-            foreach (var enemy in Enemy.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
+            if (Map.Instance.Enemies.Count <= 0) return;
+            foreach (var enemy in Map.Instance.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
             {
                 
-                if (State == State.Attacking && _canAttack)
+                if (State == State.Attacking)
                 {
                     _canAttack = false;
                     if (!enemy.GetDamage(Damage)) {continue;}
@@ -155,7 +182,7 @@ namespace OtterlyAdventure.OtterFolder
                 if (Health <= 0)
                 {
                     _IsDead = true;
-                    Game1.SetState(GameState.GameOver);
+                    
                 }
             }
             
@@ -273,11 +300,10 @@ namespace OtterlyAdventure.OtterFolder
                     _velocity.X = 0;
                 }
                 else if (OtterCollision.LeavingLeftMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Left))
-
                 {
-                    MapLoader.LoadPreviousMap(Map.Instance.ScreenRectangle.Height);
-                    Position = new Vector2(Map.Instance.ScreenRectangle.Right - HitBox.Width - 1, Position.Y);
-                    _velocity = Vector2.Zero;
+                    _velocity.X = 0;
+                    nextPosition = new Vector2(1, nextHitBox.Y);
+                    nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     return;
                 }
             }
@@ -308,6 +334,8 @@ namespace OtterlyAdventure.OtterFolder
                         HitBox.Height);
                 }
             }
+
+            _IsJumping = _velocity.Y != 0;
             Position = new(nextHitBox.X, nextHitBox.Y);
 
         }
@@ -397,7 +425,6 @@ namespace OtterlyAdventure.OtterFolder
         public void Draw(Sprites spriteBatch, float scale )
         {
             CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, scale);
-            
         }
 
         public void SetWalk(bool canWalk)
@@ -420,6 +447,13 @@ namespace OtterlyAdventure.OtterFolder
             Health = MaxHealth = 20;
             Damage = 7;
             State = State.Idle;
+            _IsAttacking = false;
+            _IsDead = false;
+            _IsHit = false;
+            _IsJumping = false;
+            _IsRunning = false;
+            _IsSleeping = false;
+            _IsWalking = false;
         }
     }
 

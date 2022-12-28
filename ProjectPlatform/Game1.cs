@@ -85,7 +85,7 @@ namespace OtterlyAdventure
             Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
             map.Initialise(Content, _screen);
-            Otter.Instance.Initialise(Content.Load<Texture2D>("Character/rsz_otterly_idle"), new Vector2(100, 100), 0.0005f, 1f);
+            Otter.Instance.Initialise(Content.Load<Texture2D>("Character/OtterAni"), new Vector2(100, 100), 0.0005f, 1f);
             Button.Font = _font;
             _hitbox = new Texture2D(GraphicsDevice, 1, 1);
             _hitbox.SetData(new[] { Color.White });

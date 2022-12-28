@@ -26,8 +26,6 @@ namespace OtterlyAdventure.Mapfolder
         {
             spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
                 Vector2.Zero, 1, SpriteEffects.None, 0f);
-            //spriteBatch.Draw(Tile.Texture, Position, Tile.Rectangle, Color.White, 0f,
-            //   Vector2.Zero, Map.Instance().Scale, SpriteEffects.None, 0f);
         }
 
         //check if send in rectangle hits the top of the tile with it's bottom

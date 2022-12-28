@@ -49,8 +49,8 @@ namespace OtterlyAdventure.Animations
             CurrentFrameIndex++;
             if (CurrentFrameIndex >= FrameCount)
             {
-                CurrentFrameIndex = 0;
                 IsFinished = true;
+                CurrentFrameIndex = 0;
             }
             else IsFinished = false;           
             

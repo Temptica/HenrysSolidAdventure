@@ -21,6 +21,8 @@ namespace OtterlyAdventure.EnemyFolder
         {
             
         }
+        
+        public abstract bool CheckAttack();
 
         internal void DefineWalkablePath()
         {
@@ -28,7 +30,7 @@ namespace OtterlyAdventure.EnemyFolder
             //find how far left you can go without having a gap or a wall. Then same for right
             Rectangle hitbox = new Rectangle(0, HitBox.Y, Map.Instance.ScreenRectangle.Right, 200);
             
-            var walkableMap = Map.Instance.FrontMap.FindAll(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Bottom>= hitbox.Top && hitbox.Intersects(tile.HitBox));
+            var walkableMap = Map.Instance.FrontMap.FindAll(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Bottom>= hitbox.Top && hitbox.Intersects(tile.HitBox));
             var sortedList = walkableMap.OrderBy(tile => Vector2.Distance(tile.Position, Position)).ToList();
             var bottomTile = sortedList.First();
 
@@ -70,7 +72,7 @@ namespace OtterlyAdventure.EnemyFolder
         {
             var x = Position.X;
             Rectangle otterHb = Otter.Instance.HitBox;
-            if (otterHb.Top <= HitBox.Bottom && otterHb.Bottom >= HitBox.Top && otterHb.Right > _maxLeftPosition && otterHb.Left < _maxRightPosition )
+            if (this is not Slime && otterHb.Top <= HitBox.Bottom && otterHb.Bottom >= HitBox.Top && otterHb.Right > _maxLeftPosition && otterHb.Left < _maxRightPosition )
             {
                 IsFacingLeft = otterHb.Center.X < HitBox.Center.X;
             }
@@ -120,20 +122,27 @@ namespace OtterlyAdventure.EnemyFolder
             if (IsDead) State = State.Dead;
             else if (IsHit) State = State.Hit;
             if (State is State.Dead || IsDead) return;
+            
             if ((State is State.Hit && !CurrentAnimation.IsFinished) || (!CurrentAnimation.IsFinished && State == State.Attacking))
             {
                 CanAttack = false;
-
                 return;
-            };
+            }
             if (State is State.Hit or State.Attacking && CurrentAnimation.IsFinished)
             {
                 IsHit = false;
                 CanAttack = true;
-                State = State.Idle;
+                State = State.Walking;
             }
-            if (IsWalking) State = State.Walking;
-            else State = State.Idle;
+            IsAttacking = CheckAttack();
+
+            if (IsAttacking&& State is not State.Attacking)
+            {
+                State = State.Attacking;
+                CanDamage = true;
+                return;
+            }
+            State = IsWalking ? State.Walking : State.Idle;
         }
         public override void Draw(Sprites spriteBatch)
         {

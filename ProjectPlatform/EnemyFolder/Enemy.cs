@@ -14,11 +14,8 @@ namespace OtterlyAdventure.EnemyFolder
 {
     internal abstract class Enemy : IAnimatable, IGameObject
     {
-        public static List<Enemy> Enemies;
         protected Enemy()
         {
-            Enemies ??= new List<Enemy>();
-            Enemies.Add(this);
             CanAttack = true;
         }
 
@@ -66,6 +63,7 @@ namespace OtterlyAdventure.EnemyFolder
             
         }
         public abstract void Draw(Sprites spriteBatch);
+        public abstract bool CheckDamage();
 
         public virtual bool GetDamage(float i)
         {
@@ -78,12 +76,13 @@ namespace OtterlyAdventure.EnemyFolder
         
         public virtual int Attack()
         {
-            if (CanDamage && State is State.Attacking) {
+            if (CanDamage && CheckDamage() && State is State.Attacking) {
                 CanDamage = false; //attacked once so can't damage anymore till next attack;
                 return Damage; 
             }
             return 0;
         }
+
         private Rectangle GetHitBox()
         {
             if (IsFacingLeft)

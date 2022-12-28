@@ -29,6 +29,11 @@ namespace OtterlyAdventure.EnemyFolder
             throw new NotImplementedException();
         }
 
+        public override bool CheckDamage()
+        {
+            return true;
+        }
+
         public virtual void Move(GameTime gameTime)
         {
             throw new NotImplementedException();
