@@ -32,7 +32,7 @@ namespace OtterlyAdventure.EnemyFolder
         public Bat(Vector2 position): base(position,150)
         {
             _velocity = Vector2.Zero;
-            Animations = new List<Animation> { new(Texture, 4, 10) };
+            Animations = new AnimationList<Animation> { new(Texture, 4, 10) };
 
             Position = position;
 
@@ -75,7 +75,7 @@ namespace OtterlyAdventure.EnemyFolder
                 _attackTimer += gameTime.ElapsedGameTime.Milliseconds;
             }
             base.Update(gameTime);
-            CurrentAnimation.Update(gameTime);
+            Animations.Update(State, gameTime);
             Move(gameTime);
         }
 

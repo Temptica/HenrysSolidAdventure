@@ -12,33 +12,33 @@ namespace OtterlyAdventure.Animations
 {
     internal class Animation: BasicAnimation
     {
-        public Frame[] Frames { get; }
+        public FrameList<Frame> Frames { get; }
         public Frame CurrentFrame => Frames[CurrentFrameIndex];
-        public override int FrameCount => Frames.Length;
+        public override int FrameCount => Frames.Count;
 
         internal State State;
 
-        public Animation(Texture2D texture, int framecount, int fps, float scale = 1f):this(texture, State.Idle, framecount, texture.Width/framecount, texture.Height, 0,0,fps, scale)
+        public Animation(Texture2D texture, int frameCount, int fps, float scale = 1f):this(texture, State.Idle, frameCount, texture.Width/frameCount, texture.Height, 0,0,fps, scale)
         {
         }
-        public Animation(Texture2D texture, State state, int framecount, int framewidth, int frameheight, int beginHeight, int beginWidth, int fps, float scale = 1f):base(texture,state.ToString(), fps)
+        public Animation(Texture2D texture, State state, int frameCount, int frameWidth, int frameHeight, int beginHeight, int beginWidth, int fps, float scale = 1f):base(texture,state.ToString(), fps)
         {
-            Frames = new Frame[framecount];
+            Frames = new FrameList<Frame>();
             State = state;
-            MakeAnimation(texture.Width,framewidth, frameheight, beginHeight, beginWidth, scale);
+            MakeAnimation(frameCount,texture.Width,frameWidth, frameHeight, beginHeight, beginWidth, scale);
         }
-        private void MakeAnimation(int textureWidth,int framewidth, int frameheight, int beginHeight, int beginWidth, float scale)
+        private void MakeAnimation(int frameCount,int textureWidth,int frameWidth, int frameHeight, int beginHeight, int beginWidth, float scale)
         {
             int frameX = beginWidth;
             int frameY = beginHeight;
-            for (int i = 0; i < Frames.Length; i++)
+            for (int i = 0; i < frameCount; i++)
             {
                 if (frameX >= textureWidth) {
-                    frameY += frameheight;//if on end of texture width, go to next height
+                    frameY += frameHeight;//if on end of texture width, go to next height
                     frameX = 0;
                 }
-                Frames[i] = new Frame(new Rectangle(frameX, frameY, framewidth, frameheight), Texture, scale);
-                frameX += framewidth;
+                Frames.Add(new Frame(new Rectangle(frameX, frameY, frameWidth, frameHeight), Texture, scale));
+                frameX += frameWidth;
             }
         }
 

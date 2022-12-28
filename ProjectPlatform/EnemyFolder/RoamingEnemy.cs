@@ -102,7 +102,7 @@ namespace OtterlyAdventure.EnemyFolder
         }
         public override void Update(GameTime gameTime)
         {
-            CurrentAnimation.Update(gameTime);
+            Animations.Update(State, gameTime);
             if (State is State.Walking)
             {
 

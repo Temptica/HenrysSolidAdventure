@@ -128,8 +128,9 @@ namespace OtterlyAdventure.OtterFolder
 
         private static Color[] GetCurrentPixels(IAnimatable animatable)
         {
-            Color[] pixels = new Color[animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Width * animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
-            animatable.CurrentAnimation.Texture.GetData(0, animatable.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
+            
+            Color[] pixels = new Color[animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width * animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
+            animatable.Animations.CurrentAnimation.Texture.GetData(0, animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
 
             return pixels;
         }
@@ -137,8 +138,8 @@ namespace OtterlyAdventure.OtterFolder
         private static Color[,] GetCurrentPixels2D(IAnimatable animatable)
         {
             Color[] otterPixels = GetCurrentPixels(animatable);
-            var width = animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
-            var height = animatable.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
+            var width = animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
+            var height = animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
             //convert otterPixels to 2d array to from a Rectangle
             Color[,] otterPixels2D = new Color[width, height];
             for (int x = 0; x < width; x++)

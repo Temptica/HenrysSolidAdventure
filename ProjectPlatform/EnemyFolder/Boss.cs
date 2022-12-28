@@ -16,7 +16,7 @@ namespace OtterlyAdventure.EnemyFolder
         public Boss(Vector2 position)
         {
             Position = position;
-            Animations = new List<Animation>();
+            Animations = new AnimationList<Animation>();
         }
 
         public override void Update(GameTime gameTime)

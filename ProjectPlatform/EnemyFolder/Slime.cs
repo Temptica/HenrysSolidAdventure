@@ -20,7 +20,7 @@ namespace OtterlyAdventure.EnemyFolder
             Position = position;
             var frameWidth = Texture.Width / 8;
             var frameHeight = Texture.Height/3;
-            Animations = new List<Animation>
+            Animations = new AnimationList<Animation>
             {
                 new(Texture, State.Idle, 4, frameWidth, frameHeight, 0, 0, 6),
                 new(Texture, State.Walking, 4, frameWidth, frameHeight, 0, frameWidth * 4, 8),

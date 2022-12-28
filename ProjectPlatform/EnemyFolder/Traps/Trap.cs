@@ -11,8 +11,7 @@ namespace OtterlyAdventure.EnemyFolder.Traps
 {
     internal abstract class Trap: IAnimatable
     {
-        public List<Animation> Animations { get; set; }
-        public Animation CurrentAnimation { get; }
+        public AnimationList<Animation> Animations { get; set; }
         public Rectangle HitBox { get; set; }
         public Vector2 Position { get; set; }
     }

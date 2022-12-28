@@ -12,8 +12,8 @@ namespace OtterlyAdventure.Interface
     {        
         Vector2 Position { get; set; }
         Rectangle HitBox { get; set; }
-        void Update(GameTime gameTime);
-        void Draw(Sprites sprites);
+        public void Update(GameTime gameTime);
+        public void Draw(Sprites sprites);
         
         
     }

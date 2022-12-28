@@ -31,21 +31,8 @@ namespace OtterlyAdventure.EnemyFolder
         public float CurrentHp { get; set; }
         public float Speed { get; set; }
         public bool Remove { get; set; }
-        public List<Animation> Animations { get; set; }
-        public Animation CurrentAnimation
-        {
-            get
-            {
-                try
-                {
-                    return Animations.First(ani => ani.State == State);
-                }
-                catch (Exception)
-                {
-                    return Animations[0];
-                }
-            }
-        }
+        public AnimationList<Animation> Animations { get; set; }
+        public Animation CurrentAnimation=> Animations.CurrentAnimation;
         public virtual Rectangle HitBox
         {
             get => GetHitBox();

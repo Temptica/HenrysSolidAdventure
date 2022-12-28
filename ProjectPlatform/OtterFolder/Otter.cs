@@ -27,7 +27,7 @@ namespace OtterlyAdventure.OtterFolder
         #region properities
         public Vector2 Position { get; set; }
         public static Texture2D Texture { get; set; }
-        public List<Animation> Animations { get; set; }
+        public AnimationList<Animation> Animations { get; set; }
         public Animation CurrentAnimation
         {
             get
@@ -84,7 +84,7 @@ namespace OtterlyAdventure.OtterFolder
             Gravity = gravity;
             Scale = scale;
             var widthHeight = Texture.Width / 5;//is squared
-            Animations = new List<Animation>()//idea: textures for run, jump and attack from online, keep idle and walk from self drawn. make hit and dead myself
+            Animations = new AnimationList<Animation>()//idea: textures for run, jump and attack from online, keep idle and walk from self drawn. make hit and dead myself
             {//0,0-4 + 
                 new(Texture, State.Walking, 6, widthHeight, widthHeight,0, 0,6, scale),
                 new(Texture, State.Idle, 9, widthHeight, widthHeight, widthHeight, widthHeight,4, scale),
@@ -102,7 +102,7 @@ namespace OtterlyAdventure.OtterFolder
                 _IsDead = true;
             }
             SetState();
-            CurrentAnimation.Update(gameTime);
+            Animations.Update(State, gameTime);
             if (State is State.Dead) return;
             MoveUpdate(gameTime, Map.Instance);
             CheckCoins();
