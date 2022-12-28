@@ -97,8 +97,13 @@ namespace OtterlyAdventure.OtterFolder
 
         public void Update(GameTime gameTime)
         {
+            if (Health <= 0)
+            {
+                _IsDead = true;
+            }
             SetState();
             CurrentAnimation.Update(gameTime);
+            if (State is State.Dead) return;
             MoveUpdate(gameTime, Map.Instance);
             CheckCoins();
             CheckEnemies();
@@ -179,14 +184,7 @@ namespace OtterlyAdventure.OtterFolder
                     _IsHit = true;
                     Health -= damage;
                 }
-                if (Health <= 0)
-                {
-                    _IsDead = true;
-                    
-                }
             }
-            
-            
         }
 
         private void CheckCoins()
@@ -419,6 +417,8 @@ namespace OtterlyAdventure.OtterFolder
         {
             Color color = Color.White;
             if (State is State.Hit) color = Color.Red;
+            else if (State is State.Attacking) color = Color.Yellow;
+            else if (State is State.Dead) color = Color.Black;
             CurrentAnimation.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
 
         }
