@@ -80,7 +80,7 @@ namespace OtterlyAdventure
             Button.Font = _font;
             _hitbox = new Texture2D(GraphicsDevice, 1, 1);
             _hitbox.SetData(new[] { Color.White });
-            AudioController.Initialise(Content);
+            AudioController.Instance.Initialise(Content);
 
             _gameState = GameState.Menu;
             _stateChanged = true;

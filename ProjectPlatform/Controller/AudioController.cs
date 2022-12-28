@@ -16,14 +16,15 @@ namespace OtterlyAdventure.Controller
         private Dictionary<string, SoundEffect> _soundEffects;
         public static float Volume { get { return MediaPlayer.Volume; } set { MediaPlayer.Volume = value; } }
 
-        public static void Initialise(ContentManager content)
+        public void Initialise(ContentManager content)
         {
-            Instance._songs = new Dictionary<string, Song>
+            _songs = new Dictionary<string, Song>
             {
                 {"GameOver", content.Load<Song>(@"Audio\Music\HANGOVER") },
                 {"MainMenu", content.Load<Song>(@"Audio\Music\The_Adventure")},
                 {"GamePlay", content.Load<Song>(@"Audio\Music\The_Aquaticans")}
             };
+            _soundEffects = new Dictionary<string, SoundEffect>();
             MediaPlayer.IsRepeating = true;
             
 

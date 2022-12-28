@@ -8,10 +8,7 @@ namespace OtterlyAdventure.Characters
     internal class Character
     {
         public AnimationList<Animation> Animations { get; set; }
-        public Rectangle HitBox
-        {
-            get => GetHitBox();
-        }
+        public virtual Rectangle HitBox => GetHitBox();
         internal bool IsFacingLeft;
         internal bool IsAttacking;
         internal bool IsWalking;
@@ -23,15 +20,10 @@ namespace OtterlyAdventure.Characters
         public int Damage { get; set; }
         public float CurrentHp { get; set; }
         public float Speed { get; set; }
-        public virtual void Update(GameTime gameTime)
-        {
+        protected Vector2 Velocity;
+        public virtual void Update(GameTime gameTime){}
 
-        }
-
-        public void Draw(Sprites sprites)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void Draw(Sprites sprites){}
 
         public Vector2 Position { get; set; }
         internal Rectangle GetHitBox()

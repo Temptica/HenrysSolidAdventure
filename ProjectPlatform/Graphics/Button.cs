@@ -12,10 +12,10 @@ namespace OtterlyAdventure.Graphics
         public Rectangle HitBox { get; }
         public bool IsActive { get; private set; }
         public GameState? ActivationState { get; set; }
-        public Text? Text { get; set; }
+        public Text Text { get; set; }
 
 
-        public Button(string name, Texture2D texture, Vector2 position, string? text = null, GameState? activationState = null)
+        public Button(string name, Texture2D texture, Vector2 position, string text = null, GameState? activationState = null)
         {
             Name = name;
             Texture = texture;

@@ -13,11 +13,9 @@ namespace OtterlyAdventure.Characters
         }
         public bool Remove { get; set; }
         public Animation CurrentAnimation=> Animations.CurrentAnimation;
-        
-        public Vector2 Position { get; set; }
         internal State State { get; set; }
 
-        public virtual void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if((State == State.Attacking && CurrentAnimation.IsFinished) || State is not State.Attacking)
             {
@@ -25,7 +23,6 @@ namespace OtterlyAdventure.Characters
             }
             
         }
-        public abstract void Draw(Sprites spriteBatch);
         public abstract bool CheckDamage();
 
         public virtual bool GetDamage(float i)
@@ -44,17 +41,6 @@ namespace OtterlyAdventure.Characters
                 return Damage; 
             }
             return 0;
-        }
-
-        private Rectangle GetHitBox()
-        {
-            if (IsFacingLeft)
-            {//invert hitbox
-                //return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X * Scale- CurrentAnimation.CurrentFrame.HitBox.Width * Scale)
-                return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y), (int)(CurrentAnimation.CurrentFrame.HitBox.Width), (int)(CurrentAnimation.CurrentFrame.HitBox.Height));
-
-            }
-            return new((int)(Position.X + CurrentAnimation.CurrentFrame.HitBox.X), (int)(Position.Y + CurrentAnimation.CurrentFrame.HitBox.Y), (int)(CurrentAnimation.CurrentFrame.HitBox.Width), (int)(CurrentAnimation.CurrentFrame.HitBox.Height));
         }
     }
 }

@@ -23,9 +23,7 @@ namespace OtterlyAdventure.OtterFolder
         #endregion
 
         #region properities
-        public Vector2 Position { get; set; }
         public static Texture2D Texture { get; set; }
-        public AnimationList<Animation> Animations { get; set; }
         public Animation CurrentAnimation
         {
             get
@@ -34,42 +32,23 @@ namespace OtterlyAdventure.OtterFolder
                 return ani ?? Animations?.FirstOrDefault();//if ani is default, it will take standard animation
             }
         }
-
-        public Rectangle HitBox
-        {
-            get => GetHitBox();
-            set => throw new NotImplementedException();
-        }
         public int Health { get; private set; }
         public float HealthPercentage => (float)Math.Round(Health / (double)MaxHealth * 100, 0);
         public int MaxHealth { get; private set; }
         public int MaxCondition { get; private set; }
         public int Condition { get; set; }
-        public int Damage { get; set; }
         public State State { get; set; }
         public float Gravity { get; private set; }
         public float Scale { get; set; }
-        public float Coins { get; private set; }
-
-
-        #endregion
-        #region private variables
-        private Vector2 _velocity;
-        private bool _canJump;
-        private bool _canWalk;
-        private bool _lookingLeft;
-        private bool _IsWalking;
-        private bool _IsRunning;
-        private bool _IsJumping;
-        private bool _IsAttacking;
-        private bool _IsSleeping;
-        private bool _IsDead;
-        private bool _IsHit;
-        //private float lastTextureHeight;
+        public float Coins { get; private set; }        
         #endregion
         //signleton 
         private static Otter _instance;
         private bool _canAttack = true;
+        private bool _canJump; 
+        private bool _isRunning;
+        private bool _canWalk;
+        private bool _isJumping;
         public static Otter Instance => _instance ??= new Otter();
 
         private Otter()//use last texture height to correct position
@@ -93,11 +72,11 @@ namespace OtterlyAdventure.OtterFolder
             Reset();
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (Health <= 0)
             {
-                _IsDead = true;
+                IsDead = true;
             }
             SetState();
             Animations.Update(State, gameTime);
@@ -105,7 +84,7 @@ namespace OtterlyAdventure.OtterFolder
             MoveUpdate(gameTime, Map.Instance);
             CheckCoins();
             CheckEnemies();
-            _velocity.X = 0;
+            Velocity.X = 0;
         }
 
         internal void MenuUpdate(GameTime gameTime, float leftBound, float rightBound, float bottomBound)
@@ -113,14 +92,14 @@ namespace OtterlyAdventure.OtterFolder
             SetState();
             CurrentAnimation.Update(gameTime);//update the animation
             MoveUpdate(gameTime, leftBound, rightBound, bottomBound);
-            _velocity.X = 0;
+            Velocity.X = 0;
         }
 
         
 
         private void SetState()
         {
-            if (State is State.Dead || _IsDead)
+            if (State is State.Dead || IsDead)
             {
                 if (CurrentAnimation.IsFinished)
                 {
@@ -131,9 +110,9 @@ namespace OtterlyAdventure.OtterFolder
                 
             if (State is State.Hit)
             {
-                _IsHit = !CurrentAnimation.IsFinished;
+                IsHit = !CurrentAnimation.IsFinished;
             }
-            if (_IsHit)
+            if (IsHit)
             {
                 State = State.Hit;
                 return;
@@ -141,22 +120,22 @@ namespace OtterlyAdventure.OtterFolder
             if (State is State.Attacking)
             {
                 if (!CurrentAnimation.IsFinished) return;
-                _IsAttacking = false;
+                IsAttacking = false;
                 _canAttack = true;
             }
             else
             {
-                _IsAttacking = _canAttack && InputController.Attack;
+                IsAttacking = _canAttack && InputController.Attack;
             }
 
-            if (_IsAttacking)
+            if (IsAttacking)
             {
                 State = State.Attacking;
                 _canAttack = false;
             }
-            else if (_IsJumping) State = State.Jumping;
-            else if (_IsRunning) State = State.Running;
-            else if (_IsWalking) State = State.Walking;
+            else if (_isJumping) State = State.Jumping;
+            else if (_isRunning) State = State.Running;
+            else if (IsWalking) State = State.Walking;
             else State = State.Idle;
         }
 
@@ -179,7 +158,7 @@ namespace OtterlyAdventure.OtterFolder
                 var damage = enemy.Attack();
                 if (damage > 0)
                 {
-                    _IsHit = true;
+                    IsHit = true;
                     Health -= damage;
                 }
             }
@@ -197,34 +176,34 @@ namespace OtterlyAdventure.OtterFolder
         {
             GetVelocity(gameTime);
             
-            float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * _velocity.X);
+            float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Velocity.X);
 
             var nextPosition = Position;
             if (velocityXDelta != 0)
             {
                 nextPosition.X += velocityXDelta;
             }
-            if (_velocity.Y != 0)
+            if (Velocity.Y != 0)
             {
-                nextPosition.Y += (float)(_velocity.Y* gameTime.ElapsedGameTime.TotalMilliseconds);
+                nextPosition.Y += (float)(Velocity.Y* gameTime.ElapsedGameTime.TotalMilliseconds);
             }
             var nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
 
-            if (_velocity.X > 0 && nextHitBox.Right > rightBound)
+            if (Velocity.X > 0 && nextHitBox.Right > rightBound)
             {
                 nextPosition.X = rightBound - HitBox.Width;
             }
-            else if (_velocity.X < 0 && nextHitBox.Left < leftBound)
+            else if (Velocity.X < 0 && nextHitBox.Left < leftBound)
             {
                 nextPosition.X = leftBound;
             }
-            if (_velocity.Y > 0 && nextHitBox.Bottom > bottomBound)
+            if (Velocity.Y > 0 && nextHitBox.Bottom > bottomBound)
             {
                 nextPosition.Y = bottomBound - HitBox.Height;
-                _velocity.Y = 0;
+                Velocity.Y = 0;
                 _canJump = true;
             }
-            else if (_velocity.Y < 0 && nextHitBox.Top < 0)
+            else if (Velocity.Y < 0 && nextHitBox.Top < 0)
             {
                 nextPosition.Y = 0;
             }
@@ -234,37 +213,37 @@ namespace OtterlyAdventure.OtterFolder
         {
             GetVelocity(gameTime);
             
-            float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * _velocity.X);
+            float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Velocity.X);
 
             var nextPosition = Position;
             if (velocityXDelta != 0)
             {
                 nextPosition.X += velocityXDelta;
             }
-            if (_velocity.Y != 0)
+            if (Velocity.Y != 0)
             {
-                nextPosition.Y += _velocity.Y;
+                nextPosition.Y += Velocity.Y;
             }
             var nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
 
-            if (_velocity.Y < 0)//going up
+            if (Velocity.Y < 0)//going up
             {
                 var tile = OtterCollision.OtterTopHit(nextHitBox, map.FrontMap);
                 if (tile != null)
                 {
-                    _velocity.Y = 0f;
+                    Velocity.Y = 0f;
                     nextPosition = new(nextPosition.X, tile.HitBox.Bottom + 1);
                 }
                 else
                 {
-                    _velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y + _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                    Velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y + Velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
                 }
                 nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                 _canJump = false;
             }
 
-            if (_velocity.X > 0)//to right
+            if (Velocity.X > 0)//to right
             {
                 //make new hitbox that will check if there will be a collision
 
@@ -273,42 +252,39 @@ namespace OtterlyAdventure.OtterFolder
                 {
                     nextPosition = new Vector2(tile.Position.X - HitBox.Width - 1, nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
-                    _velocity.X = 0;
+                    Velocity.X = 0;
                 }
                 else if (OtterCollision.LeavingRightMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Right))
                 {
                     MapLoader.LoadNextMap(Map.Instance.ScreenRectangle.Height);
                     Position = Map.Instance.Spawn;
-                    _velocity = Vector2.Zero;
+                    Velocity = Vector2.Zero;
                     return;
                 }
-
-
             }
-            else if (_velocity.X < 0)
+            else if (Velocity.X < 0)
             {
-
                 var tile = OtterCollision.OtterLeftHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
                 {
                     nextPosition = new Vector2(tile.Position.X + tile.HitBox.Width + 1, nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
-                    _velocity.X = 0;
+                    Velocity.X = 0;
                 }
                 else if (OtterCollision.LeavingLeftMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Left))
                 {
-                    _velocity.X = 0;
+                    Velocity.X = 0;
                     nextPosition = new Vector2(1, nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     return;
                 }
             }
-            if (_velocity.Y >= 0) //jump/falling mechanism
+            if (Velocity.Y >= 0) //jump/falling mechanism
             {
                 var result = OnGround(nextHitBox);
                 if (result != Vector2.Zero)
                 {
-                    _velocity.Y = 0f;
+                    Velocity.Y = 0f;
                     _canJump = true;
                     nextHitBox = new Rectangle((int)result.X, (int)result.Y, nextHitBox.Width, nextHitBox.Height);
                 }
@@ -321,17 +297,17 @@ namespace OtterlyAdventure.OtterFolder
                         return;
                     }
                     _canJump = false;
-                    var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
+                    var newY = Velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    Velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
 
                     nextPosition = new Vector2(nextPosition.X,
-                        nextPosition.Y + _velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                        nextPosition.Y + Velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width,
                         HitBox.Height);
                 }
             }
 
-            _IsJumping = _velocity.Y != 0;
+            _isJumping = Velocity.Y != 0;
             Position = new(nextHitBox.X, nextHitBox.Y);
 
         }
@@ -340,63 +316,63 @@ namespace OtterlyAdventure.OtterFolder
         {
             if (!_canWalk)
             {
-                _velocity.X = 0;
+                Velocity.X = 0;
             }
             else if (InputController.LeftInput) //left
             {
-                _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                Velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
                 if (InputController.ShiftInput)
                 {
-                    _velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X < -RunningSpeed)
-                        _velocity.X = -RunningSpeed;
-                    _IsRunning = true;
+                    Velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (Velocity.X < -RunningSpeed)
+                        Velocity.X = -RunningSpeed;
+                    _isRunning = true;
 
                 }
                 else
                 {
-                    if (_velocity.X < -WalkSpeed)
-                        _velocity.X = -WalkSpeed;
-                    _IsRunning = false;
+                    if (Velocity.X < -WalkSpeed)
+                        Velocity.X = -WalkSpeed;
+                    _isRunning = false;
                 }
-                _lookingLeft = true;
-                _IsWalking = true;
+                IsFacingLeft = true;
+                IsWalking = true;
             }
             else if (InputController.RightInput)//right
             {
-                _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                Velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
                 if (InputController.ShiftInput)
                 {
-                    _velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    if (_velocity.X > RunningSpeed)
-                        _velocity.X = RunningSpeed;
-                    _IsRunning = true;
+                    Velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (Velocity.X > RunningSpeed)
+                        Velocity.X = RunningSpeed;
+                    _isRunning = true;
                 }
                 else
                 {
-                    if (_velocity.X > WalkSpeed)
-                        _velocity.X = WalkSpeed;
-                    _IsRunning = false;
+                    if (Velocity.X > WalkSpeed)
+                        Velocity.X = WalkSpeed;
+                    _isRunning = false;
                 }
-                _IsWalking = true;
-                _lookingLeft = false;
+                IsWalking = true;
+                IsFacingLeft = false;
             }
             else
             {
-                _velocity.X = 0;
-                _IsWalking = false;
-                _IsRunning = false;
+                Velocity.X = 0;
+                IsWalking = false;
+                _isRunning = false;
             }
 
             if (InputController.JumpInput && _canJump) //jump
             {
-                _velocity.Y = -JumpForce;
+                Velocity.Y = -JumpForce;
                 _canJump = false;
             }
             else if (!_canJump)
             {
-                var newY = _velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
-                _velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
+                var newY = Velocity.Y + (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                Velocity.Y = newY > MaxYVelocity ? MaxYVelocity : newY;
             }
         }
 
@@ -411,18 +387,14 @@ namespace OtterlyAdventure.OtterFolder
         }
 
 
-        public void Draw(Sprites spriteBatch)
+        public override void Draw(Sprites spriteBatch)
         {
             Color color = Color.White;
             if (State is State.Hit) color = Color.Red;
             else if (State is State.Attacking) color = Color.Yellow;
             else if (State is State.Dead) color = Color.Black;
-            Animations.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
+            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
 
-        }
-        public void Draw(Sprites spriteBatch, float scale )
-        {
-            Animations.Draw(spriteBatch, Position, _lookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, scale);
         }
 
         public void SetWalk(bool canWalk)
@@ -436,13 +408,12 @@ namespace OtterlyAdventure.OtterFolder
             Health = MaxHealth = 20;
             Damage = 7;
             State = State.Idle;
-            _IsAttacking = false;
-            _IsDead = false;
-            _IsHit = false;
-            _IsJumping = false;
-            _IsRunning = false;
-            _IsSleeping = false;
-            _IsWalking = false;
+            IsAttacking = false;
+            IsDead = false;
+            IsHit = false;
+            _isJumping = false;
+            _isRunning = false;
+            IsWalking = false;
         }
     }
 

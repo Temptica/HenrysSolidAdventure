@@ -20,7 +20,6 @@ namespace OtterlyAdventure.Characters
         public override Rectangle HitBox
         {
             get => new((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
-            set => throw new NotSupportedException();
         }
         public Bat(Vector2 position): base(position,150)
         {

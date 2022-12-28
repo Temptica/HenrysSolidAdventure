@@ -125,7 +125,7 @@ namespace OtterlyAdventure.OtterFolder
 
         }
 
-        private static Color[] GetCurrentPixels(IAnimatable animatable)
+        private static Color[] GetCurrentPixels(Character animatable)
         {
             
             Color[] pixels = new Color[animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width * animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
@@ -134,7 +134,7 @@ namespace OtterlyAdventure.OtterFolder
             return pixels;
         }
 
-        private static Color[,] GetCurrentPixels2D(IAnimatable animatable)
+        private static Color[,] GetCurrentPixels2D(Character animatable)
         {
             Color[] otterPixels = GetCurrentPixels(animatable);
             var width = animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
