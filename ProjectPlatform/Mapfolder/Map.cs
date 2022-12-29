@@ -82,6 +82,7 @@ namespace OtterlyAdventure.Mapfolder
             Shop?.Draw(spriteBatch);
             Decorations?.ForEach(deco => deco.Draw(spriteBatch));
             Enemies?.ForEach(enemy => enemy.Draw(spriteBatch));
+            Portal?.Draw(spriteBatch);
         }
         public void Update(GameTime gameTime)
         {
@@ -98,6 +99,8 @@ namespace OtterlyAdventure.Mapfolder
                     Enemies.Remove(enemy);
                 }
             }
+
+            Portal?.Update(gameTime);
 
         }
         public Tile GetTile(int i)

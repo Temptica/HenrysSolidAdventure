@@ -18,12 +18,15 @@ namespace OtterlyAdventure.Animations
         private readonly int FrameHeight;
         private readonly int BeginHeight;
 
-        internal BasicAnimation(Texture2D texture, string identifier, float frameRate)
+        internal BasicAnimation(Texture2D texture, string identifier, float frameRate,int frameCount)
         {
             Texture = texture;
             Identifier = identifier;
             FrameRate = 1000f/frameRate;
             CurrentFrameIndex = 0;
+            FrameCount = frameCount;
+            FrameWidth = texture.Width / frameCount;
+            FrameHeight = texture.Height;
         }
         internal BasicAnimation(Texture2D texture, string identifier, float frameRate, int framecount, int framewidth, int frameheight, int beginHeight)
         {

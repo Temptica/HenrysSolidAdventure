@@ -19,7 +19,7 @@ namespace OtterlyAdventure.Mapfolder
         public Portal(Vector2 position)
         {
             Position = position;
-            _basicAnimation = new(Texture, "portal", 4f);
+            _basicAnimation = new(Texture, "portal", 4f,5);
         }
 
         public void Update(GameTime gameTime)
