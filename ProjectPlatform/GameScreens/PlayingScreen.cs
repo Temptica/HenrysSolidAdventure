@@ -15,6 +15,7 @@ namespace OtterlyAdventure.GameScreens
         List<Button> _buttons;
         List<Text> _texts;
         SpriteFont _font;
+        Coin _displayCoin;
         HealthBar _healthBar;
         public PlayingScreen(Screen screen, ContentManager content, SpriteFont font)
         {
@@ -27,21 +28,22 @@ namespace OtterlyAdventure.GameScreens
             _buttons = new List<Button>();
             _font = font;
             Otter.Instance.Reset();
-            //_buttons.ForEach(button => button.UpdateActive(_gameState));
+            _displayCoin = new Coin(new Vector2(20,20));
             Otter.Instance.SetWalk(true);
             AudioController.Instance.PlaySong("GamePlay");
             HealthBar.Texture ??= content.Load<Texture2D>("Items/HealthBarEmpty");
             HealthBar.BarTexture ??= content.Load<Texture2D>("Items/HealthBar");
-            _healthBar = new HealthBar(new Vector2(20, 40),2f);
+            _healthBar = new HealthBar(new Vector2(20, 50),2f);
             _texts = new List<Text>
             {
-                new(new Vector2(20, 20), $"Coins: {Otter.Instance.Coins}", Color.White, 0.2f, 0f, font)
+                new(new Vector2(55, 25), $": {Otter.Instance.Coins}", Color.White, 0.2f, 0f, font)
             };
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
         {
             _backGround.Draw(sprites);
+            _displayCoin.Draw(sprites);
             Map.Instance.Draw(sprites);
             Otter.Instance.Draw(sprites);
             _texts.ForEach(text => text.Draw(spriteBatch));
@@ -51,9 +53,10 @@ namespace OtterlyAdventure.GameScreens
         public void Update(GameTime gameTime)
         {
             _healthBar.SetHealth(Otter.Instance.HealthPercentage);
+            _displayCoin.Update(gameTime);
             _texts = new List<Text>
             {
-                new(new Vector2(20, 20), $"Coins: {Otter.Instance.Coins}", Color.White, 0.2f, 0f, _font)
+                new(new Vector2(55, 25), $"= {Otter.Instance.Coins}", Color.White, 0.2f, 0f, _font)
             };
             Map.Instance.Update(gameTime);
             Otter.Instance.Update(gameTime);
