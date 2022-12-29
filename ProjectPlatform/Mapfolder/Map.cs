@@ -27,6 +27,7 @@ namespace OtterlyAdventure.Mapfolder
         internal Vector2 Spawn { get; set; }
         internal Rectangle ScreenRectangle { get; private set; }
         internal List<Enemy> Enemies { get; set; }
+        internal Portal? Portal { get; set; }
 
 
         private Map()
@@ -69,6 +70,7 @@ namespace OtterlyAdventure.Mapfolder
             DecorationTextures.Add("sign", content.Load<Texture2D>("Decoration/sign"));
             Coin.Texture = content.Load<Texture2D>("Items/Coin");
             Store.Texture = content.Load<Texture2D>("Decoration/shop_anim");
+            Portal.Texture = content.Load<Texture2D>("Items/PortalRings2");
             EnemyInitialiser.Loadtextures(content);
 
         }

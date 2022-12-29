@@ -62,7 +62,7 @@ namespace OtterlyAdventure.OtterFolder
 
         public static MapTile OtterTopHit(Rectangle otterHitBox, List<MapTile> maptiles)
         {
-            otterHitBox = new Rectangle(otterHitBox.X, otterHitBox.Y - 3, otterHitBox.Width, otterHitBox.Height+3);
+            otterHitBox = new Rectangle(otterHitBox.X, otterHitBox.Y, otterHitBox.Width, otterHitBox.Height);
             var MainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Bottom >= otterHitBox.Top).ToList();
             if (MainTileFilter.Count == 0) return null;
             return MainTileFilter.OrderByDescending(tile => tile.HitBox.Bottom).First();
@@ -72,6 +72,7 @@ namespace OtterlyAdventure.OtterFolder
         {
 
             //check every tile if teh enemy walks into it and ignores the ground tiles
+            otterHitBox = new Rectangle(otterHitBox.X, otterHitBox.Y , otterHitBox.Width, otterHitBox.Height);
             var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Right >= otterHitBox.Left).ToList();
             if (mainTileFilter.Count == 0) return null;
             return mainTileFilter.OrderByDescending(tile => tile.HitBox.Right).First();
@@ -80,6 +81,7 @@ namespace OtterlyAdventure.OtterFolder
         public static MapTile OtterRightHit(Rectangle otterHitBox, List<MapTile> mapTiles)
         {
             //checks every time if intersects with oterHitbox
+            otterHitBox = new Rectangle(otterHitBox.X, otterHitBox.Y, otterHitBox.Width, otterHitBox.Height);
             var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Left <= otterHitBox.Right).ToList();
              if (mainTileFilter.Count == 0) return null;
             return mainTileFilter.OrderBy(tile => tile.HitBox.Left).First();

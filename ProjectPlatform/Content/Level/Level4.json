@@ -1,12 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"json",
-         "target":"Level4.json"
-        }
-    },
  "height":50,
  "infinite":false,
  "layers":[
@@ -552,6 +544,18 @@
                  "width":40,
                  "x":0,
                  "y":1176
+                }, 
+                {
+                 "class":"Portal",
+                 "gid":392,
+                 "height":32,
+                 "id":38,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":528,
+                 "y":1128
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -560,7 +564,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":37,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -601,6 +605,10 @@
         {
          "firstgid":367,
          "source":"..\/..\/..\/..\/Map\/OtterAni.tsx"
+        }, 
+        {
+         "firstgid":392,
+         "source":"..\/..\/..\/..\/Map\/portalRings2.tsx"
         }],
  "tilewidth":24,
  "type":"map",
