@@ -70,6 +70,18 @@
 /processorParam:TextureFormat=Color
 /build:Background/background_layer_3.png
 
+#begin Buttons/Cog.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Buttons/Cog.png
+
 #begin Buttons/EmptyButton.png
 /importer:TextureImporter
 /processor:TextureProcessor

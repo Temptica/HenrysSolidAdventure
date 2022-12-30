@@ -17,9 +17,10 @@ namespace OtterlyAdventure.GameScreens
         SpriteFont _font;
         Coin _displayCoin;
         HealthBar _healthBar;
+        bool _loaded;
         public PlayingScreen(Screen screen, ContentManager content, SpriteFont font)
         {
-            MapLoader.SetMapId(1);
+            MapLoader.SetMapId(5);
             MapLoader.LoadMap(screen.Height, content);
             //_gameState = GameState.Playing;
             Otter.Instance.Position = Map.Instance.Spawn;
@@ -60,6 +61,8 @@ namespace OtterlyAdventure.GameScreens
             };
             Map.Instance.Update(gameTime);
             Otter.Instance.Update(gameTime);
+            if (_loaded && InputController.ExitInput) return;
+            _loaded = false;
             if (InputController.ExitInput) Game1.SetState(GameState.Paused);
             if (InputController.DeadInput) Game1.SetState(GameState.GameOver);
         }
