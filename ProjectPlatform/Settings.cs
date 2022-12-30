@@ -37,9 +37,13 @@ namespace OtterlyAdventure
                         case "FullScreen":
                             Setting.FullScreen = bool.Parse(setting[1]);
                             break;
+                        case "Muted":
+                            Setting.Muted = bool.Parse(setting[1]);
+                            break;
                     }
                 });
-            AudioController.Volume = Setting.Volume;
+
+            AudioController.Volume = Setting.Muted? 0f : Setting.Volume;
             Game1.SetFullScreen(Setting.FullScreen);
 
         }
@@ -56,9 +60,11 @@ namespace OtterlyAdventure
     {
         internal float Volume{ get; set; }
         internal bool FullScreen { get; set; }
+        public bool Muted { get; set; }
+
         public override string ToString()
         {
-            return $"Volume={Volume}\nFullScreen={FullScreen}";
+            return $"Volume={Volume}\nFullScreen={FullScreen}\nMuted={Muted}";
         }
 
     }

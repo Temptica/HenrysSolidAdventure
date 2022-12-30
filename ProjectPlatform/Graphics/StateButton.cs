@@ -4,9 +4,9 @@ using OtterlyAdventure.Controller;
 
 namespace OtterlyAdventure.Graphics
 {
-    internal class StateButton
+    internal class StateButton: Clickable
     {
-        public bool IsClicked { get; private set; }
+        public bool IsClicked { get; set; }
         public static Texture2D ClickedTexture;
         public static Texture2D UnClickedTexture;
         private readonly Vector2 _position;
@@ -16,8 +16,9 @@ namespace OtterlyAdventure.Graphics
         {
             IsClicked = isClicked;
             _position = position;
+            HitBox = new Rectangle((int)position.X, (int)position.Y, UnClickedTexture.Width, UnClickedTexture.Height);
         }
-        public void Update(GameTime gameTime, Screen screen)
+        public void Update(Screen screen)
         {
             if (!MouseController.IsLeftClicked) 
             {
@@ -38,5 +39,7 @@ namespace OtterlyAdventure.Graphics
         {
             sprites.Draw(IsClicked ? ClickedTexture : UnClickedTexture, Vector2.One, _position, Color.White);
         }
+
+        public override Rectangle HitBox { get; protected set; }
     }
 }

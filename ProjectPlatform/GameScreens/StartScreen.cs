@@ -28,11 +28,13 @@ namespace OtterlyAdventure.GameScreens
             _backGround = BackGround.Instance;
             _font = font; 
             var startTexture = content.Load<Texture2D>("Buttons/EmptyButton");
-            
+            var setting = content.Load<Texture2D>("Buttons/Cog");
+
             _buttons = new List<Button>
             {
                 new("StartButton", startTexture,
-                    new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f), "START")
+                    new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f), "START"),
+                new ("Setting", setting, new Vector2(_screen.Width - setting.Width - 50, 50))
             };
 
             var halfWidth = _screen.Width / 2f;
@@ -46,7 +48,6 @@ namespace OtterlyAdventure.GameScreens
             Otter.Instance.SetWalk(true);
             
             _backGround.Reset();
-            _buttons.ForEach(button => button.UpdateActive(true));
             AudioController.Instance.PlaySong("MainMenu");
         }
         public void Draw(SpriteBatch sprite, Sprites sprites)
@@ -73,7 +74,7 @@ namespace OtterlyAdventure.GameScreens
             Otter.Instance.CurrentAnimation.Update(gameTime);
             var startButton = _buttons.First(b => b.Name == "StartButton");
             Otter.Instance.MenuUpdate(gameTime, startButton.Position.X, startButton.Position.X + startButton.Texture.Width,startButton.Position.Y);
-            var selected = _buttons.Where(button => button.CheckHit(MouseController.GetScreenPosition(_screen))).ToList();
+            var selected = _buttons.Where(button => button.CheckHit(_screen)).ToList();
             if(_loaded && (MouseController.IsLeftClicked||InputController.ExitInput))//avoids going back to the game when pressing menu button or esc too long on game-over/paused screen
             {
                 return;
@@ -93,7 +94,14 @@ namespace OtterlyAdventure.GameScreens
             {
                 if (selected[0].Name == "StartButton")
                 {
+                    
                     Game1.SetState(GameState.Playing);
+                }
+
+                if (selected[0].Name == "Setting")
+                {
+                    _loaded = true;
+                    Game1.SetState(GameState.Settings);
                 }
             }
             

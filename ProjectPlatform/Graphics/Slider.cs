@@ -4,7 +4,7 @@ using OtterlyAdventure.Controller;
 
 namespace OtterlyAdventure.Graphics
 {
-    internal class Slider
+    internal class Slider: Clickable
     {
         public static Texture2D SliderTexture;
         public static Texture2D SliderKnobTexture;
@@ -12,6 +12,8 @@ namespace OtterlyAdventure.Graphics
         private float _value;
         private float _minValue;
         private float _maxValue;
+        public override Rectangle HitBox { get; protected set; }
+        
         public float Value
         {
             get => _value;
@@ -24,6 +26,7 @@ namespace OtterlyAdventure.Graphics
             _minValue = minValue;
             _maxValue = maxValue;
             Value = value;
+            HitBox = new Rectangle((int)position.X, (int)position.Y, SliderTexture.Width, SliderTexture.Height);
         }
         public void Update(GameTime gameTime, Screen screen)
         {
@@ -43,5 +46,6 @@ namespace OtterlyAdventure.Graphics
             var knobPos = new Vector2(_position.X + SliderTexture.Width * Value, _position.Y-2f);
             sprites.Draw(SliderKnobTexture, Vector2.One, knobPos, Color.White);
         }
+
     }
 }

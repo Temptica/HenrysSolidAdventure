@@ -47,7 +47,7 @@ namespace OtterlyAdventure.GameScreens
         {
 
             BackGround.Instance.Update(gameTime);
-            var selected = _buttons.Where(b => b.CheckHit(MouseController.GetScreenPosition(_screen))).ToList();
+            var selected = _buttons.Where(b => b.CheckHit(_screen)).ToList();
             if (selected.Count == 0)
             {
                 Mouse.SetCursor(MouseCursor.Arrow);

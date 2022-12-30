@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using OtterlyAdventure.Controller;
 
 namespace OtterlyAdventure.Graphics
 {
-    internal class Button //make ButtonList class soon ?
+    internal class Button: Clickable //make ButtonList class soon ?
     {
         public static SpriteFont Font;
         public string Name { get; }
         public Texture2D Texture { get; }
         public Vector2 Position { get; }
-        public Rectangle HitBox { get; }
+        public override Rectangle HitBox { get; protected set; }
         public bool IsActive { get; private set; }
         public GameState? ActivationState { get; set; }
         public Text Text { get; set; }
@@ -56,25 +57,6 @@ namespace OtterlyAdventure.Graphics
             {
                 Text.Draw(spriteBatch);
             }
-        }
-
-        public bool CheckHit(Vector2 cursor) //-1 = no hit / 0 hit no click / 1 hit and click
-        {
-            //Check if cursor is within Hitbox
-            if (!IsActive) return false;
-
-            if (!HitBox.Contains(cursor)) return false;
-            return true;
-        }
-
-        public void UpdateActive(bool? isActive = null)
-        {
-            if (isActive is null)
-            {
-                IsActive = !IsActive;
-                return;
-            }
-            IsActive = (bool)isActive;
         }
 
     }

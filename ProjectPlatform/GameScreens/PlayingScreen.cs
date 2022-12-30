@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 using OtterlyAdventure.Controller;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.Mapfolder;
@@ -12,21 +13,21 @@ namespace OtterlyAdventure.GameScreens
     internal class PlayingScreen : IGameScreen
     {
         BackGround _backGround;
-        List<Button> _buttons;
         List<Text> _texts;
         SpriteFont _font;
         Coin _displayCoin;
         HealthBar _healthBar;
-        bool _loaded;
+        private bool _loaded;
+        Screen _screen;
         public PlayingScreen(Screen screen, ContentManager content, SpriteFont font)
         {
             MapLoader.SetMapId(5);
             MapLoader.LoadMap(screen.Height, content);
+            _screen = screen;
             //_gameState = GameState.Playing;
             Otter.Instance.Position = Map.Instance.Spawn;
             _backGround = BackGround.Instance;
             _backGround.Reset();
-            _buttons = new List<Button>();
             _font = font;
             Otter.Instance.Reset();
             _displayCoin = new Coin(new Vector2(20,20));
@@ -64,7 +65,11 @@ namespace OtterlyAdventure.GameScreens
             Otter.Instance.Update(gameTime);
             if (_loaded && InputController.ExitInput) return;
             _loaded = false;
-            if (InputController.ExitInput) Game1.SetState(GameState.Paused);
+            if (InputController.ExitInput)
+            {
+                _loaded = true;
+                Game1.SetState(GameState.Paused);
+            }
             if (InputController.DeadInput) Game1.SetState(GameState.GameOver);
         }
     }

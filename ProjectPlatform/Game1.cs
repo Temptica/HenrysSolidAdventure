@@ -140,7 +140,7 @@ namespace OtterlyAdventure
                             currentScreen = new GameOverScreen(_screen, Content, _font);
                             break;
                         case GameState.Settings:
-                            currentScreen = new SettingsScreen(currentScreen, _screen, _font);
+                            currentScreen = new SettingsScreen(currentScreen, _screen, _font, Content);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);
