@@ -64,13 +64,21 @@ namespace OtterlyAdventure.Characters
             if (_attackTimer <= _attackRate)
             {
                 _attackTimer += gameTime.ElapsedGameTime.Milliseconds;
+                State = State.Idle;
             }
             else {
                 CanDamage = true;
+                
+            }
+            if (Vector2.Distance(Position, Otter.Instance.Position) <= 15)
+            {
                 State = State.Attacking;
             }
+            else
+            {
+                State = State.Idle;
+            }
 
-            
             base.Update(gameTime);
             Move(gameTime);
         }
@@ -93,9 +101,9 @@ namespace OtterlyAdventure.Characters
 
         public override bool CheckDamage()
         {
-            return _attackTimer >= _attackRate;
+            return CanDamage;
         }
-        public virtual void Move(GameTime gameTime)
+        public void Move(GameTime gameTime)
         {
             
             Position += Velocity*(float)gameTime.ElapsedGameTime.TotalMilliseconds;
