@@ -43,7 +43,8 @@ namespace OtterlyAdventure.Mapfolder
             map.Decorations = new();
             GenerateDecorations(mapFromFile.layers.First(layer => layer.name == "Decoration").objects, map.Decorations);
             GenerateDecorations(mapFromFile.layers.First(layer => layer.name == "Nature").objects, map.Decorations);
-            map.Shop = GenerateShop(mapFromFile.layers.First(layer => layer.name == "Shop").objects.First());
+            var shop = GenerateShop(mapFromFile.layers.First(layer => layer.name == "Shop").objects.FirstOrDefault());
+            map.Shop = shop == default ? null : shop;
             var spawn = mapFromFile.layers.First(layer => layer.name == "Otter & enemies").objects;
             SetSpawns(spawn, map);
         }
@@ -57,6 +58,8 @@ namespace OtterlyAdventure.Mapfolder
                 if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
                 if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));
+                if (spawn._class == "Portal") map.Portal = new Portal(new Vector2(spawn.x, spawn.y + mapOffset - Portal.Texture.Height));
+                if (spawn._class == "Boss") map.Boss = new Boss(new Vector2(spawn.x, spawn.y + mapOffset - Boss.Texture.Height));
             }           
         }
 
@@ -71,6 +74,7 @@ namespace OtterlyAdventure.Mapfolder
 
         private static Store GenerateShop(Object store)
         {
+            if (store is null) return null;
             return new Store(new Vector2(store.x, store.y+ mapOffset - Store.Texture.Height));
         }
 
