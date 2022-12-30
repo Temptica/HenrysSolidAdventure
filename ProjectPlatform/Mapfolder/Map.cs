@@ -28,6 +28,7 @@ namespace OtterlyAdventure.Mapfolder
         internal Rectangle ScreenRectangle { get; private set; }
         internal List<Enemy> Enemies { get; set; }
         internal Portal? Portal { get; set; }
+        internal Boss Boss { get; set; }
 
 
         private Map()
@@ -83,6 +84,7 @@ namespace OtterlyAdventure.Mapfolder
             Decorations?.ForEach(deco => deco.Draw(spriteBatch));
             Enemies?.ForEach(enemy => enemy.Draw(spriteBatch));
             Portal?.Draw(spriteBatch);
+            Boss?.Draw(spriteBatch);
         }
         public void Update(GameTime gameTime)
         {
@@ -100,8 +102,14 @@ namespace OtterlyAdventure.Mapfolder
                 }
             }
 
-            Portal?.Update(gameTime);
+            Boss?.Update(gameTime);
+            if (Portal is null) return;
+            if (Portal.Update(gameTime))
+            {
+                MapLoader.LoadNextMap(ScreenRectangle.Height);
+            }
 
+            
         }
         public Tile GetTile(int i)
         {
@@ -127,6 +135,8 @@ namespace OtterlyAdventure.Mapfolder
             Shop = null;
             Spawn = Vector2.One;
             Enemies = null;
+            Boss = null;
+            Portal = null;
         }
     }
 }

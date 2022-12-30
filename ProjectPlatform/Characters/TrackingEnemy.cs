@@ -17,17 +17,20 @@ namespace OtterlyAdventure.Characters
             
             if (Vector2.Distance(Otter.Instance.Position, Position) <= Range)
             {
-                Chase();
+                Chase(Otter.Instance.Position);
             }
-            else if(Position != SpawnPosition)
-            { 
-                Return();
+            else if(Vector2.Distance(Position, SpawnPosition) >20)
+            {
+                Chase(SpawnPosition);
+            }
+            else
+            {
+                Velocity = Vector2.Zero;
             }
             base.Update(gameTime);
         }
+        
+        internal abstract void Chase(Vector2 position);
 
-        internal abstract void Chase();
-
-        internal abstract void Return();
     }
 }

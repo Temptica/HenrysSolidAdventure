@@ -485,6 +485,12 @@
 /processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
 /build:Level/Level4.json
 
+#begin Level/Level5.json
+/importer:JsonContentImporter
+/processor:JsonContentProcessor
+/processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+/build:Level/Level5.json
+
 #begin Tiles/oak_woods_tileset_fixed.png
 /importer:TextureImporter
 /processor:TextureProcessor

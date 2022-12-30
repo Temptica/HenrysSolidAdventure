@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
+using OtterlyAdventure.OtterFolder;
 
 namespace OtterlyAdventure.Mapfolder
 {
@@ -14,7 +15,8 @@ namespace OtterlyAdventure.Mapfolder
     {
         public Vector2 Position { get; private set; }
         public static Texture2D Texture;
-        public Rectangle HitBox { get; private set; }
+
+        public Rectangle HitBox => new((int)Position.X, (int)Position.Y, _basicAnimation.FrameWidth, _basicAnimation.FrameHeight);
         private BasicAnimation _basicAnimation;
         public Portal(Vector2 position)
         {
@@ -22,9 +24,10 @@ namespace OtterlyAdventure.Mapfolder
             _basicAnimation = new(Texture, "portal", 4f,5);
         }
 
-        public void Update(GameTime gameTime)
+        public bool Update(GameTime gameTime)
         {
             _basicAnimation.Update(gameTime);
+            return Otter.Instance.HitBox.Intersects(HitBox);
         }
         public void Draw(Sprites sprites)
         {

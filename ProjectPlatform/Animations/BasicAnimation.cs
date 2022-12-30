@@ -14,8 +14,8 @@ namespace OtterlyAdventure.Animations
         public virtual int FrameCount { get; private set; }
         private Rectangle FrameRectangle => new(CurrentFrameIndex * FrameWidth, BeginHeight, FrameWidth, FrameHeight);
 
-        private readonly int FrameWidth;
-        private readonly int FrameHeight;
+        public readonly int FrameWidth;
+        public readonly int FrameHeight;
         private readonly int BeginHeight;
 
         internal BasicAnimation(Texture2D texture, string identifier, float frameRate,int frameCount)
