@@ -34,7 +34,7 @@ namespace OtterlyAdventure.GameScreens
             {
                 new("StartButton", startTexture,
                     new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f), "START"),
-                new ("Setting", setting, new Vector2(_screen.Width - setting.Width - 50, 50))
+                new ("Setting", setting, new Vector2(_screen.Width - setting.Width - 25, 25))
             };
 
             var halfWidth = _screen.Width / 2f;

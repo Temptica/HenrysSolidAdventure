@@ -40,6 +40,11 @@ namespace OtterlyAdventure.Animations
         public override void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0f, Color color = default)
         {
             if (color == default) color = Color.White;
+            //spriteBatch.Draw(Game1._hitbox, position, CurrentFrame.FrameRectangle, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+            //spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+
             spriteBatch.Draw(Texture, position, CurrentFrame.FrameRectangle, color, rotation, Vector2.Zero, scale, spriteEffects, 0f);
         }
 

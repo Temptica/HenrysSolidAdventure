@@ -80,32 +80,6 @@ namespace OtterlyAdventure
             //set hitbox
             return new Rectangle(mostLeftPixel, (int)(highestPixel), (int)((mostRightPixel - mostLeftPixel)), (int)((lowestPixel - highestPixel)));
         }
-        
-        //{
-        //    Color[,] pixels = GetCurrentPixels2D(texture, rectangle);
-        //    int left = 0;
-        //    int right = 0;
-        //    int top = 0;
-        //    int bottom = 0;
-        //    for (int x = 0; x<rectangle.Width; x++)
-        //    {
-        //        for (int y = 0; y<rectangle.Height; y++)
-        //        {
-        //            if (pixels[x, y].A != 0)
-        //            {
-        //                if (left == 0) left = x;
-        //                if (right == 0) right = x;
-        //                if (top == 0) top = y;
-        //                if (bottom == 0) bottom = y;
-        //                if (x<left) left = x;
-        //                if (x > right) right = x;
-        //                if (y<top) top = y;
-        //                if (y > bottom) bottom = y;
-        //            }
-        //        }
-        //    }
-        //    HitBox = new Rectangle(rectangme.X + left, rectangme.Y + top, right - left, bottom - top);
-        //}
 
     }
 }

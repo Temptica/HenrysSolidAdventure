@@ -16,10 +16,6 @@ namespace OtterlyAdventure.Characters
         public static Texture2D Texture;
         private float _attackRate; 
         private float _attackTimer;
-        public override Rectangle HitBox
-        {
-            get => new((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height);
-        }
         public Bat(Vector2 position): base(position,150)
         {
             Velocity = Vector2.Zero;
@@ -96,6 +92,9 @@ namespace OtterlyAdventure.Characters
 
         public override void Draw(Sprites spriteBatch)
         {
+            spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
+            //spriteBatch.Draw(Game1._hitbox, Position, HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,_rotation);
         }
 

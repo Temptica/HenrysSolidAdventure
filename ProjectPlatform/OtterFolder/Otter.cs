@@ -149,7 +149,7 @@ namespace OtterlyAdventure.OtterFolder
         private void CheckEnemies()
         {
             if (Map.Instance.Enemies.Count <= 0) return;
-            foreach (var enemy in Map.Instance.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => OtterCollision.PixelBasedHit(this, enemy)))
+            foreach (var enemy in Map.Instance.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => CollisionHelper.PixelBasedHit(this, enemy)))
             {
                 
                 if (State == State.Attacking)
@@ -241,7 +241,7 @@ namespace OtterlyAdventure.OtterFolder
                 Velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                 nextPosition = new Vector2(nextPosition.X, nextPosition.Y + Velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
                 nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
-                var tile = OtterCollision.OtterTopHit(nextHitBox, map.FrontMap);
+                var tile = CollisionHelper.OtterTopHit(nextHitBox, map.FrontMap);
                 if (tile != null)
                 {
                     Velocity.Y = 0f;
@@ -253,14 +253,14 @@ namespace OtterlyAdventure.OtterFolder
             
             if (Velocity.X > 0)//to right
             {
-                var tile = OtterCollision.OtterRightHit(nextHitBox, map.FrontMap);
+                var tile = CollisionHelper.OtterRightHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
                 {
                     nextPosition = new Vector2(tile.Position.X - HitBox.Width-1,nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     Velocity.X = 0;
                 }
-                else if (OtterCollision.LeavingRightMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Right))
+                else if (CollisionHelper.LeavingRightMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Right))
                 {
                     MapLoader.LoadNextMap(Map.Instance.ScreenRectangle.Height);
                     Position = Map.Instance.Spawn;
@@ -270,14 +270,14 @@ namespace OtterlyAdventure.OtterFolder
             }
             else if (Velocity.X < 0)
             {
-                var tile = OtterCollision.OtterLeftHit(nextHitBox, map.FrontMap);
+                var tile = CollisionHelper.OtterLeftHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
                 {
                     nextPosition = new Vector2(tile.HitBox.Right+1 , nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     Velocity.X = 0;
                 }
-                else if (OtterCollision.LeavingLeftMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Left))
+                else if (CollisionHelper.LeavingLeftMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Left))
                 {
                     Velocity.X = 0;
                     nextPosition = new Vector2(1, nextHitBox.Y);
@@ -295,7 +295,7 @@ namespace OtterlyAdventure.OtterFolder
                 }
                 else
                 {
-                    if (OtterCollision.LeavingBottomMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Height))
+                    if (CollisionHelper.LeavingBottomMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Height))
                     {
                         Position = nextPosition = Map.Instance.Spawn;
                         Health -= MaxHealth / 4;
@@ -385,7 +385,7 @@ namespace OtterlyAdventure.OtterFolder
         {
             var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height + 10);
             //checks if any tile in map.currentMap has collision with the bottom of the otter if so set otter to the tile height            
-            var tile = OtterCollision.OtterGroundHit(groundBox, Map.Instance.FrontMap);
+            var tile = CollisionHelper.OtterGroundHit(groundBox, Map.Instance.FrontMap);
             if (tile == -1) return Vector2.Zero;
             //set the otter position so the otter is on the tile
             return new Vector2(hitbox.X, tile - hitbox.Height - CurrentAnimation.CurrentFrame.HitBox.Y * Scale);
@@ -397,11 +397,11 @@ namespace OtterlyAdventure.OtterFolder
             Color color = Color.White;
             if (State is State.Hit) color = Color.Red;
             else if (State is State.Attacking) color = Color.Yellow;
-            else if (State is State.Dead) color = Color.Black;
-            
+            else if (State is State.Dead) color = Color.Blue;
 
+            spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
-            
+
 
         }
 

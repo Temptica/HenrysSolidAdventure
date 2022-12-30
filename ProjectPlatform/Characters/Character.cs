@@ -28,14 +28,15 @@ namespace OtterlyAdventure.Characters
         public Vector2 Position { get; set; }
         internal Rectangle GetHitBox()
         {
-            var x = Position.X - Animations.CurrentAnimation.CurrentFrame.HitBox.X;
-            var y = Position.Y - Animations.CurrentAnimation.CurrentFrame.HitBox.Y;
+            var x = Position.X + Animations.CurrentAnimation.CurrentFrame.HitBox.X;
+            var y = Position.Y + Animations.CurrentAnimation.CurrentFrame.HitBox.Y;
             var width = Animations.CurrentAnimation.CurrentFrame.HitBox.Width;
             var height = Animations.CurrentAnimation.CurrentFrame.HitBox.Height;
             if (IsFacingLeft)
             {
-                //invert hitbox so it is correct when flipped
-                x = Position.X + Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width - Animations.CurrentAnimation.CurrentFrame.HitBox.Width;
+                // mirror the origin of your sprite.
+                x = Position.X + Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width -
+                    Animations.CurrentAnimation.CurrentFrame.HitBox.Right;
             }
             return new Rectangle((int)x, (int)y, (int)width, (int)height);
         }

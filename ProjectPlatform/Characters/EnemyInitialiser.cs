@@ -7,7 +7,7 @@ namespace OtterlyAdventure.Characters
 {
     internal static class EnemyInitialiser
     {
-        public static void Loadtextures(ContentManager content)
+        public static void LoadTextures(ContentManager content)
         {
             Bat.Texture = content.Load<Texture2D>("Enemies/Bat");
             Slime.Texture = content.Load<Texture2D>("Enemies/slime-Sheet");
@@ -22,6 +22,7 @@ namespace OtterlyAdventure.Characters
             };
             Skeleton.Textures = skeletonTextures;
             Boss.Texture = content.Load<Texture2D>("Enemies/Wizard_Boss");
+            Traps.TrapTextureLoader.LoadTextures(content);
         }
     }
 }

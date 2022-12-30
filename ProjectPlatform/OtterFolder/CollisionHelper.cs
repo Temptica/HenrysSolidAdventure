@@ -7,7 +7,7 @@ using OtterlyAdventure.Mapfolder;
 
 namespace OtterlyAdventure.OtterFolder
 {
-    internal static class OtterCollision
+    internal static class CollisionHelper
     {
         public static Rectangle LastHit = new(1,1,1,1);
         public static float OtterGroundHit(Rectangle otterHitBox, List<MapTile> maptiles)
@@ -163,5 +163,6 @@ namespace OtterlyAdventure.OtterFolder
         {
             return otter.Bottom > y;
         }
+
     }
 }

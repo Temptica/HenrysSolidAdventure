@@ -51,8 +51,8 @@ namespace OtterlyAdventure.Characters
             var hitBox = Otter.Instance.HitBox;
             if (hitBox.Top >= HitBox.Bottom || hitBox.Bottom <= HitBox.Top) return false;
             return hitBox.Center.X < HitBox.Center.X
-                ? hitBox.Right > HitBox.Left - 30
-                : hitBox.Left < HitBox.Right + 30; //if otter is left, then check left distance is 30 or less, otherwise do opposite
+                ? hitBox.Right > HitBox.Left - 20
+                : hitBox.Left < HitBox.Right + 20; //if otter is left, then check left distance is 20 or less, otherwise do opposite
         }
     }
 }

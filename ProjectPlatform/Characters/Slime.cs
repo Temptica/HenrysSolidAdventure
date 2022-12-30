@@ -37,7 +37,11 @@ namespace OtterlyAdventure.Characters
 
         public override void Draw(Sprites spriteBatch)
         {//texture is flipped compared to other enemies
+            spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
             Animations.Draw(spriteBatch, Position, !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
+            //spriteBatch.Draw(Game1._hitbox, Position, HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+
         }
         public override bool CheckDamage()
         {

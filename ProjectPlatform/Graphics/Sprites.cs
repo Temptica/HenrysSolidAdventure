@@ -49,7 +49,7 @@ namespace OtterlyAdventure.Graphics
             if (camera is null)
             {
                 Viewport vp = game.GraphicsDevice.Viewport;
-                effect.Projection = Matrix.CreateOrthographicOffCenter(0, vp.Width, 0, vp.Height, 0f, 1f);
+                effect.Projection = Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height,0,  0f, 1f);
                 effect.View = Matrix.Identity;
             }
             else
@@ -79,7 +79,7 @@ namespace OtterlyAdventure.Graphics
 
         public void Draw(Texture2D texture, Rectangle? sourceRectangle, Rectangle destinationRectangle, Color color)
         {
-            sprites.Draw(texture, destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+            sprites.Draw(texture, destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
         }
 
         public void Draw(Texture2D texture, Rectangle destinationRectangle, Color color)

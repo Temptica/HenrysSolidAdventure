@@ -72,7 +72,7 @@ namespace OtterlyAdventure.Mapfolder
             Coin.Texture = content.Load<Texture2D>("Items/Coin");
             Store.Texture = content.Load<Texture2D>("Decoration/shop_anim");
             Portal.Texture = content.Load<Texture2D>("Items/PortalRings2");
-            EnemyInitialiser.Loadtextures(content);
+            EnemyInitialiser.LoadTextures(content);
 
         }
         public void Draw(Sprites spriteBatch)

@@ -59,7 +59,7 @@ namespace OtterlyAdventure.Mapfolder
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
                 if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));
                 if (spawn._class == "Portal") map.Portal = new Portal(new Vector2(spawn.x, spawn.y + mapOffset - Portal.Texture.Height));
-                if (spawn._class == "Boss") map.Boss = new Boss(new Vector2(spawn.x, spawn.y + mapOffset - Boss.Texture.Height));
+                if (spawn._class == "Boss") map.Boss = new Boss(new Vector2(spawn.x, spawn.y + mapOffset - Boss.Texture.Height/8f));
             }           
         }
 

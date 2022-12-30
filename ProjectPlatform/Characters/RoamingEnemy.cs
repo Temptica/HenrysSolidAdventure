@@ -13,11 +13,6 @@ namespace OtterlyAdventure.Characters
         private float _maxLeftPosition;
         private float _maxRightPosition;
 
-        protected RoamingEnemy()
-        {
-            
-        }
-        
         public abstract bool CheckAttack();
 
         internal void DefineWalkablePath()
@@ -37,7 +32,7 @@ namespace OtterlyAdventure.Characters
             while (x >= Tile.TileSize)
             {
                 x -= Tile.TileSize;
-                var tile = walkableMap.Find(tile => tile.Position.X == x && tile.Position.Y == y) ;
+                var tile = walkableMap.Find(tile => tile.Position.X == x && tile.Position.Y == y && tile.Tile.Type is TileType.Flat);
                 if (tile == null) break;//gap
                 tile = walkableMap.Find(tile => tile.Position.X == x && tile.Position.Y == y - Tile.TileSize);
                 if (tile != null) break;//wall
@@ -50,7 +45,7 @@ namespace OtterlyAdventure.Characters
             while (x <= Map.Instance.ScreenRectangle.Right - Tile.TileSize)
             {
                 x += Tile.TileSize;
-                var tile = walkableMap.Find(tile => tile.Position.X == x && tile.Position.Y == y);
+                var tile = walkableMap.Find(tile => tile.Position.X == x && tile.Position.Y == y && tile.Tile.Type is TileType.Flat);
                 if (tile == null) break;//gap
                 tile = walkableMap.Find(tile => tile.Position.X == x && tile.Position.Y == y - Tile.TileSize);
                 if (tile != null) break;//wall

@@ -30,7 +30,7 @@ namespace OtterlyAdventure.GameScreens
             var setting = content.Load<Texture2D>("Buttons/Cog");
             _buttons = new List<Button>
             {
-                new ("Setting", setting, new Vector2(screen.Width - setting.Width - 50, 50))
+                new ("Setting", setting, new Vector2(screen.Width - setting.Width - 25, 25))
             };
             _texts = new List<Text> {
             new(textPosition,"Press \"E\" or \"enter\" to resume. \nPress \"Escape\" to go to menu." , Color.White, 0.5f, 0f, font)
