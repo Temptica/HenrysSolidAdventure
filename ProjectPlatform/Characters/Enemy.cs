@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.OtterFolder;
@@ -21,7 +22,8 @@ namespace OtterlyAdventure.Characters
             {
                 CanAttack = true;
             }
-            
+            Animations.Update(State, gameTime);
+
         }
         public abstract bool CheckDamage();
 
@@ -32,6 +34,11 @@ namespace OtterlyAdventure.Characters
             if (!(CurrentHp < 0)) return false;
             IsDead = true;
             return true;
+        }
+
+        public override void Draw(Sprites spriteBatch)
+        {
+            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
         }
         
         public virtual int Attack()

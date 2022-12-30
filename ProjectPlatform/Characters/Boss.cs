@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
+using OtterlyAdventure.OtterFolder;
 
 namespace OtterlyAdventure.Characters
 {
@@ -12,17 +13,28 @@ namespace OtterlyAdventure.Characters
         public Boss(Vector2 position)
         {
             Position = position;
-            Animations = new AnimationList<Animation>();
+            var width = Texture.Width / 8;
+            var height = Texture.Height / 8;
+            Animations = new AnimationList<Animation>()
+            {
+                new(Texture, State.Attacking, 16, width, height, 0, 0, 8),
+                new(Texture, State.Dead, 7, width, height, height * 2, 0, 5),
+                new(Texture, State.Idle, 8, width, height, height * 4, 0, 8),
+                new(Texture, State.Walking, 8, width, height, height * 6, 0, 10),
+                new(Texture, State.Hit, 3, width, height, Texture.Height - height, 0, 4)
+            };
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            base.Update(gameTime);
+            //do more logic
         }
 
         public override void Draw(Sprites spriteBatch)
         {
-            throw new NotImplementedException();
+            base.Draw(spriteBatch);
+            //todo
         }
 
         public override bool CheckDamage()

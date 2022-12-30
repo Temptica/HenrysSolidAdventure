@@ -233,30 +233,30 @@ namespace OtterlyAdventure.OtterFolder
             }
             var nextHitBox = new Rectangle((int)Math.Round(nextPosition.X), (int)Math.Round(nextPosition.Y), HitBox.Width, HitBox.Height);
 
+
+
             if (Velocity.Y < 0)//going up
             {
+                
+                Velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
+                nextPosition = new Vector2(nextPosition.X, nextPosition.Y + Velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
+                nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                 var tile = OtterCollision.OtterTopHit(nextHitBox, map.FrontMap);
                 if (tile != null)
                 {
                     Velocity.Y = 0f;
                     nextPosition = new(nextPosition.X, tile.HitBox.Bottom + 3);
+                    nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                 }
-                else
-                {
-                    Velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
-                    nextPosition = new Vector2(nextPosition.X, nextPosition.Y + Velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
-                }
-                nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                 _canJump = false;
             }
-
+            
             if (Velocity.X > 0)//to right
             {
-
                 var tile = OtterCollision.OtterRightHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
                 {
-                    nextPosition = new Vector2(tile.Position.X - HitBox.Width - 1, nextHitBox.Y);
+                    nextPosition = new Vector2(tile.Position.X - HitBox.Width-1,nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     Velocity.X = 0;
                 }
@@ -273,7 +273,7 @@ namespace OtterlyAdventure.OtterFolder
                 var tile = OtterCollision.OtterLeftHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
                 {
-                    nextPosition = new Vector2(tile.Position.X + tile.HitBox.Width + 1, nextHitBox.Y);
+                    nextPosition = new Vector2(tile.HitBox.Right+1 , nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     Velocity.X = 0;
                 }

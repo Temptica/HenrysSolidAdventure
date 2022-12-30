@@ -461,6 +461,18 @@
 /processorParam:TextureFormat=Color
 /build:Items/HealthBarEmpty.png
 
+#begin Items/portalRings2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Items/portalRings2.png
+
 #begin Level/Level1.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
@@ -484,6 +496,12 @@
 /processor:JsonContentProcessor
 /processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
 /build:Level/Level4.json
+
+#begin Level/Level5.json
+/importer:JsonContentImporter
+/processor:JsonContentProcessor
+/processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+/build:Level/Level5.json
 
 #begin Tiles/oak_woods_tileset_fixed.png
 /importer:TextureImporter

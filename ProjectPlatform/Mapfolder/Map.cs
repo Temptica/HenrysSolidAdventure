@@ -27,7 +27,7 @@ namespace OtterlyAdventure.Mapfolder
         internal Vector2 Spawn { get; set; }
         internal Rectangle ScreenRectangle { get; private set; }
         internal List<Enemy> Enemies { get; set; }
-        internal Portal Portal { get; set; }
+        internal Portal? Portal { get; set; }
         internal Boss Boss { get; set; }
 
 

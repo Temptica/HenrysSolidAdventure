@@ -14,7 +14,7 @@ namespace OtterlyAdventure.Mapfolder
         //"D:\ap\22-23\ProjGameDev\Map\Level1.json"
         private static float mapOffset;
         private static int MapID = 1;
-        private static int mapCount = 4;
+        private static int mapCount = 5;
         static ContentManager _content;
         public static void LoadMap(int screenheight, ContentManager content = null)
         {
@@ -37,7 +37,7 @@ namespace OtterlyAdventure.Mapfolder
             
             var map = Map.Instance;
             map.Unload();
-            map.FrontMap =  GenerateTileLayer(mapFromFile.layers.First(layer => layer.name == "ForegroundTiles"), screenheight);
+            map.FrontMap = GenerateTileLayer(mapFromFile.layers.First(layer => layer.name == "ForegroundTiles"), screenheight);
             map.BackMap = GenerateTileLayer(mapFromFile.layers.First(layer => layer.name == "BackgroundTiles"), screenheight);
             map.Coins = GenerateCoins(mapFromFile.layers.First(layer => layer.name == "Coins").objects);
             map.Decorations = new();

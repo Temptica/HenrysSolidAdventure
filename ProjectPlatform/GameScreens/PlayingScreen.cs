@@ -44,9 +44,10 @@ namespace OtterlyAdventure.GameScreens
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
         {
             _backGround.Draw(sprites);
-            _displayCoin.Draw(sprites);
+            
             Map.Instance.Draw(sprites);
             Otter.Instance.Draw(sprites);
+            _displayCoin.Draw(sprites);
             _texts.ForEach(text => text.Draw(spriteBatch));
             _healthBar.Draw(sprites);
         }

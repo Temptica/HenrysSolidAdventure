@@ -98,7 +98,7 @@ namespace OtterlyAdventure.Characters
         }
         public override void Update(GameTime gameTime)
         {
-            Animations.Update(State, gameTime);
+            
             if (State is State.Walking)
             {
 
@@ -139,10 +139,6 @@ namespace OtterlyAdventure.Characters
                 return;
             }
             State = IsWalking ? State.Walking : State.Idle;
-        }
-        public override void Draw(Sprites spriteBatch)
-        {
-            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
         }
 
     }

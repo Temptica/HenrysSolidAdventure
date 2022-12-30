@@ -14,7 +14,6 @@ namespace OtterlyAdventure.Characters
         //flying tracking enemy. will start flying to you when you are 15 tiles away, regardless of walls. Once detected, it will keep tracking
 
         public static Texture2D Texture;
-        private Vector2 _velocity;
         private float _attackRate; 
         private float _attackTimer;
         public override Rectangle HitBox
@@ -23,7 +22,7 @@ namespace OtterlyAdventure.Characters
         }
         public Bat(Vector2 position): base(position,150)
         {
-            _velocity = Vector2.Zero;
+            Velocity = Vector2.Zero;
             Animations = new AnimationList<Animation> { new(Texture, 4, 10) };
 
             Position = position;
@@ -32,7 +31,7 @@ namespace OtterlyAdventure.Characters
             CanDamage = true;
             Damage = 4;
             Speed = 0.1f;
-            _attackRate = 0.5f / 1000f; //0.5 times per second
+            _attackRate = 2000f; //0.5 times per second
         }
 
         private float _timer;
@@ -44,12 +43,12 @@ namespace OtterlyAdventure.Characters
             {
                 if (_timer == 0)
                 {
-                    _velocity = new Vector2(0, 0.2f * gameTime.ElapsedGameTime.Milliseconds);
+                    Velocity = new Vector2(0, 0.2f * gameTime.ElapsedGameTime.Milliseconds);
                     IsFacingLeft = false;
                 }
                 if (_timer >= 4000) Remove = true;
                 
-                Position += _velocity;
+                Position += Velocity;
                 _timer+= gameTime.ElapsedGameTime.Milliseconds;
                 //rotate so it goes downwards
                 if (_rotation <= (Math.PI / 2))
@@ -65,25 +64,33 @@ namespace OtterlyAdventure.Characters
             if (_attackTimer <= _attackRate)
             {
                 _attackTimer += gameTime.ElapsedGameTime.Milliseconds;
+                State = State.Idle;
             }
+            else {
+                CanDamage = true;
+                
+            }
+            if (Vector2.Distance(Position, Otter.Instance.Position) <= 15)
+            {
+                State = State.Attacking;
+            }
+            else
+            {
+                State = State.Idle;
+            }
+
             base.Update(gameTime);
-            Animations.Update(State, gameTime);
             Move(gameTime);
         }
 
-        internal override void Chase()
+        internal override void Chase(Vector2 position)
         {
-            var otterPos = Otter.Instance.Position;
-            var angle = Math.Atan2(otterPos.Y - Position.Y, otterPos.X - Position.X);
-            _velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * Speed;
+            var angle = Math.Atan2(position.Y - Position.Y, position.X - Position.X);
+            //reduce speed if close by to avoid overshooting
+            var tempSpeed = Vector2.Distance(Position, position) < 30 ? 0.05f : 0.1f;
+            IsFacingLeft = Velocity.X < 0;
+            Velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * tempSpeed;
 
-        }
-
-        internal override void Return()
-        {
-            var spawnPos = SpawnPosition;
-            var angle = Math.Atan2(spawnPos.Y - Position.Y, spawnPos.X - Position.X);
-            _velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * Speed;
         }
 
 
@@ -94,12 +101,12 @@ namespace OtterlyAdventure.Characters
 
         public override bool CheckDamage()
         {
-            return _attackTimer >= _attackRate;
+            return CanDamage;
         }
-        public virtual void Move(GameTime gameTime)
+        public void Move(GameTime gameTime)
         {
-            _velocity = new Vector2(_velocity.X * gameTime.ElapsedGameTime.Milliseconds, _velocity.Y *gameTime.ElapsedGameTime.Milliseconds);
-            Position += _velocity;
+            
+            Position += Velocity*(float)gameTime.ElapsedGameTime.TotalMilliseconds;
         }
         public override int Attack()
         {
