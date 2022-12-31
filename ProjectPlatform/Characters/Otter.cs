@@ -4,12 +4,12 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
-using OtterlyAdventure.Characters;
 using OtterlyAdventure.Controller;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.Mapfolder;
+using OtterlyAdventure.OtterFolder;
 
-namespace OtterlyAdventure.OtterFolder
+namespace OtterlyAdventure.Characters
 {
     //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
     internal enum State { Idle, Walking, Running, Jumping, Attacking, Sleeping, Dead, Hit, Other }
@@ -46,12 +46,12 @@ namespace OtterlyAdventure.OtterFolder
         public State State { get; set; }
         public float Gravity { get; private set; }
         public float Scale { get; set; }
-        public float Coins { get; private set; }        
+        public float Coins { get; private set; }
         #endregion
         //signleton 
         private static Otter _instance;
         private bool _canAttack = true;
-        private bool _canJump; 
+        private bool _canJump;
         private bool _isRunning;
         private bool _canWalk;
         private bool _isJumping;
@@ -102,7 +102,7 @@ namespace OtterlyAdventure.OtterFolder
             Velocity.X = 0;
         }
 
-        
+
 
         private void SetState()
         {
@@ -114,7 +114,7 @@ namespace OtterlyAdventure.OtterFolder
                 }
                 return;
             }
-                
+
             if (State is State.Hit)
             {
                 IsHit = !CurrentAnimation.IsFinished;
@@ -151,11 +151,11 @@ namespace OtterlyAdventure.OtterFolder
             if (Map.Instance.Enemies.Count <= 0) return;
             foreach (var enemy in Map.Instance.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => CollisionHelper.PixelBasedHit(this, enemy)))
             {
-                
+
                 if (State == State.Attacking)
                 {
                     _canAttack = false;
-                    if (!enemy.GetDamage(Damage)) {continue;}
+                    if (!enemy.GetDamage(Damage)) { continue; }
                     Coins += 1;
                     var coin = new Coin(enemy.Position);
                     Map.Instance.Coins.Add(coin);
@@ -182,7 +182,7 @@ namespace OtterlyAdventure.OtterFolder
         private void MoveUpdate(GameTime gameTime, float leftBound, float rightBound, float bottomBound)
         {
             GetVelocity(gameTime);
-            
+
             float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Velocity.X);
 
             var nextPosition = Position;
@@ -192,7 +192,7 @@ namespace OtterlyAdventure.OtterFolder
             }
             if (Velocity.Y != 0)
             {
-                nextPosition.Y += (float)(Velocity.Y* gameTime.ElapsedGameTime.TotalMilliseconds);
+                nextPosition.Y += (float)(Velocity.Y * gameTime.ElapsedGameTime.TotalMilliseconds);
             }
             var nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
 
@@ -219,13 +219,13 @@ namespace OtterlyAdventure.OtterFolder
         public void MoveUpdate(GameTime gameTime, Map map)
         {
             GetVelocity(gameTime);
-            
+
             float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Velocity.X);
-            
+
             var nextPosition = Position;
             if (velocityXDelta != 0)
             {
-                nextPosition.X+= velocityXDelta;
+                nextPosition.X += velocityXDelta;
             }
             if (Velocity.Y != 0)
             {
@@ -237,7 +237,7 @@ namespace OtterlyAdventure.OtterFolder
 
             if (Velocity.Y < 0)//going up
             {
-                
+
                 Velocity.Y += (float)(Gravity * gameTime.ElapsedGameTime.TotalMilliseconds);
                 nextPosition = new Vector2(nextPosition.X, nextPosition.Y + Velocity.Y * (float)gameTime.ElapsedGameTime.TotalMilliseconds);
                 nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
@@ -250,13 +250,13 @@ namespace OtterlyAdventure.OtterFolder
                 }
                 _canJump = false;
             }
-            
+
             if (Velocity.X > 0)//to right
             {
                 var tile = CollisionHelper.OtterRightHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
                 {
-                    nextPosition = new Vector2(tile.Position.X - HitBox.Width-1,nextHitBox.Y);
+                    nextPosition = new Vector2(tile.Position.X - HitBox.Width - 1, nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     Velocity.X = 0;
                 }
@@ -273,7 +273,7 @@ namespace OtterlyAdventure.OtterFolder
                 var tile = CollisionHelper.OtterLeftHit(nextHitBox, map.FrontMap);
                 if (tile is not null)
                 {
-                    nextPosition = new Vector2(tile.HitBox.Right+1 , nextHitBox.Y);
+                    nextPosition = new Vector2(tile.HitBox.Right + 1, nextHitBox.Y);
                     nextHitBox = new Rectangle((int)nextPosition.X, (int)nextPosition.Y, HitBox.Width, HitBox.Height);
                     Velocity.X = 0;
                 }
@@ -400,7 +400,7 @@ namespace OtterlyAdventure.OtterFolder
             else if (State is State.Dead) color = Color.Blue;
 
             spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale,0f, color);
+            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale, 0f, color);
 
 
         }
@@ -409,7 +409,7 @@ namespace OtterlyAdventure.OtterFolder
         {
             _canWalk = canWalk;
         }
-        
+
         public void Reset()
         {
             Coins = 0;

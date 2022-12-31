@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using OtterlyAdventure.Characters;
-using OtterlyAdventure.OtterFolder;
 using OtterlyAdventure.Shop;
 
 namespace OtterlyAdventure.Mapfolder

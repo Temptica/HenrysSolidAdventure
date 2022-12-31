@@ -91,10 +91,6 @@ namespace OtterlyAdventure.Characters.Traps
                 {
                     TrapTier.Two,
                     content.Load<Texture2D>("Enemies/Traps/Sandworm Trap/Sandworm Trap - level 2 - Transition")
-                },
-                {
-                    TrapTier.Three,
-                    content.Load<Texture2D>("Enemies/Traps/Sandworm Trap/Sandworm Trap - level 3 - Transition")
                 }
             };
         }

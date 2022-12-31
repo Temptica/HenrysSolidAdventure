@@ -6,7 +6,7 @@ using System.Linq;
 using OtterlyAdventure.Controller;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.Mapfolder;
-using OtterlyAdventure.OtterFolder;
+using OtterlyAdventure.Characters;
 
 namespace OtterlyAdventure.GameScreens
 {

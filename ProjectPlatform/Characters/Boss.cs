@@ -12,6 +12,7 @@ namespace OtterlyAdventure.Characters
     {//https://luizmelo.itch.io/evil-wizard-2
         public static Texture2D Texture { get; set; }
         private const float Gravity = 0.0001f;
+        private HealthBar _healthBar;
         public Boss(Vector2 position)
         {
             Position = position;
@@ -25,6 +26,8 @@ namespace OtterlyAdventure.Characters
                 new(Texture, State.Walking, 8, width, height, height * 6, 0, 10),
                 new(Texture, State.Hit, 3, width, height, Texture.Height - height, 0, 4)
             };
+            _healthBar = new HealthBar(Position, 1f);
+            CurrentHp = BaseHp = 50;
         }
 
         public override void Update(GameTime gameTime)
@@ -34,7 +37,7 @@ namespace OtterlyAdventure.Characters
             var result = OnGround(HitBox);
             //look at otter
             IsFacingLeft = Otter.Instance.HitBox.Center.X < HitBox.Center.X;
-                
+            _healthBar.SetHealth(CurrentHp / BaseHp);
 
 
 
@@ -46,7 +49,7 @@ namespace OtterlyAdventure.Characters
         {
             
             base.Draw(spriteBatch);
-           
+            _healthBar.Draw(spriteBatch);
             //todo
         }
         public Vector2 OnGround(Rectangle hitbox)

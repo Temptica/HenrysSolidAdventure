@@ -7,7 +7,6 @@ using OtterlyAdventure.Controller;
 using OtterlyAdventure.GameScreens;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.Mapfolder;
-using OtterlyAdventure.OtterFolder;
 
 namespace OtterlyAdventure
 {

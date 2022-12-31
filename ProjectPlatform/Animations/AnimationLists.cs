@@ -2,8 +2,8 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using OtterlyAdventure.Characters;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.OtterFolder;
 
 namespace OtterlyAdventure.Animations
 {

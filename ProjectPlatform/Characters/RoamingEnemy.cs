@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Graphics;
 using OtterlyAdventure.Mapfolder;
-using OtterlyAdventure.OtterFolder;
 
 namespace OtterlyAdventure.Characters
 {

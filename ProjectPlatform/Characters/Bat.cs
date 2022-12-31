@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.OtterFolder;
 
 //https://github.com/roy-t/AStar
 

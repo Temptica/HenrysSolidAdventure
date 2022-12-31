@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OtterlyAdventure.Animations;
+using OtterlyAdventure.Characters;
 using OtterlyAdventure.Graphics;
-using OtterlyAdventure.OtterFolder;
 
 namespace OtterlyAdventure.Mapfolder
 {
