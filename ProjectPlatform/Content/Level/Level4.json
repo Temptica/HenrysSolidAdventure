@@ -534,18 +534,6 @@
                  "y":936
                 }, 
                 {
-                 "class":"Spawn",
-                 "gid":367,
-                 "height":40,
-                 "id":36,
-                 "name":"",
-                 "rotation":0,
-                 "visible":true,
-                 "width":40,
-                 "x":0,
-                 "y":1176
-                }, 
-                {
                  "class":"Portal",
                  "gid":392,
                  "height":32,
@@ -556,6 +544,18 @@
                  "width":32,
                  "x":528,
                  "y":1128
+                }, 
+                {
+                 "class":"Spawn",
+                 "gid":397,
+                 "height":55,
+                 "id":39,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":100,
+                 "x":-24,
+                 "y":1176
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -564,7 +564,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":39,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -609,6 +609,10 @@
         {
          "firstgid":392,
          "source":"..\/..\/..\/..\/Map\/portalRings2.tsx"
+        }, 
+        {
+         "firstgid":397,
+         "source":"..\/..\/..\/..\/Map\/Spawn.tsx"
         }],
  "tilewidth":24,
  "type":"map",

@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
-using OtterlyAdventure.Controller;
+using HenrySolidAdventure.Controller;
 
-namespace OtterlyAdventure
+namespace HenrySolidAdventure
 {
     internal class Settings
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace OtterlyAdventure.Graphics
+namespace HenrySolidAdventure.Graphics
 {
     internal class Text
     {

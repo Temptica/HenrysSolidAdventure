@@ -1,4 +1,4 @@
-﻿namespace OtterlyAdventure.Shop
+﻿namespace HenrySolidAdventure.Shop
 {
     internal class StatsBuff
     {

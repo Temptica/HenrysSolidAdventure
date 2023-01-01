@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using OtterlyAdventure.Characters;
-using OtterlyAdventure.Shop;
 
-namespace OtterlyAdventure.Mapfolder
+namespace HenrySolidAdventure.Mapfolder
 {
     internal static class MapLoader
     {
@@ -53,7 +53,7 @@ namespace OtterlyAdventure.Mapfolder
             map.Enemies = new List<Enemy>();
             foreach (var spawn in spawns)
             {
-                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Otter.Texture.Height/3f);
+                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Hero.Texture.Height/3f);
                 if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
                 if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));

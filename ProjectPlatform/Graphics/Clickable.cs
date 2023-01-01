@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HenrySolidAdventure.Controller;
 using Microsoft.Xna.Framework;
-using OtterlyAdventure.Controller;
 
-namespace OtterlyAdventure.Graphics
+namespace HenrySolidAdventure.Graphics
 {
     internal abstract class Clickable
     {

@@ -1,12 +1,10 @@
-﻿using System;
+﻿using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Mapfolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Mapfolder;
-using OtterlyAdventure.OtterFolder;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal class Boss : Enemy
     {//https://luizmelo.itch.io/evil-wizard-2
@@ -36,7 +34,7 @@ namespace OtterlyAdventure.Characters
             //put boss on the ground with Hitbox
             var result = OnGround(HitBox);
             //look at otter
-            IsFacingLeft = Otter.Instance.HitBox.Center.X < HitBox.Center.X;
+            IsFacingLeft = Hero.Instance.HitBox.Center.X < HitBox.Center.X;
             _healthBar.SetHealth(CurrentHp / BaseHp);
 
 
@@ -56,7 +54,7 @@ namespace OtterlyAdventure.Characters
         {
             var groundBox = new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, hitbox.Height);
             //checks if any tile in map.currentMap has collision with the bottom of the otter if so set otter to the tile height            
-            var tile = CollisionHelper.OtterGroundHit(groundBox, Map.Instance.FrontMap);
+            var tile = CollisionHelper.GroundHit(groundBox, Map.Instance.FrontMap);
             if (tile == -1) return Vector2.Zero;
             //set the otter position so the otter is on the tile
             return new Vector2(hitbox.X, tile - hitbox.Height - CurrentAnimation.CurrentFrame.HitBox.Y);

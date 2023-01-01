@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace OtterlyAdventure.Graphics
+namespace HenrySolidAdventure.Graphics
 {
     internal class BackGround
     {//from same bundle as tileset, decoration and nature

@@ -1,14 +1,14 @@
 ﻿using System;
+using System.IO;
+using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Controller;
+using HenrySolidAdventure.GameScreens;
+using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Mapfolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.IO;
-using OtterlyAdventure.Characters;
-using OtterlyAdventure.Controller;
-using OtterlyAdventure.GameScreens;
-using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Mapfolder;
 
-namespace OtterlyAdventure
+namespace HenrySolidAdventure
 {
     enum GameState { Menu, Paused, Playing, GameOver, Settings }
     public class Game1 : Game
@@ -75,7 +75,7 @@ namespace OtterlyAdventure
             Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
             map.Initialise(Content, _screen);
-            Otter.Instance.Initialise(Content.Load<Texture2D>("Character/OtterAni"), new Vector2(100, 100), 0.0005f, 1f);
+            Hero.Instance.Initialise(Content.Load<Texture2D>("Character/HeroKnight"), new Vector2(100, 100), 0.0005f, 1f);
             Button.Font = _font;
             _hitbox = new Texture2D(GraphicsDevice, 1, 1);
             _hitbox.SetData(new[] { Color.White });
@@ -113,7 +113,7 @@ namespace OtterlyAdventure
                     _gameState = currentScreen switch
                     {
                         PlayingScreen => GameState.Playing,
-                        StartScreen => GameState.Menu,
+                        TittleScreen => GameState.Menu,
                         GameOverScreen => GameState.GameOver,
                         PausedScreen => GameState.Paused,
                         _ => _gameState
@@ -130,7 +130,7 @@ namespace OtterlyAdventure
                             currentScreen = new PlayingScreen(_screen, Content, _font);
                             break;
                         case GameState.Menu:
-                            currentScreen = new StartScreen(_screen, Content, _font);
+                            currentScreen = new TittleScreen(_screen, Content, _font);
                             break;
                         case GameState.Paused:
                             currentScreen = new PausedScreen(_screen, _font, Content, (PlayingScreen)currentScreen);

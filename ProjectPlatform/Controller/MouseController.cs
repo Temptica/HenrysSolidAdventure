@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Controller
+namespace HenrySolidAdventure.Controller
 {
     internal static class MouseController
     {

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 
-namespace OtterlyAdventure.Controller
+namespace HenrySolidAdventure.Controller
 {
     internal class AudioController
     {

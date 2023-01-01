@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Shop
+namespace HenrySolidAdventure.Shop
 {
     internal class Store
     {

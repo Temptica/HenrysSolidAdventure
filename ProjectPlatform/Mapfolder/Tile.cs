@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace OtterlyAdventure.Mapfolder
+namespace HenrySolidAdventure.Mapfolder
 {
     public enum TileType
     {

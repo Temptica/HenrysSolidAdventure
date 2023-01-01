@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Characters;
-using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Shop;
 
-namespace OtterlyAdventure.Mapfolder
+namespace HenrySolidAdventure.Mapfolder
 {
     //TODO: Make map scaled to screen with fixed raster of 50X50 for example
     //TODO: Read from a string (from folder)

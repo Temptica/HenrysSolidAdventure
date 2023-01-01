@@ -1,10 +1,10 @@
 ﻿using System;
+using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
-using OtterlyAdventure.Graphics;
 
 //using Microsoft.Xna.Framework.Graphics;
 
-namespace OtterlyAdventure
+namespace HenrySolidAdventure
 {
     public static class Util
     {

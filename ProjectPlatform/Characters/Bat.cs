@@ -1,12 +1,12 @@
 ﻿using System;
+using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
 
 //https://github.com/roy-t/AStar
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal class Bat : TrackingEnemy
     {
@@ -65,7 +65,7 @@ namespace OtterlyAdventure.Characters
                 CanDamage = true;
                 
             }
-            if (Vector2.Distance(Position, Otter.Instance.Position) <= 15)
+            if (Vector2.Distance(Position, Hero.Instance.Position) <= 15)
             {
                 State = State.Attacking;
             }
@@ -85,7 +85,6 @@ namespace OtterlyAdventure.Characters
             var tempSpeed = Vector2.Distance(Position, position) < 30 ? 0.05f : 0.1f;
             IsFacingLeft = Velocity.X < 0;
             Velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * tempSpeed;
-
         }
 
 
@@ -94,7 +93,7 @@ namespace OtterlyAdventure.Characters
             spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             //spriteBatch.Draw(Game1._hitbox, Position, HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,_rotation);
+            CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead || !IsFacingLeft?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,_rotation);
         }
 
         public override bool CheckDamage()

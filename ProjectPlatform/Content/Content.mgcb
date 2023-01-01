@@ -142,7 +142,7 @@
 /processorParam:TextureFormat=Color
 /build:Buttons/sliderKnobpng.png;Buttons/sliderKnob.png
 
-#begin Character/OtterAni.png
+#begin Character/HeroKnight.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -152,19 +152,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Character/OtterAni.png
-
-#begin Character/rsz_otterly_idle.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Character/rsz_otterly_idle.png
+/build:Character/HeroKnight.png
 
 #begin Decoration/fence_1.png
 /importer:TextureImporter

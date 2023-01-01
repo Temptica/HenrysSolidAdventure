@@ -130,18 +130,6 @@
          "name":"Otter & enemies",
          "objects":[
                 {
-                 "class":"Spawn",
-                 "gid":340,
-                 "height":48,
-                 "id":18,
-                 "name":"",
-                 "rotation":0,
-                 "visible":true,
-                 "width":48,
-                 "x":48,
-                 "y":1104
-                }, 
-                {
                  "class":"Bat",
                  "gid":366,
                  "height":44,
@@ -176,6 +164,18 @@
                  "width":32,
                  "x":792,
                  "y":1056
+                }, 
+                {
+                 "class":"Spawn",
+                 "gid":398,
+                 "height":55,
+                 "id":47,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":100,
+                 "x":0,
+                 "y":1104
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -492,7 +492,7 @@
          "y":0
         }],
  "nextlayerid":23,
- "nextobjectid":46,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -533,6 +533,14 @@
         {
          "firstgid":372,
          "source":"..\/..\/..\/..\/Map\/Slime.tsx"
+        }, 
+        {
+         "firstgid":373,
+         "source":"..\/..\/..\/..\/Map\/OtterAni.tsx"
+        }, 
+        {
+         "firstgid":398,
+         "source":"..\/..\/..\/..\/Map\/Spawn.tsx"
         }],
  "tilewidth":24,
  "type":"map",

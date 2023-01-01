@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal static class EnemyInitialiser
     {

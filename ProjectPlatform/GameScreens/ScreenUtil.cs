@@ -1,4 +1,4 @@
-﻿namespace OtterlyAdventure.GameScreens
+﻿namespace HenrySolidAdventure.GameScreens
 {
     internal class ScreenUtil
     {

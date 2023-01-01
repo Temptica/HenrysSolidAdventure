@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal class Slime:RoamingEnemy
     {//slimes are dumb and won't track enemies. (perhaps make them run onto slopes?)
@@ -50,14 +50,14 @@ namespace OtterlyAdventure.Characters
         public override bool CheckAttack()
         {
             if (!CanAttack) return false;
-            var hitBox = Otter.Instance.HitBox;
+            var hitBox = Hero.Instance.HitBox;
             if (hitBox.Top >= HitBox.Bottom || hitBox.Bottom <= HitBox.Top) return false;
             if (hitBox.Center.X < HitBox.Center.X)
             {
                 if (hitBox.Right > HitBox.Left - 35)
                 {
                     IsFacingLeft = true;
-                    if (hitBox.Right > HitBox.Left - 5)
+                    if (hitBox.Right > HitBox.Left - 2)
                     {
                         return true;
                     }
@@ -68,7 +68,7 @@ namespace OtterlyAdventure.Characters
                 if (hitBox.Left < HitBox.Right +35)
                 {
                     IsFacingLeft = false;
-                    if (hitBox.Left < HitBox.Right + 5)
+                    if (hitBox.Left < HitBox.Right + 2)
                     {
                         return true;
                     }
@@ -76,7 +76,7 @@ namespace OtterlyAdventure.Characters
                 
             }
 
-            return false; //if otter is left, then check left distance is 5 or less, otherwise do opposite
+            return false; //if otter is left, then check left distance is 2 or less, otherwise do opposite
         }
 
 

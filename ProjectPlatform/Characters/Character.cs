@@ -1,14 +1,13 @@
-﻿using System;
+﻿using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal class Character
     {
         public AnimationList<Animation> Animations { get; set; }
-        public virtual Rectangle HitBox => GetHitBox();
+        public virtual Rectangle HitBox => GetHitBox(Position);
         internal bool IsFacingLeft;
         internal bool IsAttacking;
         internal bool IsWalking;
@@ -26,19 +25,36 @@ namespace OtterlyAdventure.Characters
         public virtual void Draw(Sprites sprites){}
 
         public Vector2 Position { get; set; }
-        internal Rectangle GetHitBox()
+        internal Rectangle GetHitBox(Vector2 position)
         {
-            var x = Position.X + Animations.CurrentAnimation.CurrentFrame.HitBox.X;
-            var y = Position.Y + Animations.CurrentAnimation.CurrentFrame.HitBox.Y;
+            var x = position.X + Animations.CurrentAnimation.CurrentFrame.HitBox.X;
+            var y = position.Y + Animations.CurrentAnimation.CurrentFrame.HitBox.Y;
             var width = Animations.CurrentAnimation.CurrentFrame.HitBox.Width;
             var height = Animations.CurrentAnimation.CurrentFrame.HitBox.Height;
             if (IsFacingLeft)
             {
                 // mirror the origin of your sprite.
-                x = Position.X + Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width -
+                x = position.X + Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width -
                     Animations.CurrentAnimation.CurrentFrame.HitBox.Right;
             }
             return new Rectangle((int)x, (int)y, (int)width, (int)height);
         }
+
+        internal Vector2 GetPosition(Rectangle hitBox)
+        {
+            //convert back to position
+            var x = hitBox.X - Animations.CurrentAnimation.CurrentFrame.HitBox.X;
+            var y = hitBox.Y - Animations.CurrentAnimation.CurrentFrame.HitBox.Y;
+            if (IsFacingLeft)
+            {
+                // mirror the origin of your sprite.
+                x = hitBox.X + Animations.CurrentAnimation.CurrentFrame.HitBox.Right -
+                    Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
+            }
+            return new Vector2(x, y);
+
+
+        }
+        
     }
 }

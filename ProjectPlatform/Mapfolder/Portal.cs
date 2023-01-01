@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Characters;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Mapfolder
+namespace HenrySolidAdventure.Mapfolder
 {
     internal class Portal
     {
         public Vector2 Position { get; private set; }
         public static Texture2D Texture;
 
-        public Rectangle HitBox => new((int)Position.X, (int)Position.Y, _basicAnimation.FrameWidth, _basicAnimation.FrameHeight);
+        public Rectangle HitBox => new((int)Position.X, (int)Position.Y, _basicAnimation.CurrentFrame.FrameRectangle.Width, _basicAnimation.CurrentFrame.FrameRectangle.Height);
         private BasicAnimation _basicAnimation;
         public Portal(Vector2 position)
         {
@@ -27,7 +22,7 @@ namespace OtterlyAdventure.Mapfolder
         public bool Update(GameTime gameTime)
         {
             _basicAnimation.Update(gameTime);
-            return Otter.Instance.HitBox.Intersects(HitBox);
+            return Hero.Instance.HitBox.Intersects(HitBox);
         }
         public void Draw(Sprites sprites)
         {

@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Controller;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Controller;
 
-namespace OtterlyAdventure.Graphics
+namespace HenrySolidAdventure.Graphics
 {
     internal class StateButton: Clickable
     {

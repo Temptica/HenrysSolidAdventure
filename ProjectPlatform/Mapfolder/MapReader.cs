@@ -1,6 +1,6 @@
 ﻿using MonoGame.Extended.Serialization;
 
-namespace OtterlyAdventure.Mapfolder
+namespace HenrySolidAdventure.Mapfolder
 {
     internal class MapReader:JsonContentTypeReader<MapReaderObject>
     {

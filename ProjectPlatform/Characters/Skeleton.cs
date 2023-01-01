@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using HenrySolidAdventure.Animations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal class Skeleton:RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform
@@ -20,7 +20,7 @@ namespace OtterlyAdventure.Characters
                 new Animation(Textures[State.Attacking], State.Attacking,18, Textures[State.Attacking].Width/18, Textures[State.Attacking].Height, 0, 0,10),
                 new Animation(Textures[State.Hit], State.Hit,8, Textures[State.Hit].Width/8, Textures[State.Hit].Height, 0, 0,5),
                 new Animation(Textures[State.Dead], State.Dead,15, Textures[State.Dead].Width/15, Textures[State.Dead].Height, 0, 0,5),
-                new Animation(Textures[State.Other], State.Other,4, Textures[State.Other].Width/4, Textures[State.Other].Height, 0, 0,7)//when skeleton detects Otter
+                new Animation(Textures[State.Other], State.Other,4, Textures[State.Other].Width/4, Textures[State.Other].Height, 0, 0,7)//when skeleton detects Hero
             };
             CurrentHp = BaseHp = 14;
             Damage = 5;
@@ -47,11 +47,11 @@ namespace OtterlyAdventure.Characters
         public override bool CheckAttack()
         {
             if (!CanAttack) return false;
-            var hitBox = Otter.Instance.HitBox;
+            var hitBox = Hero.Instance.HitBox;
             if (hitBox.Top >= HitBox.Bottom || hitBox.Bottom <= HitBox.Top) return false;
             return hitBox.Center.X < HitBox.Center.X
-                ? hitBox.Right > HitBox.Left - 20
-                : hitBox.Left < HitBox.Right + 20; //if otter is left, then check left distance is 20 or less, otherwise do opposite
+                ? hitBox.Right > HitBox.Left - 10
+                : hitBox.Left < HitBox.Right + 10; //if otter is left, then check left distance is 10 or less, otherwise do opposite
         }
     }
 }

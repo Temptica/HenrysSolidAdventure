@@ -174,18 +174,6 @@
          "name":"Otter & enemies",
          "objects":[
                 {
-                 "class":"Spawn",
-                 "gid":316,
-                 "height":40,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "visible":true,
-                 "width":40,
-                 "x":48,
-                 "y":1176
-                }, 
-                {
                  "class":"Bat",
                  "gid":341,
                  "height":44,
@@ -256,6 +244,18 @@
                  "width":250,
                  "x":852.666666666667,
                  "y":1162.66666666667
+                }, 
+                {
+                 "class":"Spawn",
+                 "gid":412,
+                 "height":55,
+                 "id":10,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":100,
+                 "x":0,
+                 "y":1176
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -264,7 +264,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":10,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -293,6 +293,10 @@
         {
          "firstgid":348,
          "source":"..\/..\/..\/..\/Map\/Wizard_Boss.tsx"
+        }, 
+        {
+         "firstgid":412,
+         "source":"..\/..\/..\/..\/Map\/Spawn.tsx"
         }],
  "tilewidth":24,
  "type":"map",

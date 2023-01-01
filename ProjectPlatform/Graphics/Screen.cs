@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace OtterlyAdventure.Graphics
+namespace HenrySolidAdventure.Graphics
 {
     public sealed class Screen : IDisposable
     {//from https://www.youtube.com/watch?v=yUSB_wAVtE8 and own previous project

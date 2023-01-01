@@ -1,4 +1,4 @@
-﻿namespace OtterlyAdventure.Mapfolder
+﻿namespace HenrySolidAdventure.Mapfolder
 {
     internal class MapReaderObject
     {

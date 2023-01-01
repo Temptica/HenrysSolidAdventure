@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Characters;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Animations
+namespace HenrySolidAdventure.Animations
 {
     internal class FrameList<T> : List<T> where T: Frame
     {
 
-        private int _animationIndex;
-        public Frame CurrentFrame => this[_animationIndex];
+        public int AnimationIndex;
+        public Frame CurrentFrame => this[AnimationIndex];
 
         public void ResetIndex()
         {
-            _animationIndex = 0;
+            AnimationIndex = 0;
         }
     }
 
@@ -28,13 +28,14 @@ namespace OtterlyAdventure.Animations
             foreach (var animations in this)
             {
                 animations.Frames.ResetIndex();
+                animations.IsFinished = false;
             }
         }
         public void Update(State state, GameTime gameTime)
         {
             if (_currentAnimation != state)
             {
-                CurrentAnimation.Frames.ResetIndex();
+                ResetAnimations();
                 _currentAnimation = state;
             }
             CurrentAnimation.Update(gameTime);

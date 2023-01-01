@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Xna.Framework.Input;
 
-namespace OtterlyAdventure.Controller
+namespace HenrySolidAdventure.Controller
 {
     internal static class InputController
     {
@@ -16,6 +16,7 @@ namespace OtterlyAdventure.Controller
         internal static bool ShiftInput { get; private set; }
         internal static bool InteractInput { get; private set; }
         internal static bool Attack { get; private set; }
+        internal static bool Block { get; private set; }
         internal static bool ExitInput { get; private set; }
 #if DEBUG
         internal static bool NextInput { get; private set; }
@@ -45,16 +46,15 @@ namespace OtterlyAdventure.Controller
             {
                 LeftInput = LeftInput ? LeftInput : keyboard.IsKeyDown(Keys.Q);
                 Attack = keyboard.IsKeyDown(Keys.A);
-                JumpInput = JumpInput ? JumpInput : keyboard.IsKeyDown(Keys.W);
+                JumpInput = JumpInput ? JumpInput : keyboard.IsKeyDown(Keys.Z);
             }
             //non-layout dependant
 
             RightInput = RightInput ? RightInput : keyboard.IsKeyDown(Keys.D);
-            InteractInput = keyboard.IsKeyDown(Keys.E) || keyboard.IsKeyDown(Keys.Enter);
-            DodgeInput = DodgeInput ? keyboard.IsKeyDown(Keys.S) : DodgeInput;
-
+            InteractInput = keyboard.IsKeyDown(Keys.F) || keyboard.IsKeyDown(Keys.Enter);
+            DodgeInput = keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down) ;
+            Block = keyboard.IsKeyDown(Keys.E);
             ShiftInput = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
-            InteractInput = keyboard.IsKeyDown(Keys.E) || keyboard.IsKeyDown(Keys.Enter);
             ExitInput = keyboard.IsKeyDown(Keys.Escape);
 #if DEBUG
             NextInput = keyboard.IsKeyDown(Keys.N) && keyboard.IsKeyDown(Keys.LeftControl);

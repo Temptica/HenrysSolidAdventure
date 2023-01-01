@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.GameScreens
+namespace HenrySolidAdventure.GameScreens
 {
     internal interface IGameScreen
     {

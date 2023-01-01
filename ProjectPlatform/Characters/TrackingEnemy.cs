@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal abstract class TrackingEnemy : Enemy
     {
@@ -14,9 +14,9 @@ namespace OtterlyAdventure.Characters
         public override void Update(GameTime gameTime)
         {
             
-            if (Vector2.Distance(Otter.Instance.Position, Position) <= Range)
+            if (Vector2.Distance(Hero.Instance.Position, Position) <= Range)
             {
-                Chase(Otter.Instance.Position);
+                Chase(Hero.Instance.HitBox.Center.ToVector2());
             }
             else if(Vector2.Distance(Position, SpawnPosition) >20)
             {

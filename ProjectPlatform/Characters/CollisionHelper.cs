@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HenrySolidAdventure.Mapfolder;
 using Microsoft.Xna.Framework;
-using OtterlyAdventure.Characters;
-using OtterlyAdventure.Mapfolder;
 
-namespace OtterlyAdventure.OtterFolder
+namespace HenrySolidAdventure.Characters
 {
     internal static class CollisionHelper
     {
         public static Rectangle LastHit = new(1,1,1,1);
-        public static float OtterGroundHit(Rectangle otterHitBox, List<MapTile> maptiles)
+        public static float GroundHit(Rectangle hitBox, List<MapTile> maptiles, bool isLookingLeft = false)
         {
-            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(otterHitBox) && (tile.HitBox.Top <= otterHitBox.Bottom && otterHitBox.Bottom - tile.HitBox.Top < 50 || tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with enemy (main hitbox based)
+            hitBox.Width /= 2;
+            if (!isLookingLeft) hitBox.X += hitBox.Width;
+            
+            var filter1 = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(hitBox))
+                .ToList();
+            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(hitBox) && (tile.HitBox.Top <= hitBox.Bottom && hitBox.Bottom - tile.HitBox.Top < 50 || tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with enemy (main hitbox based)
             if (MainTileFilter.Count == 0) return -1;
             var sorted = MainTileFilter.OrderByDescending(tile => tile.HitBox.Top).ToList();
             if (MainTileFilter.TrueForAll(tile => tile.Tile.Type is TileType.Flat or TileType.Air)) return sorted.First().Position.Y;//no slopes
@@ -22,7 +26,7 @@ namespace OtterlyAdventure.OtterFolder
                 switch (tile.Tile.Type)
                 {
                     case TileType.UphillLow: //on the right
-                        var onTileDistance = Util.Clamp(otterHitBox.Right - tile.HitBox.Left, 0, tile.HitBox.Width);
+                        var onTileDistance = Util.Clamp(hitBox.Right - tile.HitBox.Left, 0, tile.HitBox.Width);
                         int upslope = onTileDistance / 2;
                         //uphill is 2x for 1y staring from the bottom of the block
                         float newHeight = tile.HitBox.Bottom - upslope;
@@ -31,14 +35,14 @@ namespace OtterlyAdventure.OtterFolder
                         break;
                     case TileType.UpHillHigh://on the right
                         //uphill is 2x for 1y staring from the middle height of the block
-                        onTileDistance = Util.Clamp(otterHitBox.Right - tile.HitBox.Left, 0, tile.HitBox.Width);
+                        onTileDistance = Util.Clamp(hitBox.Right - tile.HitBox.Left, 0, tile.HitBox.Width);
                         upslope = onTileDistance / 2;
                         newHeight = tile.HitBox.Bottom - upslope - tile.Tile.Rectangle.Height / 2f;
                         if (height > newHeight) height = newHeight;
                         break;
                     case TileType.DownhillHigh: //on the left
                         //downhill is 2x for 1y staring from the top height of the block downwards to the middle
-                        onTileDistance = Util.Clamp(tile.HitBox.Right - otterHitBox.Left, 0, tile.HitBox.Width);
+                        onTileDistance = Util.Clamp(tile.HitBox.Right - hitBox.Left, 0, tile.HitBox.Width);
                         upslope = onTileDistance / 2;
                         newHeight = tile.HitBox.Bottom - upslope - tile.Tile.Rectangle.Height / 2f;
                         if (height > newHeight) height = newHeight;
@@ -46,7 +50,7 @@ namespace OtterlyAdventure.OtterFolder
                         break;
                     case TileType.DownHillLow: //On the left
                         //downhill is 2x for 1y staring from the middle of the block downwards to the bottom
-                        onTileDistance = Util.Clamp(tile.HitBox.Right - otterHitBox.Left, 0, tile.HitBox.Width);
+                        onTileDistance = Util.Clamp(tile.HitBox.Right - hitBox.Left, 0, tile.HitBox.Width);
                         upslope = onTileDistance / 2;
                         newHeight = tile.HitBox.Bottom - upslope;
                         if (height > newHeight) height = newHeight;
@@ -56,40 +60,47 @@ namespace OtterlyAdventure.OtterFolder
                         break;
                 }
             }
-            if (otterHitBox.Bottom < height) return -1;
+            if (hitBox.Bottom < height) return -1;
             return height;
         }
 
-        public static MapTile OtterTopHit(Rectangle otterHitBox, List<MapTile> maptiles)
+        public static MapTile TopHit(Rectangle hitBox, List<MapTile> maptiles, bool isLookingLeft = false)
         {
-            otterHitBox = new Rectangle(otterHitBox.X, otterHitBox.Y, otterHitBox.Width, otterHitBox.Height);
-            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Bottom - otterHitBox.Top < 10).ToList();
-            if (MainTileFilter.Count == 0) return null;
-            return MainTileFilter.OrderByDescending(tile => tile.HitBox.Bottom).First();
+            //if looking left, only take left half of hitbox, else right half
+            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y -5, hitBox.Width, hitBox.Height);
+            tempHitBox.Width /= 2;
+            if (!isLookingLeft) tempHitBox.X += hitBox.Width;
+
+            var mainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(tempHitBox) && tile.HitBox.Bottom - tempHitBox.Top < 10).ToList();
+            if (mainTileFilter.Count == 0) return null;
+            return mainTileFilter.OrderByDescending(tile => tile.HitBox.Bottom).First();
         }
 
-        public static MapTile OtterLeftHit(Rectangle otterHitBox, List<MapTile> mapTiles)
+        public static MapTile LeftHit(Rectangle hitBox, List<MapTile> mapTiles)
         {
-            var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Right >= otterHitBox.Left && tile.HitBox.Right - otterHitBox.Left < 20).ToList();
+            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y + 10, hitBox.Width, hitBox.Height-15);
+            
+            var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(tempHitBox) && tile.HitBox.Right >= tempHitBox.Left && tile.HitBox.Right - tempHitBox.Left < 20).ToList();
             if (mainTileFilter.Count == 0) return null;
             return mainTileFilter.OrderByDescending(tile => tile.HitBox.Right).First();
         }
 
-        public static MapTile OtterRightHit(Rectangle otterHitBox, List<MapTile> mapTiles)
+        public static MapTile RightHit(Rectangle hitBox, List<MapTile> mapTiles)
         {
             //checks every time if intersects with oterHitbox
-            var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(otterHitBox) && tile.HitBox.Left <= otterHitBox.Right && otterHitBox.Right - tile.HitBox.Left < 20).ToList();
+            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y+10, hitBox.Width, hitBox.Height-15);
+            var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(tempHitBox) && tile.HitBox.Left <= tempHitBox.Right && tempHitBox.Right - tile.HitBox.Left < 20).ToList();
              if (mainTileFilter.Count == 0) return null;
             return mainTileFilter.OrderBy(tile => tile.HitBox.Left).First();
 
         }
 
-        public static bool PixelBasedHit(Otter otter, Enemy enemy)
+        public static bool PixelBasedHit(Hero hero, Enemy enemy)
         {
-            var otterPixels2D = GetCurrentPixels2D(otter);
+            var otterPixels2D = GetCurrentPixels2D(hero);
             var enemyPixels2D = GetCurrentPixels2D(enemy);
             //get the rectangle wherein both collide
-            var collisionRectangle = Rectangle.Intersect(otter.HitBox, enemy.HitBox);
+            var collisionRectangle = Rectangle.Intersect(hero.HitBox, enemy.HitBox);
             if (collisionRectangle.Width == 0 || collisionRectangle.Height == 0) return false;
             //get the start and end points of the collision rectangle
             int startX = collisionRectangle.Left;
@@ -102,13 +113,22 @@ namespace OtterlyAdventure.OtterFolder
                 for (int y = startY; y < endY; y++)
                 {
                     //if both pixels are not transparent, there is a collision
-                    var otterx = x - otter.HitBox.Left;
-                    var ottery = y - otter.HitBox.Top;
-                    var enemyx = x - enemy.HitBox.Left;
-                    var enemyy = y - enemy.HitBox.Top;
+                    var heroX = x - hero.HitBox.Left;
+                    var heroY = y - hero.HitBox.Top;
+                    var enemyX = x - enemy.HitBox.Left;
+                    var enemyY = y - enemy.HitBox.Top;
+                    //if hitbox is flipped
+                    if (hero.IsFacingLeft)
+                    {
+                        heroX = hero.HitBox.Right - x;
+                    }
+                    if (enemy.IsFacingLeft)
+                    {
+                        enemyX = enemy.HitBox.Right - x;
+                    }
                     try
                     {
-                        if (otterPixels2D[otterx,ottery].A != 0 && enemyPixels2D[enemyx,enemyy].A != 0)
+                        if (otterPixels2D[heroX,heroY].A != 0 && enemyPixels2D[enemyX,enemyY].A != 0)
                         {
                             LastHit = collisionRectangle;
                             return true;
@@ -124,20 +144,20 @@ namespace OtterlyAdventure.OtterFolder
 
         }
 
-        private static Color[] GetCurrentPixels(Character animatable)
+        private static Color[] GetCurrentPixels(Character character)
         {
             
-            Color[] pixels = new Color[animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width * animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
-            animatable.Animations.CurrentAnimation.Texture.GetData(0, animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
+            Color[] pixels = new Color[character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width * character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
+            character.Animations.CurrentAnimation.CurrentFrame.Texture.GetData(0, character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
 
             return pixels;
         }
 
-        private static Color[,] GetCurrentPixels2D(Character animatable)
+        private static Color[,] GetCurrentPixels2D(Character character)
         {
-            Color[] otterPixels = GetCurrentPixels(animatable);
-            var width = animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
-            var height = animatable.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
+            Color[] otterPixels = GetCurrentPixels(character);
+            var width = character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
+            var height = character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
             //convert otterPixels to 2d array to from a Rectangle
             Color[,] otterPixels2D = new Color[width, height];
             for (int x = 0; x < width; x++)
@@ -150,18 +170,18 @@ namespace OtterlyAdventure.OtterFolder
 
             return otterPixels2D;
         }
-        public static bool LeavingLeftMapBorder(Rectangle otter, int x)
+        public static bool LeavingLeftMapBorder(Rectangle hitBox, int x)
         {
-            return otter.Left < x;
+            return hitBox.Left < x;
         }
 
-        public static bool LeavingRightMapBorder(Rectangle otter, int x)
+        public static bool LeavingRightMapBorder(Rectangle hitBox, int x)
         {
-            return otter.Right > x;
+            return hitBox.Right > x;
         }
-        public static bool LeavingBottomMapBorder(Rectangle otter, int y)
+        public static bool LeavingBottomMapBorder(Rectangle hitBox, int y)
         {
-            return otter.Bottom > y;
+            return hitBox.Bottom > y;
         }
 
     }

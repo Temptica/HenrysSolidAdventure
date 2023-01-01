@@ -1,14 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HenrySolidAdventure.Controller;
+using HenrySolidAdventure.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using OtterlyAdventure.Controller;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.GameScreens
+namespace HenrySolidAdventure.GameScreens
 {
     internal class PausedScreen : IGameScreen
     {

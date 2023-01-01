@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal abstract class Enemy:Character
     {

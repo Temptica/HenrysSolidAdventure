@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Animations;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Mapfolder
+namespace HenrySolidAdventure.Mapfolder
 {
     internal class Coin
     {

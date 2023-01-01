@@ -1,63 +1,50 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Graphics;
 
-namespace OtterlyAdventure.Animations
+namespace HenrySolidAdventure.Animations
 {
     internal class BasicAnimation
     {
-        public Texture2D Texture { get; private set; }
         public string Identifier { get; private set; }
-        public int CurrentFrameIndex { get; private set; }
-        public bool IsFinished { get; private set; }
         public float FrameRate { get; }
-        public virtual int FrameCount { get; private set; }
-        private Rectangle FrameRectangle => new(CurrentFrameIndex * FrameWidth, BeginHeight, FrameWidth, FrameHeight);
+        public FrameList<Frame> Frames { get; protected set; }
+        public Frame CurrentFrame => Frames.CurrentFrame;
+        public int CurrentFrameIndex => Frames.AnimationIndex;
+        public bool IsFinished{ get; set; }
 
-        public readonly int FrameWidth;
-        public readonly int FrameHeight;
-        private readonly int BeginHeight;
-
-        internal BasicAnimation(Texture2D texture, string identifier, float frameRate,int frameCount)
+        internal BasicAnimation(Texture2D texture, string identifier, float frameRate,int frameCount):this(texture,identifier, frameRate, frameCount, texture.Width / frameCount, texture.Height,0)
         {
-            Texture = texture;
-            Identifier = identifier;
-            FrameRate = 1000f/frameRate;
-            CurrentFrameIndex = 0;
-            FrameCount = frameCount;
-            FrameWidth = texture.Width / frameCount;
-            FrameHeight = texture.Height;
         }
-        internal BasicAnimation(Texture2D texture, string identifier, float frameRate, int framecount, int framewidth, int frameheight, int beginHeight)
+        internal BasicAnimation(Texture2D texture, string identifier, float frameRate, int frameCount, int frameWidth, int frameHeight, int beginHeight)
         {
-            Texture = texture;
             Identifier = identifier;
             FrameRate = 1000f/frameRate;
-            CurrentFrameIndex = 0;
-            FrameCount = framecount;
-            FrameWidth = framewidth;
-            FrameHeight = frameheight;
-            BeginHeight = beginHeight;
+            Frames = new();
+            for (int i = 0; i < frameCount; i++)
+            {
+                Frames.Add(new Frame(new Rectangle(i * frameWidth, beginHeight, frameWidth, frameHeight), texture, 1f));
+            }
         }
         double _time;
         public void Update(GameTime gameTime)
         {
             _time += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (_time < FrameRate) return;
-            CurrentFrameIndex++;
-            if (CurrentFrameIndex >= FrameCount)
+            if (_time < FrameRate) return; 
+            Frames.AnimationIndex++;
+            if (Frames.AnimationIndex >= Frames.Count)
             {
+                Frames.AnimationIndex = 0;
                 IsFinished = true;
-                CurrentFrameIndex = 0;
             }
-            else IsFinished = false;           
-            
+            else IsFinished = false;
+
             _time = 0;
         }
         public virtual void Draw(Sprites spriteBatch, Vector2 position, SpriteEffects spriteEffects, float scale, float rotation = 0, Color color = default)
         {
             if (color == default) color = Color.White;
-            spriteBatch.Draw(Texture, position, FrameRectangle, color, rotation, Vector2.Zero, scale, spriteEffects, 0f);
+            spriteBatch.Draw(CurrentFrame.Texture, position, CurrentFrame.FrameRectangle, color, rotation, Vector2.Zero, scale, spriteEffects, 0f);
         }
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using HenrySolidAdventure.Mapfolder;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using OtterlyAdventure.Graphics;
-using OtterlyAdventure.Mapfolder;
 
-namespace OtterlyAdventure.Characters
+namespace HenrySolidAdventure.Characters
 {
     internal abstract class RoamingEnemy:Enemy
     {
@@ -61,7 +59,7 @@ namespace OtterlyAdventure.Characters
         public virtual void Move(GameTime gameTime)
         {
             var x = Position.X;
-            Rectangle otterHb = Otter.Instance.HitBox;
+            Rectangle otterHb = Hero.Instance.HitBox;
             if (this is not Slime && otterHb.Top <= HitBox.Bottom && otterHb.Bottom >= HitBox.Top && otterHb.Right > _maxLeftPosition && otterHb.Left < _maxRightPosition )
             {
                 IsFacingLeft = otterHb.Center.X < HitBox.Center.X;
