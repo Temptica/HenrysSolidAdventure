@@ -16,6 +16,66 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Audio/Effects/Coin.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/Coin.mp3
+
+#begin Audio/Effects/Die.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/Die.mp3
+
+#begin Audio/Effects/HeavySwing.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/HeavySwing.mp3
+
+#begin Audio/Effects/Hurt1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/Hurt1.mp3
+
+#begin Audio/Effects/Hurt2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/Hurt2.mp3
+
+#begin Audio/Effects/Hurt3.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/Hurt3.mp3
+
+#begin Audio/Effects/ShieldBlock.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/ShieldBlock.mp3
+
+#begin Audio/Effects/SlimeAttack.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/SlimeAttack.mp3
+
+#begin Audio/Effects/SlimeHit.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/SlimeHit.mp3
+
+#begin Audio/Effects/Sword.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/Effects/Sword.mp3
+
 #begin Audio/Music/HANGOVER.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
@@ -1040,31 +1100,31 @@
 #begin Level/Level1.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
 /build:Level/Level1.json
 
 #begin Level/Level2.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
 /build:Level/Level2.json
 
 #begin Level/Level3.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
 /build:Level/Level3.json
 
 #begin Level/Level4.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
 /build:Level/Level4.json
 
 #begin Level/Level5.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
 /build:Level/Level5.json
 
 #begin Tiles/oak_woods_tileset_fixed.png

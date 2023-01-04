@@ -31,7 +31,7 @@ namespace HenrySolidAdventure.GameScreens
             Hero.Instance.Reset();
             _displayCoin = new Coin(new Vector2(20,20));
             Hero.Instance.SetWalk(true);
-            AudioController.Instance.PlaySong("GamePlay");
+            AudioController.Instance.PlaySong(Songs.GamePlay);
             HealthBar.Texture ??= content.Load<Texture2D>("Items/HealthBarEmpty");
             HealthBar.BarTexture ??= content.Load<Texture2D>("Items/HealthBar");
             _healthBar = new HealthBar(new Vector2(20, 50),2f);
@@ -39,6 +39,7 @@ namespace HenrySolidAdventure.GameScreens
             {
                 new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, font)
             };
+            StatsController.Instance.Reset();
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
@@ -56,6 +57,7 @@ namespace HenrySolidAdventure.GameScreens
         {
             _healthBar.SetHealth(Hero.Instance.HealthPercentage);
             _displayCoin.Update(gameTime);
+            StatsController.Instance.UpdatePlayTime(gameTime);
             _texts = new List<Text>
             {
                 new(new Vector2(55, 25), $"= {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font)

@@ -1,9 +1,11 @@
-﻿using HenrySolidAdventure.Animations;
+﻿using System;
+using HenrySolidAdventure.Animations;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace HenrySolidAdventure.Characters
 {
+    internal enum State { Idle, Walking, Rolling, Jumping, Falling, Attacking, Attacking2, Attacking3, Dead, Hit, Block, BlockHit, Other }
     internal class Character
     {
         public AnimationList<Animation> Animations { get; set; }
@@ -17,9 +19,15 @@ namespace HenrySolidAdventure.Characters
         internal bool CanDamage;
         public int BaseHp { get; set; }
         public int Damage { get; set; }
-        public float CurrentHp { get; set; }
+        public int Health
+        {
+            get => _health;
+            set => _health = Util.Clamp(value, 0, BaseHp);
+        }
+        public float HealthPercentage => (float)Math.Round(Health / (double)BaseHp * 100, 0);
         public float Speed { get; set; }
         protected Vector2 Velocity;
+        private int _health;
         public virtual void Update(GameTime gameTime){}
 
         public virtual void Draw(Sprites sprites){}
@@ -53,8 +61,8 @@ namespace HenrySolidAdventure.Characters
             }
             return new Vector2(x, y);
 
-
         }
+        
         
     }
 }

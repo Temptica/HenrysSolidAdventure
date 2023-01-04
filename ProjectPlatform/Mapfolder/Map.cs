@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using HenrySolidAdventure.Characters;
 using HenrySolidAdventure.Graphics;
@@ -27,8 +28,7 @@ namespace HenrySolidAdventure.Mapfolder
         internal Vector2 Spawn { get; set; }
         internal Rectangle ScreenRectangle { get; private set; }
         internal List<Enemy> Enemies { get; set; }
-        internal Portal? Portal { get; set; }
-        internal Boss Boss { get; set; }
+        internal Portal Portal { get; set; }
 
 
         private Map()
@@ -58,17 +58,19 @@ namespace HenrySolidAdventure.Mapfolder
             }
             ScreenRectangle = new Rectangle(0, 0, screen.Width, screen.Height);
             if (DecorationTextures is not null && DecorationTextures.Count != 0) return;
-            DecorationTextures = new Dictionary<string, Texture2D>();
-            DecorationTextures.Add("fence_1", content.Load<Texture2D>("Decoration/fence_1"));
-            DecorationTextures.Add("fence_2", content.Load<Texture2D>("Decoration/fence_2"));
-            DecorationTextures.Add("grass_1", content.Load<Texture2D>("Decoration/grass_1"));
-            DecorationTextures.Add("grass_2", content.Load<Texture2D>("Decoration/grass_2"));
-            DecorationTextures.Add("grass_3", content.Load<Texture2D>("Decoration/grass_3"));
-            DecorationTextures.Add("lamp", content.Load<Texture2D>("Decoration/lamp"));
-            DecorationTextures.Add("rock_1", content.Load<Texture2D>("Decoration/rock_1"));
-            DecorationTextures.Add("rock_2", content.Load<Texture2D>("Decoration/rock_2"));
-            DecorationTextures.Add("rock_3", content.Load<Texture2D>("Decoration/rock_3"));
-            DecorationTextures.Add("sign", content.Load<Texture2D>("Decoration/sign"));
+            DecorationTextures = new Dictionary<string, Texture2D>
+            {
+                { "fence_1", content.Load<Texture2D>("Decoration/fence_1") },
+                { "fence_2", content.Load<Texture2D>("Decoration/fence_2") },
+                { "grass_1", content.Load<Texture2D>("Decoration/grass_1") },
+                { "grass_2", content.Load<Texture2D>("Decoration/grass_2") },
+                { "grass_3", content.Load<Texture2D>("Decoration/grass_3") },
+                { "lamp", content.Load<Texture2D>("Decoration/lamp") },
+                { "rock_1", content.Load<Texture2D>("Decoration/rock_1") },
+                { "rock_2", content.Load<Texture2D>("Decoration/rock_2") },
+                { "rock_3", content.Load<Texture2D>("Decoration/rock_3") },
+                { "sign", content.Load<Texture2D>("Decoration/sign") }
+            };
             Coin.Texture = content.Load<Texture2D>("Items/Coin");
             Store.Texture = content.Load<Texture2D>("Decoration/shop_anim");
             Portal.Texture = content.Load<Texture2D>("Items/PortalRings2");
@@ -84,7 +86,6 @@ namespace HenrySolidAdventure.Mapfolder
             Decorations?.ForEach(deco => deco.Draw(spriteBatch));
             Enemies?.ForEach(enemy => enemy.Draw(spriteBatch));
             Portal?.Draw(spriteBatch);
-            Boss?.Draw(spriteBatch);
         }
         public void Update(GameTime gameTime)
         {
@@ -92,7 +93,14 @@ namespace HenrySolidAdventure.Mapfolder
             var coinToDestroy = Coins?.Where(coin => coin.Destroy).FirstOrDefault();
             if (coinToDestroy != null) Coins?.Remove(coinToDestroy);
             Shop?.Update(gameTime);
-            Enemies?.ForEach(enemy => enemy.Update(gameTime));
+            try
+            {
+                Enemies?.ForEach(enemy => enemy.Update(gameTime));
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
             var remove = Enemies?.Where(enemy => enemy.Remove).ToList();
             if (remove != null)
             {
@@ -101,8 +109,6 @@ namespace HenrySolidAdventure.Mapfolder
                     Enemies.Remove(enemy);
                 }
             }
-
-            Boss?.Update(gameTime);
             if (Portal is null) return;
             if (Portal.Update(gameTime))
             {
@@ -135,7 +141,6 @@ namespace HenrySolidAdventure.Mapfolder
             Shop = null;
             Spawn = Vector2.One;
             Enemies = null;
-            Boss = null;
             Portal = null;
         }
     }

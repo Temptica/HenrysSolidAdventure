@@ -8,7 +8,6 @@ namespace HenrySolidAdventure.Characters
 {
     internal static class CollisionHelper
     {
-        public static Rectangle LastHit = new(1,1,1,1);
         public static float GroundHit(Rectangle hitBox, List<MapTile> maptiles, bool isLookingLeft = false)
         {
             hitBox.Width /= 2;
@@ -99,6 +98,8 @@ namespace HenrySolidAdventure.Characters
         {
             var otterPixels2D = GetCurrentPixels2D(hero);
             var enemyPixels2D = GetCurrentPixels2D(enemy);
+            //if hero is facing left, change the pixels on the X axis
+            
             //get the rectangle wherein both collide
             var collisionRectangle = Rectangle.Intersect(hero.HitBox, enemy.HitBox);
             if (collisionRectangle.Width == 0 || collisionRectangle.Height == 0) return false;
@@ -113,24 +114,15 @@ namespace HenrySolidAdventure.Characters
                 for (int y = startY; y < endY; y++)
                 {
                     //if both pixels are not transparent, there is a collision
-                    var heroX = x - hero.HitBox.Left;
-                    var heroY = y - hero.HitBox.Top;
-                    var enemyX = x - enemy.HitBox.Left;
-                    var enemyY = y - enemy.HitBox.Top;
+                    var heroX = (int)(x - hero.GetPosition(hero.HitBox).X);
+                    var heroY = (int)(y - hero.GetPosition(hero.HitBox).Y);
+                    var enemyX = (int)(x - enemy.GetPosition(enemy.HitBox).X);
+                    var enemyY = (int)(y - enemy.GetPosition(enemy.HitBox).Y);
                     //if hitbox is flipped
-                    if (hero.IsFacingLeft)
-                    {
-                        heroX = hero.HitBox.Right - x;
-                    }
-                    if (enemy.IsFacingLeft)
-                    {
-                        enemyX = enemy.HitBox.Right - x;
-                    }
                     try
                     {
                         if (otterPixels2D[heroX,heroY].A != 0 && enemyPixels2D[enemyX,enemyY].A != 0)
                         {
-                            LastHit = collisionRectangle;
                             return true;
                         }
                     }
@@ -160,12 +152,26 @@ namespace HenrySolidAdventure.Characters
             var height = character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
             //convert otterPixels to 2d array to from a Rectangle
             Color[,] otterPixels2D = new Color[width, height];
-            for (int x = 0; x < width; x++)
+            if (character.IsFacingLeft)
             {
-                for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
                 {
-                    otterPixels2D[x, y] = otterPixels[x + y * width];
+                    for (int y = 0; y < height; y++)
+                    {
+                        otterPixels2D[x, y] = otterPixels[(width - x - 1) + y * width];
+                    }
                 }
+            }
+            else
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    for (int y = 0; y < height; y++)
+                    {
+                        otterPixels2D[x, y] = otterPixels[x + y * width];
+                    }
+                }
+
             }
 
             return otterPixels2D;

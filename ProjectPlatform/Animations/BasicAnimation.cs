@@ -16,11 +16,12 @@ namespace HenrySolidAdventure.Animations
         internal BasicAnimation(Texture2D texture, string identifier, float frameRate,int frameCount):this(texture,identifier, frameRate, frameCount, texture.Width / frameCount, texture.Height,0)
         {
         }
-        internal BasicAnimation(Texture2D texture, string identifier, float frameRate, int frameCount, int frameWidth, int frameHeight, int beginHeight)
+        internal BasicAnimation(Texture2D texture, string identifier, float frameRate, int frameCount, int frameWidth, int frameHeight, int beginHeight, bool fromChild = false)
         {
             Identifier = identifier;
             FrameRate = 1000f/frameRate;
             Frames = new();
+            if (fromChild) return;
             for (int i = 0; i < frameCount; i++)
             {
                 Frames.Add(new Frame(new Rectangle(i * frameWidth, beginHeight, frameWidth, frameHeight), texture, 1f));

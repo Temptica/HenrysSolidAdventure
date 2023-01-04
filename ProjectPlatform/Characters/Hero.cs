@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Graphics;
 namespace HenrySolidAdventure.Characters
 {
     //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
-    internal enum State { Idle, Walking, Rolling, Jumping, Falling, Attacking, Attacking2, Attacking3, Dead, Hit, Block, BlockHit, Other }
     internal class Hero : Character
     {
         #region Consts
@@ -24,14 +23,6 @@ namespace HenrySolidAdventure.Characters
         
         #region properities
         public static Texture2D Texture { get; set; }
-        public int Health
-        {
-            get => _health;
-            private set => _health = Util.Clamp(value, 0, MaxHealth);
-        }
-
-        public float HealthPercentage => (float)Math.Round(Health / (double)MaxHealth * 100, 0);
-        public int MaxHealth { get; private set; }
         public State State { get; set; }
         public float Gravity { get; private set; }
         public float Scale { get; set; }
@@ -81,13 +72,15 @@ namespace HenrySolidAdventure.Characters
             };
             Reset();
             _lastTextureHeight = Animations.CurrentAnimation.CurrentFrame.HitBox.Height;
+            Damage = 3;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (Health <= 0)
+            if (Health <= 0 && !IsDead)
             {
                 IsDead = true;
+                AudioController.Instance.PlayEffect(SoundEffects.Die);
             }
             _isBlocking = InputController.Block && _canBlock;
             _isRolling = InputController.ShiftInput;
@@ -123,6 +116,7 @@ namespace HenrySolidAdventure.Characters
             _canJump = false;
             if (State is State.Dead || IsDead)
             {
+                State = State.Dead;
                 if (Animations.CurrentAnimation.IsFinished)
                 {
                     Game1.SetState(GameState.GameOver);
@@ -142,6 +136,7 @@ namespace HenrySolidAdventure.Characters
             if (State is State.BlockHit)
             {
                 if (!Animations.CurrentAnimation.IsFinished)return;
+                IsHit = false;
             }
             if (State is State.Hit)
             {
@@ -153,9 +148,25 @@ namespace HenrySolidAdventure.Characters
             {
                 case true when _isBlocking://is hit while blocking
                     State = State.BlockHit;
+                    AudioController.Instance.PlayEffect(SoundEffects.ShieldBlock);
                     return;
                 case true:
                     State = State.Hit;//is hit while not blocking
+                    Random rng = new Random();
+                    SoundEffects effect;
+                    switch (rng.Next(0,3))
+                    {
+                        case 0:
+                            effect = SoundEffects.Hurt1;
+                            break;
+                        case 1:
+                            effect = SoundEffects.Hurt2;
+                            break;
+                        default:
+                            effect = SoundEffects.Hurt3;
+                            break;
+                    }
+                    AudioController.Instance.PlayEffect(effect);
                     return;
                 case false when _isBlocking://is blocking while not being hit
                     State = State.Block;
@@ -165,18 +176,21 @@ namespace HenrySolidAdventure.Characters
             IsAttacking = _canAttack && InputController.Attack;
             if (State is State.Attacking or State.Attacking2 or State.Attacking3)
             {
+                _attackTimer = 0;
                 if (!Animations.CurrentAnimation.IsFinished) return;
                 switch (State)
                 {
                     //if still attacking, go to the next one
                     case State.Attacking when InputController.Attack:
                         State = State.Attacking2;
+                        AudioController.Instance.PlayEffect(SoundEffects.Sword);
                         return;
                     case State.Attacking2 when InputController.Attack:
                         State = State.Attacking3;
+                        AudioController.Instance.PlayEffect(SoundEffects.Sword);
                         return;
                 }
-                _attackTimer = 0;
+                
                 IsAttacking = false;
             }
             
@@ -205,6 +219,7 @@ namespace HenrySolidAdventure.Characters
             if (IsAttacking)
             {
                 State = State.Attacking;
+                AudioController.Instance.PlayEffect(SoundEffects.Sword);
                 return;
             }
             _canWalk = true;
@@ -214,28 +229,46 @@ namespace HenrySolidAdventure.Characters
             else if (IsWalking) State = State.Walking;
             else State = State.Idle;
         }
-
         private void CheckEnemies()
         {
             if (Map.Instance.Enemies.Count <= 0) return;
+            int damage;
+            var enemy1 = Map.Instance.Enemies.FirstOrDefault(e => e is Boss);
+            if (enemy1 is Boss boss && boss.CurrentAttack is not null && CollisionHelper.PixelBasedHit(this, boss.CurrentAttack)) //get the boiss if exists and check hit with the attack if exist
+            {
+                if (Attack()) boss.CurrentAttack.GetDamage(Damage);
+                else
+                {
+                    damage = boss.CurrentAttack.Attack();
+                    if (damage > 0 && State != State.Hit) 
+                    { 
+                        IsHit = true; 
+                        if (State is not State.Block && State is not State.BlockHit) Health -= damage;
+                    }
+                }
+            }
             foreach (var enemy in Map.Instance.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => CollisionHelper.PixelBasedHit(this, enemy)))
             {
-
+                
                 if (Attack())
                 {
+                    
                     if (!enemy.GetDamage(Damage)) { continue; }
+
+                    StatsController.Instance.AddKill();
                     Coins += 1;
                     var coin = new Coin(enemy.Position);
                     Map.Instance.Coins.Add(coin);
                     coin.Collect();
                     continue;
                 }
-                var damage = enemy.Attack();
-                if (damage > 0)
+                damage = enemy.Attack();
+                if (damage > 0 && State != State.Hit)
                 {
                     IsHit = true;
-                    if(State is not State.Block)
+                    if(State is not State.Block && State is not State.BlockHit)
                         Health -= damage;
+                    else StatsController.Instance.AddBlock();
                 }
             }
         }
@@ -355,7 +388,7 @@ namespace HenrySolidAdventure.Characters
                     if (CollisionHelper.LeavingBottomMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Height))
                     {
                         Position = Map.Instance.Spawn;
-                        Health -= MaxHealth / 4;
+                        Health -= BaseHp / 4;
                         _isFalling = false;
                         return;
                     }
@@ -442,7 +475,7 @@ namespace HenrySolidAdventure.Characters
             else if (State is State.Attacking) color = Color.Yellow;
             else if (State is State.Dead) color = Color.Blue;
 
-            spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale, 0f, color);
 
         }
@@ -455,7 +488,7 @@ namespace HenrySolidAdventure.Characters
         public void Reset()
         {
             Coins = 0;
-            Health = MaxHealth = 20;
+            Health = BaseHp = 20;
             Damage = 7;
             State = State.Idle;
             IsAttacking = false;

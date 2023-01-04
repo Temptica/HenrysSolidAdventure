@@ -57,13 +57,9 @@ namespace HenrySolidAdventure.GameScreens
                 return;
             }
             _loaded = false;
-            if(_clickables.Any(c => c.CheckHit(_screen)))
-            {
-                Mouse.SetCursor(MouseCursor.Hand);
-            }
-            else Mouse.SetCursor(MouseCursor.Arrow);
+            var selected = ClickableChecker.CheckHits(_clickables, _screen);
 
-            if (InputController.ExitInput || (_goBackButton.CheckHit(_screen) && MouseController.IsLeftClicked))
+            if (InputController.ExitInput || (selected is Button && MouseController.IsLeftClicked))
             {
                 Settings.Instance.Save();
                 Game1.SetState(GameState.Menu);

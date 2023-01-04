@@ -25,7 +25,7 @@ namespace HenrySolidAdventure.Mapfolder
             MapReaderObject mapFromFile = null;
             try
             {
-                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");//OtterlyAdventure.Mapfolder.MapReader, OtterlyAdventure
+                mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");//HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
                 if (mapFromFile is null) throw new ArgumentNullException("file is empty or incorrect");
             }
             catch (ArgumentNullException)
@@ -36,6 +36,7 @@ namespace HenrySolidAdventure.Mapfolder
             
             var map = Map.Instance;
             map.Unload();
+            map.Enemies = new List<Enemy>();
             map.FrontMap = GenerateTileLayer(mapFromFile.layers.First(layer => layer.name == "ForegroundTiles"), screenheight);
             map.BackMap = GenerateTileLayer(mapFromFile.layers.First(layer => layer.name == "BackgroundTiles"), screenheight);
             map.Coins = GenerateCoins(mapFromFile.layers.First(layer => layer.name == "Coins").objects);
@@ -47,10 +48,9 @@ namespace HenrySolidAdventure.Mapfolder
             var spawn = mapFromFile.layers.First(layer => layer.name == "Otter & enemies").objects;
             SetSpawns(spawn, map);
         }
-
+        
         private static void SetSpawns(Object[] spawns, Map map)
         {
-            map.Enemies = new List<Enemy>();
             foreach (var spawn in spawns)
             {
                 if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Hero.Texture.Height/3f);
@@ -58,7 +58,7 @@ namespace HenrySolidAdventure.Mapfolder
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
                 if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));
                 if (spawn._class == "Portal") map.Portal = new Portal(new Vector2(spawn.x, spawn.y + mapOffset - Portal.Texture.Height));
-                if (spawn._class == "Boss") map.Boss = new Boss(new Vector2(spawn.x, spawn.y + mapOffset - Boss.Texture.Height/8f));
+                if (spawn._class == "Boss" && !map.Enemies.Any(e => e is Boss)) map.Enemies.Add(new Boss(new Vector2(spawn.x, spawn.y + mapOffset - Boss.Texture.Height/8f))); //if boss exists, do not add
             }           
         }
 
@@ -126,6 +126,19 @@ namespace HenrySolidAdventure.Mapfolder
         public static void SetMapId(int mapId)
         {
             MapID = mapId;
+        }
+
+        public static void ReloadEnemies()
+        {
+            var remove = new List<Enemy>();
+            var boss = Map.Instance.Enemies.First(enemy => enemy is Boss);
+
+            Map.Instance.Enemies = new List<Enemy>()
+            {
+                boss
+            };
+            MapReaderObject mapFromFile = _content.Load<MapReaderObject>($"Level/Level{MapID}");
+            SetSpawns(mapFromFile.layers.First(layer => layer.name == "Otter & enemies").objects, Map.Instance);
         }
     }
 }

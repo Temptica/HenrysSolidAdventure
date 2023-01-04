@@ -22,7 +22,7 @@ namespace HenrySolidAdventure.Characters
 
             Position = position;
 
-            CurrentHp = BaseHp = 3;
+            Health = BaseHp = 3;
             CanDamage = true;
             Damage = 4;
             Speed = 0.1f;
@@ -59,13 +59,12 @@ namespace HenrySolidAdventure.Characters
             if (_attackTimer <= _attackRate)
             {
                 _attackTimer += gameTime.ElapsedGameTime.Milliseconds;
-                State = State.Idle;
             }
             else {
                 CanDamage = true;
                 
             }
-            if (Vector2.Distance(Position, Hero.Instance.Position) <= 15)
+            if (Vector2.Distance(HitBox.Center.ToVector2(), Hero.Instance.HitBox.Center.ToVector2()) <= 50)
             {
                 State = State.Attacking;
             }
@@ -83,6 +82,7 @@ namespace HenrySolidAdventure.Characters
             var angle = Math.Atan2(position.Y - Position.Y, position.X - Position.X);
             //reduce speed if close by to avoid overshooting
             var tempSpeed = Vector2.Distance(Position, position) < 30 ? 0.05f : 0.1f;
+            if (Vector2.Distance(Position, position) < 5) tempSpeed = 0f;
             IsFacingLeft = Velocity.X < 0;
             Velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * tempSpeed;
         }
@@ -90,7 +90,7 @@ namespace HenrySolidAdventure.Characters
 
         public override void Draw(Sprites spriteBatch)
         {
-            spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             //spriteBatch.Draw(Game1._hitbox, Position, HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead || !IsFacingLeft?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,_rotation);

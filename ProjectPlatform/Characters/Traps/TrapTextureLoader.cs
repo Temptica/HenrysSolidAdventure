@@ -56,19 +56,19 @@ namespace HenrySolidAdventure.Characters.Traps
                 { TrapTier.Three, content.Load<Texture2D>("Enemies/Traps/Saw Trap/Saw Trap - level 3 - Transition") }
             };
 
-            Toxic.Textures = new Dictionary<TrapTier, Texture2D>
+            Magic.Textures = new Dictionary<TrapTier, Texture2D>
             {
-                { TrapTier.One, content.Load<Texture2D>("Enemies/Traps/Toxic Trap/Toxic Trap - level 1") },
-                { TrapTier.Two, content.Load<Texture2D>("Enemies/Traps/Toxic Trap/Toxic Trap - level 2") },
-                { TrapTier.Three, content.Load<Texture2D>("Enemies/Traps/Toxic Trap/Toxic Trap - level 3") }
+                { TrapTier.One, content.Load<Texture2D>("Enemies/Traps/Magic Trap/Magic Trap - Level 1") },
+                { TrapTier.Two, content.Load<Texture2D>("Enemies/Traps/Magic Trap/Magic Trap - Level 2") },
+                { TrapTier.Three, content.Load<Texture2D>("Enemies/Traps/Magic Trap/Magic Trap - Level 3") }
             };
-            Toxic.SpawnTextures = new Dictionary<TrapTier, Texture2D>
+            Magic.SpawnTextures = new Dictionary<TrapTier, Texture2D>
             {
-                { TrapTier.One, content.Load<Texture2D>("Enemies/Traps/Toxic Trap/Toxic Trap - level 1 - Transition") },
-                { TrapTier.Two, content.Load<Texture2D>("Enemies/Traps/Toxic Trap/Toxic Trap - level 2 - Transition") },
+                { TrapTier.One, content.Load<Texture2D>("Enemies/Traps/Magic Trap/Magic Trap - level 1 - Transition") },
+                { TrapTier.Two, content.Load<Texture2D>("Enemies/Traps/Magic Trap/Magic Trap - level 2 - Transition") },
                 {
                     TrapTier.Three,
-                    content.Load<Texture2D>("Enemies/Traps/Toxic Trap/Toxic Trap - level 3 - Transition")
+                    content.Load<Texture2D>("Enemies/Traps/Magic Trap/Magic Trap - level 3 - Transition")
                 }
             };
             //worm class with Sandworm as name
@@ -86,6 +86,10 @@ namespace HenrySolidAdventure.Characters.Traps
                 },
                 {
                     TrapTier.Two,
+                    content.Load<Texture2D>("Enemies/Traps/Sandworm Trap/Sandworm Trap - level 2 - Transition")
+                },
+                {
+                    TrapTier.Three,
                     content.Load<Texture2D>("Enemies/Traps/Sandworm Trap/Sandworm Trap - level 2 - Transition")
                 }
             };

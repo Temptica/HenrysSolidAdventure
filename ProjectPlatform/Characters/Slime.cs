@@ -1,4 +1,5 @@
 ﻿using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,7 +22,7 @@ namespace HenrySolidAdventure.Characters
                 new(Texture, State.Hit, 4, frameWidth, frameHeight, frameHeight, frameWidth * 5, 4),
                 new(Texture, State.Dead, 4, frameWidth, frameHeight, frameHeight * 2, frameWidth, 4)
             };
-            CurrentHp = BaseHp = 6;
+            Health = BaseHp = 6;
             Damage = 3;
             IsWalking = true;
             CanAttack = true;
@@ -57,7 +58,7 @@ namespace HenrySolidAdventure.Characters
                 if (hitBox.Right > HitBox.Left - 35)
                 {
                     IsFacingLeft = true;
-                    if (hitBox.Right > HitBox.Left - 2)
+                    if (hitBox.Right > HitBox.Left + 2)
                     {
                         return true;
                     }
@@ -68,7 +69,7 @@ namespace HenrySolidAdventure.Characters
                 if (hitBox.Left < HitBox.Right +35)
                 {
                     IsFacingLeft = false;
-                    if (hitBox.Left < HitBox.Right + 2)
+                    if (hitBox.Left < HitBox.Right - 2)
                     {
                         return true;
                     }
@@ -76,7 +77,12 @@ namespace HenrySolidAdventure.Characters
                 
             }
 
-            return false; //if otter is left, then check left distance is 2 or less, otherwise do opposite
+            return false;
+        }
+        public override bool GetDamage(int i)
+        {
+            AudioController.Instance.PlayEffect(SoundEffects.SlimeHit);
+            return base.GetDamage(i);
         }
 
 

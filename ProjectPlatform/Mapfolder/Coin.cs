@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -76,6 +77,8 @@ namespace HenrySolidAdventure.Mapfolder
             _animationX = (float)(_time = 0f);
             
             _collected = true;
+            StatsController.Instance.AddCoin();
+            AudioController.Instance.PlayEffect(SoundEffects.Coin);
             return true;
         }
 

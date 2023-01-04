@@ -1,4 +1,6 @@
-﻿using HenrySolidAdventure.Animations;
+﻿using System;
+using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,21 +28,21 @@ namespace HenrySolidAdventure.Characters
         }
         public abstract bool CheckDamage();
 
-        public virtual bool GetDamage(float i)
+        public virtual bool GetDamage(int i)
         {
-            CurrentHp -= i;
+            Health -= i;
+            StatsController.Instance.AddDamageDealt(i);
             IsHit = true;
-            if (!(CurrentHp < 0)) return false;
+            if (!(Health <= 0)) return false;
             IsDead = true;
             return true;
         }
 
         public override void Draw(Sprites spriteBatch)
         {
-            spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
-            //spriteBatch.Draw(Game1._hitbox, Position, HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
         }
 

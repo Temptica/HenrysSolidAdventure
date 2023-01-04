@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Mapfolder;
 using Microsoft.Xna.Framework;
 
@@ -127,6 +128,8 @@ namespace HenrySolidAdventure.Characters
             if (IsAttacking&& State is not State.Attacking)
             {
                 State = State.Attacking;
+                if(this is Skeleton) AudioController.Instance.PlayEffect(SoundEffects.HeavySwing);
+                if(this is Slime) AudioController.Instance.PlayEffect(SoundEffects.SlimeAttack);
                 CanDamage = true;
                 return;
             }

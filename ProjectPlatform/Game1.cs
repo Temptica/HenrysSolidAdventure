@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace HenrySolidAdventure
 {
-    enum GameState { Menu, Paused, Playing, GameOver, Settings }
+    enum GameState { Menu, Paused, Playing, GameOver, Settings, Win }
     public class Game1 : Game
     {       
         
@@ -125,7 +125,7 @@ namespace HenrySolidAdventure
                     {
                         case GameState.Playing when currentScreen is PausedScreen screen:
                             currentScreen = screen._playingScreen;
-                            return;
+                            break;
                         case GameState.Playing:
                             currentScreen = new PlayingScreen(_screen, Content, _font);
                             break;
@@ -140,6 +140,9 @@ namespace HenrySolidAdventure
                             break;
                         case GameState.Settings:
                             currentScreen = new SettingsScreen(currentScreen, _screen, _font, Content);
+                            break;
+                        case GameState.Win:
+                            currentScreen = new WinScreen(_screen, Content, _font);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);

@@ -9,10 +9,15 @@ namespace HenrySolidAdventure.Animations
     {
         internal State State;
 
-        public Animation(Texture2D texture, int frameCount, int fps, float scale = 1f):this(texture, State.Idle, frameCount, texture.Width/frameCount, texture.Height, 0,0,fps, scale)
+        public Animation(Texture2D texture, int frameCount, int fps, float scale = 1f):this(texture, State.Idle,frameCount,fps, scale)
         {
         }
-        public Animation(Texture2D texture, State state, int frameCount, int frameWidth, int frameHeight, int beginHeight, int beginWidth, int fps, float scale = 1f):base(texture,state.ToString(), fps, frameCount,frameWidth,frameHeight,beginHeight)
+
+        public Animation(Texture2D texture, State state, int frameCount, int fps, float scale = 1f) : this(texture, state, frameCount, texture.Width / frameCount, texture.Height, 0, 0, fps, scale)
+        {
+
+        }
+        public Animation(Texture2D texture, State state, int frameCount, int frameWidth, int frameHeight, int beginHeight, int beginWidth, int fps, float scale = 1f):base(texture,state.ToString(), fps, frameCount,frameWidth,frameHeight,beginHeight,true)
         {
             Frames = new FrameList<Frame>();
             State = state;
@@ -42,3 +47,4 @@ namespace HenrySolidAdventure.Animations
 
     }
 }
+

@@ -49,19 +49,15 @@ namespace HenrySolidAdventure.GameScreens
             if (_loaded && InputController.ExitInput) return;
             _loaded = false;
 
-            var selected = _buttons.Where(button => button.CheckHit(_screen)).ToList();
-            if (selected.Count > 0)
+            var selected = ClickableChecker.CheckHits(_buttons, _screen);
+            if (MouseController.IsLeftClicked && selected is Button button)
             {
-                Mouse.SetCursor(MouseCursor.Hand);
-                if (MouseController.IsLeftClicked)
+                switch (button.Name) 
                 {
-                    switch (selected[0].Name)
-                    {
-                        case "Setting":
-                            _loaded = true;
-                            Game1.SetState(GameState.Settings);
-                            return;
-                    }
+                    case "Setting":
+                        _loaded = true;
+                        Game1.SetState(GameState.Settings);
+                        return;
                 }
             }
             else Mouse.SetCursor(MouseCursor.Arrow);

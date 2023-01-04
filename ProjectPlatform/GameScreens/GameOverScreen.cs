@@ -24,7 +24,8 @@ namespace HenrySolidAdventure.GameScreens
             Vector2 textPosition = new(halfWidth - length / 2, screen.Height / 10f);
 
             _texts = new List<Text> {
-                new(textPosition,title , Color.Red, 1f, 0f, font)
+                new(textPosition,title , Color.Red, 1f, 0f, font),
+                new(new Vector2(50,150),StatsController.Instance.GetStats(),Color.White,0.25f,0f,font)
             };
             var startTexture = content.Load<Texture2D>("buttons/EmptyButton");
             _buttons = new List<Button>
@@ -33,7 +34,7 @@ namespace HenrySolidAdventure.GameScreens
                 new("Restart", startTexture, new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f+startTexture.Height + 20f), "Restart")
 
             };
-            AudioController.Instance.PlaySong("GameOver");
+            AudioController.Instance.PlaySong(Songs.GameOver);
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
@@ -47,22 +48,17 @@ namespace HenrySolidAdventure.GameScreens
         {
 
             BackGround.Instance.Update(gameTime);
-            var selected = _buttons.Where(b => b.CheckHit(_screen)).ToList();
-            if (selected.Count == 0)
+            var selected = ClickableChecker.CheckHits(_buttons, _screen);
+            if (MouseController.IsLeftClicked && selected is Button button)
             {
-                Mouse.SetCursor(MouseCursor.Arrow);
-                return;
-            }
-            Mouse.SetCursor(MouseCursor.Hand);
-            if (MouseController.IsLeftClicked)
-            {
-                if (selected[0].Name == "Menu")
+                switch (button.Name)
                 {
-                    Game1.SetState(GameState.Menu);
-                }
-                if (selected[0].Name == "Restart")
-                {
-                    Game1.SetState(GameState.Playing);
+                    case "Menu":
+                        Game1.SetState(GameState.Menu);
+                        break;
+                    case "Restart":
+                        Game1.SetState(GameState.Playing);
+                        break;
                 }
             }
         }

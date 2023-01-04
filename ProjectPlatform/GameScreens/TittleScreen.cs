@@ -39,16 +39,17 @@ namespace HenrySolidAdventure.GameScreens
 
             var halfWidth = _screen.Width / 2f;
             string title = "Henry's Solid Adventure";
-            var length = _font.MeasureString(title).Length();
+            float scale = 0.75f;
+            var length = _font.MeasureString(title).Length()*scale;
             _textPosition = new(halfWidth - length / 2, _screen.Height / 10f);
-            _title = new Text(new Vector2(-length,_textPosition.Y), title, Color.SandyBrown, 1f, 0f, font);
-            _titleBackGround = new Text(new Vector2(-length, _textPosition.Y) + new Vector2(5, 5), title, Color.Black, 1f, 0f, font);
+            _title = new Text(new Vector2(-length,_textPosition.Y), title, Color.SandyBrown, scale, 0f, font);
+            _titleBackGround = new Text(new Vector2(-length, _textPosition.Y) + new Vector2(5, 5), title, Color.Black, scale, 0f, font);
             Hero.Instance.Reset();
             Hero.Instance.Position = _buttons.First(b=>b.Name=="StartButton").Position - new Vector2(0,Hero.Instance.HitBox.Height);
             Hero.Instance.SetWalk(true);
             
             _backGround.Reset();
-            AudioController.Instance.PlaySong("MainMenu");
+            AudioController.Instance.PlaySong(Songs.MainMenu);
         }
         public void Draw(SpriteBatch sprite, Sprites sprites)
         {
