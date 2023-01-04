@@ -28,10 +28,11 @@ namespace HenrySolidAdventure.Graphics
             if (_changed) return;
 
             var mousePos = MouseController.GetScreenPosition(screen);
-            if (mousePos.X < _position.X || mousePos.X > _position.X + ClickedTexture.Width) return;
-            if (mousePos.Y < _position.Y || mousePos.Y > _position.Y + ClickedTexture.Height) return;
-            IsClicked = !IsClicked;
-            _changed = true;
+            if (HitBox.Contains(mousePos))
+            {
+                IsClicked = !IsClicked;
+                _changed = true;
+            }
             
 
         }

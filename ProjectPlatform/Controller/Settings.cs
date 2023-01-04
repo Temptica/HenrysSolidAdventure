@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
-using HenrySolidAdventure.Controller;
 
-namespace HenrySolidAdventure
+namespace HenrySolidAdventure.Controller
 {
     internal class Settings
     {
@@ -31,19 +30,26 @@ namespace HenrySolidAdventure
                     var setting = d.Split('=');
                     switch (setting[0])
                     {
-                        case "Volume":
-                            Setting.Volume = float.Parse(setting[1]);
+                        case "MusicVolume":
+                            Setting.MusicVolume = float.Parse(setting[1]);
                             break;
                         case "FullScreen":
                             Setting.FullScreen = bool.Parse(setting[1]);
                             break;
-                        case "Muted":
-                            Setting.Muted = bool.Parse(setting[1]);
+                        case "MusicMuted":
+                            Setting.MusicMuted = bool.Parse(setting[1]);
+                            break;
+                        case "EffectMuted":
+                            Setting.EffectMuted = bool.Parse(setting[1]);
+                            break;
+                        case "EffectVolume":
+                            Setting.EffectVolume = float.Parse(setting[1]);
                             break;
                     }
                 });
 
-            AudioController.Volume = Setting.Muted? 0f : Setting.Volume;
+            AudioController.Volume = Setting.MusicMuted ? 0f : Setting.MusicVolume;
+            AudioController.EffectVolume = Setting.EffectMuted ? 0f : Setting.EffectVolume;
             Game1.SetFullScreen(Setting.FullScreen);
 
         }
@@ -58,13 +64,15 @@ namespace HenrySolidAdventure
 
     internal class Setting
     {
-        internal float Volume{ get; set; }
+        internal float MusicVolume { get; set; }
+        public bool MusicMuted { get; set; }
+        public float EffectVolume { get; set; }
+        public bool EffectMuted { get; set; }
         internal bool FullScreen { get; set; }
-        public bool Muted { get; set; }
-
+        
         public override string ToString()
         {
-            return $"Volume={Volume}\nFullScreen={FullScreen}\nMuted={Muted}";
+            return $"MusicVolume={MusicVolume}\nFullScreen={FullScreen}\nMusicMuted={MusicMuted}\nEffectMuted={EffectMuted}\nEffectVolume={EffectVolume}";
         }
 
     }

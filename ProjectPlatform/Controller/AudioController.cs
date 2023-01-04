@@ -19,6 +19,11 @@ namespace HenrySolidAdventure.Controller
         public static float Volume { get => MediaPlayer.Volume;
             set => MediaPlayer.Volume = value;
         }
+
+        public static float EffectVolume
+        {
+            get;set;
+        }
         
         public void Initialise(ContentManager content)
         {
@@ -51,10 +56,8 @@ namespace HenrySolidAdventure.Controller
            if (effect is not null)
            {
                effect.Play();
-               effect.Volume = Volume;
+               effect.Volume = EffectVolume;
            }
-           
-
         }
 
         public void PlaySong(Songs key)

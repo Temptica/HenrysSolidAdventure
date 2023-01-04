@@ -58,7 +58,7 @@ namespace HenrySolidAdventure.Characters
             Animations = new AnimationList<Animation>()
             {
                 new(Texture, State.Idle, 8, width, height, 0, 0,6, scale),
-                new(Texture, State.Walking, 10, width, height, 0, width*8,6, scale),
+                new(Texture, State.Walking, 10, width, height, 0, width*8,10, scale),
                 new(Texture, State.Attacking, 6, width, height,height , width*8,10, scale),
                 new(Texture, State.Attacking2, 6, width, height, height*2, width*4,8, scale),
                 new(Texture, State.Attacking3, 8, width, height, height*3, 0,8, scale),

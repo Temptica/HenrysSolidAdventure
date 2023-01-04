@@ -15,10 +15,10 @@ namespace HenrySolidAdventure.Controller
             var result = clickables.FirstOrDefault(c => c.CheckHit(screen));
             if (result == default)
             {
-                Mouse.SetCursor(MouseCursor.Hand);
+                Mouse.SetCursor(MouseCursor.Arrow);
                 return null;
             }
-            Mouse.SetCursor(MouseCursor.Arrow);
+            Mouse.SetCursor(MouseCursor.Hand);
             return result;
 
         }
