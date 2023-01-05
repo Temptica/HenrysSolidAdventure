@@ -13,7 +13,7 @@ namespace HenrySolidAdventure.Characters
         //flying tracking enemy. will start flying to you when you are 15 tiles away, regardless of walls. Once detected, it will keep tracking
 
         public static Texture2D Texture;
-        private float _attackRate; 
+        private readonly float _attackRate; 
         private float _attackTimer;
         public Bat(Vector2 position): base(position,150)
         {
@@ -88,12 +88,9 @@ namespace HenrySolidAdventure.Characters
         }
 
 
-        public override void Draw(Sprites spriteBatch)
+        public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-
-            //spriteBatch.Draw(Game1._hitbox, Position, HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            CurrentAnimation.Draw(spriteBatch, Position, State is State.Dead || !IsFacingLeft?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,_rotation);
+            CurrentAnimation.Draw(sprites, Position, State is State.Dead || !IsFacingLeft?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,_rotation);
         }
 
         public override bool CheckDamage()

@@ -4,9 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace HenrySolidAdventure.Graphics
 {
-    internal class StateButton: Clickable
+    internal class StateButton: IClickable
     {
         public bool IsClicked { get; set; }
+        public Rectangle HitBox { get; set; }
         public static Texture2D ClickedTexture;
         public static Texture2D UnClickedTexture;
         private readonly Vector2 _position;
@@ -41,6 +42,6 @@ namespace HenrySolidAdventure.Graphics
             sprites.Draw(IsClicked ? ClickedTexture : UnClickedTexture, Vector2.One, _position, Color.White);
         }
 
-        public override Rectangle HitBox { get; protected set; }
+        
     }
 }

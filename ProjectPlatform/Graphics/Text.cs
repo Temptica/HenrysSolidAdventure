@@ -6,11 +6,11 @@ namespace HenrySolidAdventure.Graphics
     internal class Text
     {
         public Vector2 Position { get; set; }
-        string TextString { get; set; }
+        private string TextString { get; set; }
         public Color Color { get; set; }
-        float Scale { get; set; }
-        float Rotation { get; set; }
-        SpriteFont Font { get; set; }
+        private float Scale { get; set; }
+        private float Rotation { get; set; }
+        private SpriteFont Font { get; set; }
 
         public Text(Vector2 position, string textString, Color color, float scale, float rotation, SpriteFont font)
         {

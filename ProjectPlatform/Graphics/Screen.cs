@@ -8,8 +8,8 @@ namespace HenrySolidAdventure.Graphics
     {//from https://www.youtube.com/watch?v=yUSB_wAVtE8 and own previous project
 
         private bool isDisposed;
-        private Game game;
-        private RenderTarget2D target;
+        private readonly Game game;
+        private readonly RenderTarget2D target;
         private bool isSet;
 
         public int Width

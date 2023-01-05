@@ -8,7 +8,7 @@ namespace HenrySolidAdventure.Characters
     internal class Skeleton:RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform
         public static Dictionary<State, Texture2D> Textures;//list as some of the spritesheets are bigger than others due to the big "sword" making it very difficult having them on one sprite
-        private float fixedYPosition;
+        private readonly float fixedYPosition;
         public Skeleton(Vector2 position)
         {
             Position = position;
@@ -46,7 +46,7 @@ namespace HenrySolidAdventure.Characters
         }
         public override bool CheckAttack()
         {
-            if (!CanAttack) return false;
+            if (!CanAttack || Hero.Instance.IsInvisible) return false;
             var hitBox = Hero.Instance.HitBox;
             if (hitBox.Top >= HitBox.Bottom || hitBox.Bottom <= HitBox.Top) return false;
             return hitBox.Center.X < HitBox.Center.X

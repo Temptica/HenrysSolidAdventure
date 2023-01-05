@@ -13,8 +13,8 @@ namespace HenrySolidAdventure.Mapfolder
         //"D:\ap\22-23\ProjGameDev\Map\Level1.json"
         private static float mapOffset;
         private static int MapID = 1;
-        private static int mapCount = 5;
-        static ContentManager _content;
+        private static readonly int mapCount = 5;
+        private static ContentManager _content;
         public static void LoadMap(int screenheight, ContentManager content = null)
         {
             if (content != null)
@@ -53,7 +53,7 @@ namespace HenrySolidAdventure.Mapfolder
         {
             foreach (var spawn in spawns)
             {
-                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Hero.Texture.Height/3f);
+                if(spawn._class == "Spawn") map.Spawn = new Vector2(spawn.x, spawn.y + mapOffset - Hero.Instance.HitBox.Height);
                 if (spawn._class == "Bat") map.Enemies.Add(new Bat(new Vector2(spawn.x, spawn.y + mapOffset-Bat.Texture.Height)));
                 if (spawn._class == "Skeleton") map.Enemies.Add(new Skeleton(new Vector2(spawn.x, spawn.y + mapOffset - Skeleton.Textures[State.Idle].Height)));
                 if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));

@@ -8,8 +8,8 @@ namespace HenrySolidAdventure.Mapfolder
     {
         internal Texture2D Texture;
         internal Vector2 Position;
-        float Scale;
-        SpriteEffects Effect;
+        private readonly float Scale;
+        private readonly SpriteEffects Effect;
         public Decoration(Texture2D texture, Vector2 position, float scale, SpriteEffects effect = SpriteEffects.None)
         {
             Texture = texture;

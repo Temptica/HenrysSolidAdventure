@@ -77,15 +77,15 @@ namespace HenrySolidAdventure.Mapfolder
             EnemyInitialiser.LoadTextures(content);
 
         }
-        public void Draw(Sprites spriteBatch)
+        public void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
-            BackMap?.ForEach(mapTile => mapTile.Draw(spriteBatch));
-            FrontMap.ForEach(mapTile => mapTile.Draw(spriteBatch));
-            Coins?.ForEach(coin =>coin.Draw(spriteBatch));
-            Shop?.Draw(spriteBatch);
-            Decorations?.ForEach(deco => deco.Draw(spriteBatch));
-            Enemies?.ForEach(enemy => enemy.Draw(spriteBatch));
-            Portal?.Draw(spriteBatch);
+            BackMap?.ForEach(mapTile => mapTile.Draw(sprites));
+            FrontMap.ForEach(mapTile => mapTile.Draw(sprites));
+            Coins?.ForEach(coin =>coin.Draw(sprites));
+            Shop?.Draw(sprites, spriteBatch);
+            Decorations?.ForEach(deco => deco.Draw(sprites));
+            Enemies?.ForEach(enemy => enemy.Draw(sprites, spriteBatch));
+            Portal?.Draw(sprites);
         }
         public void Update(GameTime gameTime)
         {

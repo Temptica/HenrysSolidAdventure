@@ -27,7 +27,8 @@ namespace HenrySolidAdventure.Animations
                 Frames.Add(new Frame(new Rectangle(i * frameWidth, beginHeight, frameWidth, frameHeight), texture, 1f));
             }
         }
-        double _time;
+
+        private double _time;
         public void Update(GameTime gameTime)
         {
             _time += gameTime.ElapsedGameTime.TotalMilliseconds;

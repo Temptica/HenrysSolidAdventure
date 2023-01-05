@@ -10,9 +10,9 @@ namespace HenrySolidAdventure.Controller
 {
     internal static class ClickableChecker
     {
-        public static Clickable CheckHits(IEnumerable<Clickable> clickables, Screen screen)
+        public static IClickable CheckHits(IEnumerable<IClickable> clickables)
         {
-            var result = clickables.FirstOrDefault(c => c.CheckHit(screen));
+            var result = clickables.FirstOrDefault(CheckHit);
             if (result == default)
             {
                 Mouse.SetCursor(MouseCursor.Arrow);
@@ -20,7 +20,11 @@ namespace HenrySolidAdventure.Controller
             }
             Mouse.SetCursor(MouseCursor.Hand);
             return result;
-
+            
+        }
+        public static bool CheckHit(IClickable clickable) //-1 = no hit / 0 hit no click / 1 hit and click
+        {
+            return clickable.HitBox.Contains(MouseController.GetScreenPosition(Game1._screen));
         }
     }
 }

@@ -12,12 +12,12 @@ namespace HenrySolidAdventure.GameScreens
 {
     internal class PausedScreen : IGameScreen
     {
-        List<Text> _texts;
+        private readonly List<Text> _texts;
         public PlayingScreen _playingScreen { get; }
-        private List<Button> _buttons;
-        private Screen _screen;
-        bool _loaded;
-        public PausedScreen(Screen screen,SpriteFont font, ContentManager content, PlayingScreen playScreen)
+        private readonly List<Button> _buttons;
+        private readonly Screen _screen;
+        private bool _loaded;
+        public PausedScreen(Screen screen,ContentManager content, PlayingScreen playScreen)
         {
             _loaded = true;
             _playingScreen = playScreen;
@@ -25,7 +25,7 @@ namespace HenrySolidAdventure.GameScreens
             var halfWidth = screen.Width / 2f;
             var halfHeight = screen.Height / 2f;
             string title = "Press \"E\" or \"enter\" to resume.";
-            var length = font.MeasureString(title).Length();
+            var length = Game1.MainFont.MeasureString(title).Length();
             Vector2 textPosition = new(halfWidth - length / 2 * 0.5f, screen.Height / 2f);
             var setting = content.Load<Texture2D>("Buttons/Cog");
             _buttons = new List<Button>
@@ -33,7 +33,7 @@ namespace HenrySolidAdventure.GameScreens
                 new ("Setting", setting, new Vector2(screen.Width - setting.Width - 25, 25))
             };
             _texts = new List<Text> {
-            new(textPosition,"Press \"E\" or \"enter\" to resume. \nPress \"Escape\" to go to menu." , Color.White, 0.5f, 0f, font)
+            new(textPosition,"Press \"E\" or \"enter\" to resume. \nPress \"Escape\" to go to menu." , Color.White, 0.5f, 0f, Game1.MainFont)
             };
         }
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
@@ -49,7 +49,7 @@ namespace HenrySolidAdventure.GameScreens
             if (_loaded && InputController.ExitInput) return;
             _loaded = false;
 
-            var selected = ClickableChecker.CheckHits(_buttons, _screen);
+            var selected = ClickableChecker.CheckHits(_buttons);
             if (MouseController.IsLeftClicked && selected is Button button)
             {
                 switch (button.Name) 

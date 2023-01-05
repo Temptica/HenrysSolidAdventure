@@ -12,12 +12,12 @@ namespace HenrySolidAdventure.Mapfolder
         public static List<List<int>> CollectedCoins;
         public const float Scale = 0.5f;
         internal static Texture2D Texture;
-        readonly BasicAnimation normalAnimation;
+        private readonly BasicAnimation normalAnimation;
         private float CollectedFrameRate = 50; //20fps
         private const float CollectAnimationRepeatTimes = 5;
         private float _collectAnimationTimes;
         private float _animationX;
-        bool _collected;
+        private bool _collected;
         public bool Destroy;
         internal Rectangle HitBox;
 
@@ -30,7 +30,7 @@ namespace HenrySolidAdventure.Mapfolder
         }
 
         private double _time;
-        float percentage;
+        private float percentage;
         internal void Update(GameTime gameTime)
         {
             if (!_collected)

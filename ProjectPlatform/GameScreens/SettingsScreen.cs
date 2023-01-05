@@ -11,20 +11,20 @@ namespace HenrySolidAdventure.GameScreens
 {
     internal class SettingsScreen: IGameScreen
     {
-        List<Text> _texts;
-        private List<Clickable> _clickables;
-        private Slider _SongSlider;
-        private StateButton _muteSongButton;
-        private StateButton _FullScreenButton;
-        private Slider _EffectSlider;
-        private StateButton _muteEffectButton;
-        private Button _goBackButton;
-        Screen _screen;
-        bool _loaded;
-        float _timer;
+        private readonly List<Text> _texts;
+        private readonly List<IClickable> _clickables;
+        private readonly Slider _SongSlider;
+        private readonly StateButton _muteSongButton;
+        private readonly StateButton _FullScreenButton;
+        private readonly Slider _EffectSlider;
+        private readonly StateButton _muteEffectButton;
+        private readonly Button _goBackButton;
+        private readonly Screen _screen;
+        private bool _loaded;
+        private float _timer;
         public IGameScreen LastScreen { get; }
 
-        public SettingsScreen(IGameScreen lastScreen, Screen screen, SpriteFont font, ContentManager content)//add content 
+        public SettingsScreen(IGameScreen lastScreen, Screen screen, ContentManager content)//add content 
         {
             LastScreen = lastScreen;
             const string settingText = "Settings";
@@ -34,16 +34,16 @@ namespace HenrySolidAdventure.GameScreens
             const string muteEffectText = "Mute Effect";
             const string fullscreenText = "Fullscreen";
             var halfWidth = screen.Width / 2f;
-            var length = font.MeasureString(settingText).Length();
+            var length = Game1.MainFont.MeasureString(settingText).Length();
             var textPos = new Vector2(halfWidth - length / 2, screen.Height / 10f);
             _texts = new List<Text>
             {
-                new(textPos, settingText, Color.White, 1f, 0f, font),
-                new(new Vector2(textPos.X, textPos.Y+165f), volumeText, Color.White, 0.2f, 0f, font),
-                new(new Vector2(textPos.X, textPos.Y+230f), muteText, Color.White, 0.2f, 0f, font),
-                new(new Vector2(textPos.X*2, textPos.Y+230f), muteEffectText, Color.White, 0.2f, 0f, font),
-                new(new Vector2(textPos.X, textPos.Y+285f), effectText, Color.White, 0.2f, 0f, font),
-                new(new Vector2(textPos.X, textPos.Y+375), fullscreenText, Color.White, 0.2f, 0f, font)
+                new(textPos, settingText, Color.White, 1f, 0f, Game1.MainFont),
+                new(new Vector2(textPos.X, textPos.Y+165f), volumeText, Color.White, 0.2f, 0f, Game1.MainFont),
+                new(new Vector2(textPos.X, textPos.Y+230f), muteText, Color.White, 0.2f, 0f, Game1.MainFont),
+                new(new Vector2(textPos.X*2, textPos.Y+230f), muteEffectText, Color.White, 0.2f, 0f, Game1.MainFont),
+                new(new Vector2(textPos.X, textPos.Y+285f), effectText, Color.White, 0.2f, 0f, Game1.MainFont),
+                new(new Vector2(textPos.X, textPos.Y+375), fullscreenText, Color.White, 0.2f, 0f, Game1.MainFont)
             };
             _SongSlider = new Slider(new Vector2(textPos.X +150f, textPos.Y + 150f), 0, 1, AudioController.Volume);
             _muteSongButton = new StateButton(new Vector2(textPos.X + 150f, textPos.Y + 230f), false);
@@ -57,7 +57,7 @@ namespace HenrySolidAdventure.GameScreens
             _screen = screen;
             _loaded = true;
             
-            _clickables = new List<Clickable>
+            _clickables = new List<IClickable>
             {
                 _SongSlider, _FullScreenButton, _goBackButton, _muteSongButton, _muteEffectButton, _EffectSlider
             };
@@ -73,7 +73,7 @@ namespace HenrySolidAdventure.GameScreens
                 return;
             }
             _loaded = false;
-            var selected = ClickableChecker.CheckHits(_clickables, _screen);
+            var selected = ClickableChecker.CheckHits(_clickables);
 
             if (InputController.ExitInput || (selected is Button && MouseController.IsLeftClicked))
             {

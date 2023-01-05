@@ -15,6 +15,7 @@ namespace HenrySolidAdventure.Controller
         internal static bool JumpInput { get; private set; }
         internal static bool ShiftInput { get; private set; }
         internal static bool InteractInput { get; private set; }
+        internal static bool InventoryInput { get; private set; }
         internal static bool Attack { get; private set; }
         internal static bool Block { get; private set; }
         internal static bool ExitInput { get; private set; }
@@ -56,10 +57,7 @@ namespace HenrySolidAdventure.Controller
             Block = keyboard.IsKeyDown(Keys.E);
             ShiftInput = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
             ExitInput = keyboard.IsKeyDown(Keys.Escape);
-#if DEBUG
-            NextInput = keyboard.IsKeyDown(Keys.N) && keyboard.IsKeyDown(Keys.LeftControl);
-            PreviousInput = keyboard.IsKeyDown(Keys.B) && keyboard.IsKeyDown(Keys.LeftControl);
-#endif
+            InventoryInput = keyboard.IsKeyDown(Keys.I);
         }
     }
 }

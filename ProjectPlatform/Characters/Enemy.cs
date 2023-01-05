@@ -19,7 +19,7 @@ namespace HenrySolidAdventure.Characters
 
         public override void Update(GameTime gameTime)
         {
-            if((State == State.Attacking && CurrentAnimation.IsFinished) || State is not State.Attacking)
+            if ( !Hero.Instance.IsInvisible && (State == State.Attacking && CurrentAnimation.IsFinished) || State is not State.Attacking)
             {
                 CanAttack = true;
             }
@@ -38,11 +38,11 @@ namespace HenrySolidAdventure.Characters
             return true;
         }
 
-        public override void Draw(Sprites spriteBatch)
+        public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
             //spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
-            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
+            Animations.Draw(sprites, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
 
         }
 

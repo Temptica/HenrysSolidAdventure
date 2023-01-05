@@ -6,6 +6,8 @@ using HenrySolidAdventure.Graphics;
 using HenrySolidAdventure.Mapfolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using HenrySolidAdventure.Shop;
 
 namespace HenrySolidAdventure.Characters
 {
@@ -13,27 +15,37 @@ namespace HenrySolidAdventure.Characters
     internal class Hero : Character
     {
         #region Consts
-        private const float JumpForce = 0.30f;
+        private const float BaseJumpForce = 0.30f;
         private const float MaxYVelocity = 0.5f;
-        private const float WalkSpeed = 0.18f;
-        private const float RollingSpeed = 0.2f;
+        private const float BaseWalkSpeed = 0.18f;
+        private const float RollingSpeed = 0.22f;
         private const float XAcceleration = 0.03f;
         private const float AttackWaitTime = 1500f;//1.5 seconds
+        private const int BaseDamage = 3;
         #endregion
         
         #region properities
         public static Texture2D Texture { get; set; }
         public State State { get; set; }
-        public float Gravity { get; private set; }
+        public float BaseGravity { get; private set; }
+        public float JumpForce { get; set; } = BaseJumpForce;
+        public float WalkSpeed { get; set; } = BaseWalkSpeed;
+        public bool CanGetDamage { get; set; } 
+        public float Gravity { get; set; }
         public float Scale { get; set; }
-        public float Coins { get; private set; }
+        public float Coins { get; set; }
+        public Inventory Inventory { get; private set; }
+        public Dictionary<PotionType, float> Effects { get; set; } //timer per potion
+        public bool IsInvisible { get; set; }
         #endregion
         //signleton 
+        
+        public bool CanWalk;
+        
         private static Hero _instance;
         private bool _canAttack = true;
         private bool _canJump;
         private bool _isRolling;
-        private bool _canWalk;
         private bool _isJumping;
         private bool _isFalling;
         private int _health;
@@ -41,17 +53,20 @@ namespace HenrySolidAdventure.Characters
         private float _attackTimer;
         private float _lastTextureHeight;
         private bool _canBlock;
+        
 
         public static Hero Instance => _instance ??= new Hero();
 
         private Hero()//use last texture height to correct position
         {
+            Effects = new Dictionary<PotionType, float>();
+            Inventory = new Inventory();
         }
         public void Initialise(Texture2D otter, Vector2 position, float gravity, float scale)
         {
             Texture = otter;
             Position = position;
-            Gravity = gravity;
+            Gravity = BaseGravity = gravity;
             Scale = scale;
             var width = Texture.Width / 10;
             var height = Texture.Height / 9;
@@ -72,7 +87,8 @@ namespace HenrySolidAdventure.Characters
             };
             Reset();
             _lastTextureHeight = Animations.CurrentAnimation.CurrentFrame.HitBox.Height;
-            Damage = 3;
+            Damage = BaseDamage;
+            CanGetDamage = true;
         }
 
         public override void Update(GameTime gameTime)
@@ -84,6 +100,7 @@ namespace HenrySolidAdventure.Characters
             }
             _isBlocking = InputController.Block && _canBlock;
             _isRolling = InputController.ShiftInput;
+
             SetState(gameTime);
             
             Animations.Update(State, gameTime);
@@ -95,9 +112,49 @@ namespace HenrySolidAdventure.Characters
             }
             if (State is State.Dead) return;
             MoveUpdate(gameTime, Map.Instance);
+            CheckPotions(gameTime);
             CheckCoins();
+            Inventory.Update();
             CheckEnemies();
             Velocity.X = 0;
+        }
+
+        private void CheckPotions(GameTime gameTime)
+        {
+            var remove = new List<PotionType>();
+            foreach (var potion in Effects)
+            {
+                Effects[potion.Key] -= (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (Effects[potion.Key] <= 0)
+                {
+                    remove.Add(potion.Key);
+                }
+            }
+            foreach (var potion in remove)
+            {
+                switch (potion)
+                {
+                    case PotionType.Floating:
+                        Gravity = BaseGravity;
+                        break;
+                    case PotionType.Invis:
+                        IsInvisible = false;
+                        break;
+                    case PotionType.Damage:
+                        Damage = BaseDamage;
+                        break;
+                    case PotionType.Jump:
+                        JumpForce = BaseJumpForce;
+                        break;
+                    case PotionType.Speed:
+                        WalkSpeed = BaseWalkSpeed;
+                        break;
+                    case PotionType.Undying:
+                        CanGetDamage = true;
+                        break;
+                }
+                Effects.Remove(potion);
+            }
         }
 
         internal void MenuUpdate(GameTime gameTime, float leftBound, float rightBound, float bottomBound)
@@ -112,7 +169,7 @@ namespace HenrySolidAdventure.Characters
         private void SetState(GameTime gameTime)
         {
             _isBlocking = InputController.Block && _canBlock;
-            _canWalk = false;
+            CanWalk = false;
             _canJump = false;
             if (State is State.Dead || IsDead)
             {
@@ -197,7 +254,7 @@ namespace HenrySolidAdventure.Characters
             if (_isFalling)
             {
                 State = State.Falling;
-                _canWalk = true;
+                CanWalk = true;
                 _canBlock = false;
                 return;
             }
@@ -205,7 +262,7 @@ namespace HenrySolidAdventure.Characters
             if (_isJumping)
             {
                 State = State.Jumping;
-                _canWalk = true;
+                CanWalk = true;
                 _canBlock = false;
                 return;
             }
@@ -213,7 +270,7 @@ namespace HenrySolidAdventure.Characters
             _canBlock = true;
             if (State is State.Rolling)
             {
-                _canWalk = true;
+                CanWalk = true;
                 if (!Animations.CurrentAnimation.IsFinished) return;
             }
             if (IsAttacking)
@@ -222,7 +279,7 @@ namespace HenrySolidAdventure.Characters
                 AudioController.Instance.PlayEffect(SoundEffects.Sword);
                 return;
             }
-            _canWalk = true;
+            CanWalk = true;
             _canJump = true;
             
             if (_isRolling) State = State.Rolling;
@@ -240,7 +297,7 @@ namespace HenrySolidAdventure.Characters
                 else
                 {
                     damage = boss.CurrentAttack.Attack();
-                    if (damage > 0 && State != State.Hit) 
+                    if (damage > 0 && State != State.Hit&&CanGetDamage) 
                     { 
                         IsHit = true; 
                         if (State is not State.Block && State is not State.BlockHit) Health -= damage;
@@ -249,10 +306,8 @@ namespace HenrySolidAdventure.Characters
             }
             foreach (var enemy in Map.Instance.Enemies.Where(enemy => enemy.State is not State.Dead and not State.Hit).Where(enemy => CollisionHelper.PixelBasedHit(this, enemy)))
             {
-                
                 if (Attack())
                 {
-                    
                     if (!enemy.GetDamage(Damage)) { continue; }
 
                     StatsController.Instance.AddKill();
@@ -263,7 +318,7 @@ namespace HenrySolidAdventure.Characters
                     continue;
                 }
                 damage = enemy.Attack();
-                if (damage > 0 && State != State.Hit)
+                if (damage > 0 && State != State.Hit && CanGetDamage)
                 {
                     IsHit = true;
                     if(State is not State.Block && State is not State.BlockHit)
@@ -326,7 +381,6 @@ namespace HenrySolidAdventure.Characters
 
             float velocityXDelta = (float)(gameTime.ElapsedGameTime.TotalMilliseconds * Velocity.X);
             var nextHitBox = GetHitBox(new Vector2(Position.X+ velocityXDelta, Position.Y +Velocity.Y));
-
 
 
             if (Velocity.Y < 0)//going up
@@ -401,6 +455,7 @@ namespace HenrySolidAdventure.Characters
                 }
             }
 
+            
             _isJumping = Velocity.Y != 0;
             IsWalking = Velocity.X != 0;
             Position = GetPosition(nextHitBox);
@@ -409,16 +464,26 @@ namespace HenrySolidAdventure.Characters
 
         private void GetVelocity(GameTime gameTime)
         {
-            if (!_canWalk)
+            if (!CanWalk)
             {
                 Velocity.X = 0;
             }
             else if (State is State.Rolling)
             {
-                var direction = IsFacingLeft ? -1 : 1;
-                Velocity.X += direction * (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
-                if (Velocity.X > RollingSpeed* direction)
-                    Velocity.X = RollingSpeed* direction;
+                if (IsFacingLeft)
+                {
+                    Velocity.X -= (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (Velocity.X < -RollingSpeed)
+                        Velocity.X = -RollingSpeed;
+                }
+                else
+                {
+                    Velocity.X += (float)(XAcceleration * gameTime.ElapsedGameTime.TotalMilliseconds);
+                    if (Velocity.X > RollingSpeed)
+                        Velocity.X = RollingSpeed;
+                }
+                
+                
             }
             else if (InputController.LeftInput) //left
             {
@@ -468,21 +533,16 @@ namespace HenrySolidAdventure.Characters
         }
 
 
-        public override void Draw(Sprites spriteBatch)
+        public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
-            Color color = Color.White;
-            if (State is State.Hit) color = Color.Red;
-            else if (State is State.Attacking) color = Color.Yellow;
-            else if (State is State.Dead) color = Color.Blue;
-
-            //spriteBatch.Draw(Game1._hitbox, new Vector2(HitBox.X, HitBox.Y), HitBox, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            Animations.Draw(spriteBatch, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale, 0f, color);
+            Animations.Draw(sprites, Position, IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, Scale, 0f, Color.White);
+            Inventory.Draw(sprites, spriteBatch);
 
         }
 
         public void SetWalk(bool canWalk)
         {
-            _canWalk = canWalk;
+            CanWalk = canWalk;
         }
 
         public void Reset()
@@ -497,6 +557,7 @@ namespace HenrySolidAdventure.Characters
             _isJumping = false;
             _isRolling = false;
             IsWalking = false;
+            Inventory = new Inventory();
         }
 
         public bool Attack()

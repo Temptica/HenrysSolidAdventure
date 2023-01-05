@@ -11,22 +11,22 @@ namespace HenrySolidAdventure.GameScreens
 {
     internal class WinScreen: IGameScreen
     {
-        private List<Text> _texts;
-        private List<Button> _buttons;
-        Screen _screen;
+        private readonly List<Text> _texts;
+        private readonly List<Button> _buttons;
+        private readonly Screen _screen;
 
-        public WinScreen(Screen screen, ContentManager content, SpriteFont font)
+        public WinScreen(Screen screen, ContentManager content)
         {
             _screen = screen;
             var halfWidth = screen.Width / 2f;
             var halfHeight = screen.Height / 2f;
             string title = "You won!";
-            var length = font.MeasureString(title).Length();
+            var length = Game1.MainFont.MeasureString(title).Length();
             Vector2 textPosition = new(halfWidth - length / 2, screen.Height / 10f);
 
             _texts = new List<Text> {
-                new(textPosition,title , Color.Red, 1f, 0f, font),
-                new(new Vector2(50,150),StatsController.Instance.GetStats(),Color.White,0.25f,0f,font)
+                new(textPosition,title , Color.Red, 1f, 0f, Game1.MainFont),
+                new(new Vector2(50,150),StatsController.Instance.GetStats(),Color.White,0.25f,0f,Game1.MainFont)
             };
             var startTexture = content.Load<Texture2D>("buttons/EmptyButton");
             _buttons = new List<Button>
@@ -40,7 +40,7 @@ namespace HenrySolidAdventure.GameScreens
         public void Update(GameTime gameTime)
         {
             BackGround.Instance.Update(gameTime);
-            var selected = ClickableChecker.CheckHits(_buttons, _screen);
+            var selected = ClickableChecker.CheckHits(_buttons);
             if (MouseController.IsLeftClicked && selected is Button button)
             {
                 switch (button.Name)

@@ -4,15 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace HenrySolidAdventure.Graphics
 {
-    internal class Slider: Clickable
+    internal class Slider: IClickable
     {
         public static Texture2D SliderTexture;
         public static Texture2D SliderKnobTexture;
-        private Vector2 _position;
+        private readonly Vector2 _position;
         private float _value;
-        private float _minValue;
-        private float _maxValue;
-        public override Rectangle HitBox { get; protected set; }
+        private readonly float _minValue;
+        private readonly float _maxValue;
+        public Rectangle HitBox { get; set; }
         
         public float Value
         {

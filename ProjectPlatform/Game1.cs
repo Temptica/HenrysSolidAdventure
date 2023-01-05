@@ -5,23 +5,24 @@ using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.GameScreens;
 using HenrySolidAdventure.Graphics;
 using HenrySolidAdventure.Mapfolder;
+using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace HenrySolidAdventure
 {
-    enum GameState { Menu, Paused, Playing, GameOver, Settings, Win }
+    internal enum GameState { Menu, Paused, Playing, GameOver, Settings, Win }
     public class Game1 : Game
     {       
         
         private readonly GraphicsDeviceManager _graphics;
         private BackGround _backGround;
-        private SpriteFont _font;
+        public static SpriteFont MainFont;
         private static GameState _gameState;
         private static bool _stateChanged;
         public static Texture2D _hitbox;
         private SpriteBatch _sprite;
-        private Screen _screen;
+        public static Screen _screen;
         private Sprites _sprites;
         private Camera _camera;
         private static bool _isFullScreen;
@@ -47,6 +48,7 @@ namespace HenrySolidAdventure
             _screen = new Screen(this, 1200, 675);
             _camera = new Camera(_screen);
             _sprites = new Sprites(this);
+            
             base.Initialize();
 
         }
@@ -66,17 +68,16 @@ namespace HenrySolidAdventure
         {
             _backGround = BackGround.Instance;
             _backGround.Initialise(Content);
-            _font = Content.Load<SpriteFont>("Fonts/ThaleahFat");
+            MainFont = Content.Load<SpriteFont>("Fonts/ThaleahFat");
             StateButton.ClickedTexture = Content.Load<Texture2D>("Buttons/knobSelected");
             StateButton.UnClickedTexture = Content.Load<Texture2D>("Buttons/KnobNotSelected");
             Slider.SliderTexture = Content.Load<Texture2D>("Buttons/slider");
             Slider.SliderKnobTexture = Content.Load<Texture2D>("Buttons/sliderKnob");
-
+            PotionLoader.Initialise(Content);
             Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
             map.Initialise(Content, _screen);
             Hero.Instance.Initialise(Content.Load<Texture2D>("Character/HeroKnight"), new Vector2(100, 100), 0.0005f, 1f);
-            Button.Font = _font;
             _hitbox = new Texture2D(GraphicsDevice, 1, 1);
             _hitbox.SetData(new[] { Color.White });
             AudioController.Instance.Initialise(Content);
@@ -127,22 +128,22 @@ namespace HenrySolidAdventure
                             currentScreen = screen._playingScreen;
                             break;
                         case GameState.Playing:
-                            currentScreen = new PlayingScreen(_screen, Content, _font);
+                            currentScreen = new PlayingScreen(_screen, Content);
                             break;
                         case GameState.Menu:
-                            currentScreen = new TittleScreen(_screen, Content, _font);
+                            currentScreen = new TittleScreen(_screen, Content);
                             break;
                         case GameState.Paused:
-                            currentScreen = new PausedScreen(_screen, _font, Content, (PlayingScreen)currentScreen);
+                            currentScreen = new PausedScreen(_screen, Content, (PlayingScreen)currentScreen);
                             break;
                         case GameState.GameOver:
-                            currentScreen = new GameOverScreen(_screen, Content, _font);
+                            currentScreen = new GameOverScreen(_screen, Content);
                             break;
                         case GameState.Settings:
-                            currentScreen = new SettingsScreen(currentScreen, _screen, _font, Content);
+                            currentScreen = new SettingsScreen(currentScreen, _screen, Content);
                             break;
                         case GameState.Win:
-                            currentScreen = new WinScreen(_screen, Content, _font);
+                            currentScreen = new WinScreen(_screen, Content);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);

@@ -12,21 +12,21 @@ namespace HenrySolidAdventure.GameScreens
 {
     internal class TittleScreen : IGameScreen
     {
-        BackGround _backGround;
-        SpriteFont _font;
-        List<Button> _buttons;
-        Screen _screen;
-        Text _title;
-        Text _titleBackGround;
-        Vector2 _textPosition;
-        float moveSpeed = 0.2f;
-        bool _loaded;
-        public TittleScreen(Screen screen, ContentManager content, SpriteFont font)
+        private readonly BackGround _backGround;
+        private readonly SpriteFont _font;
+        private readonly List<Button> _buttons;
+        private readonly Screen _screen;
+        private readonly Text _title;
+        private readonly Text _titleBackGround;
+        private readonly Vector2 _textPosition;
+        private const float moveSpeed = 0.2f;
+        private bool _loaded;
+        public TittleScreen(Screen screen, ContentManager content)
         {
             _loaded = true;
             _screen = screen;
             _backGround = BackGround.Instance;
-            _font = font; 
+            _font = Game1.MainFont; 
             var startTexture = content.Load<Texture2D>("Buttons/EmptyButton");
             var setting = content.Load<Texture2D>("Buttons/Cog");
 
@@ -42,8 +42,8 @@ namespace HenrySolidAdventure.GameScreens
             float scale = 0.75f;
             var length = _font.MeasureString(title).Length()*scale;
             _textPosition = new(halfWidth - length / 2, _screen.Height / 10f);
-            _title = new Text(new Vector2(-length,_textPosition.Y), title, Color.SandyBrown, scale, 0f, font);
-            _titleBackGround = new Text(new Vector2(-length, _textPosition.Y) + new Vector2(5, 5), title, Color.Black, scale, 0f, font);
+            _title = new Text(new Vector2(-length,_textPosition.Y), title, Color.SandyBrown, scale, 0f, _font);
+            _titleBackGround = new Text(new Vector2(-length, _textPosition.Y) + new Vector2(5, 5), title, Color.Black, scale, 0f, _font);
             Hero.Instance.Reset();
             Hero.Instance.Position = _buttons.First(b=>b.Name=="StartButton").Position - new Vector2(0,Hero.Instance.HitBox.Height);
             Hero.Instance.SetWalk(true);
@@ -51,13 +51,13 @@ namespace HenrySolidAdventure.GameScreens
             _backGround.Reset();
             AudioController.Instance.PlaySong(Songs.MainMenu);
         }
-        public void Draw(SpriteBatch sprite, Sprites sprites)
+        public void Draw(SpriteBatch spriteBatch, Sprites sprites)
         {
             _backGround.Draw(sprites, new Vector2(_screen.Width, _screen.Height));
-            _buttons.ForEach(button => button.Draw(sprites, sprite));
-            _titleBackGround.Draw(sprite);
-            _title.Draw(sprite);
-            Hero.Instance.Draw(sprites);
+            _buttons.ForEach(button => button.Draw(sprites, spriteBatch));
+            _titleBackGround.Draw(spriteBatch);
+            _title.Draw(spriteBatch);
+            Hero.Instance.Draw(sprites, spriteBatch);
         }
 
         public void Update(GameTime gameTime)
@@ -73,7 +73,7 @@ namespace HenrySolidAdventure.GameScreens
             _backGround.Update(gameTime);
             var startButton = _buttons.First(b => b.Name == "StartButton");
             Hero.Instance.MenuUpdate(gameTime, startButton.Position.X, startButton.Position.X + startButton.Texture.Width,startButton.Position.Y);
-            var selected = _buttons.Where(button => button.CheckHit(_screen)).ToList();
+            var selected = ClickableChecker.CheckHits(_buttons);
             if(_loaded && (MouseController.IsLeftClicked||InputController.ExitInput))//avoids going back to the game when pressing menu button or esc too long on game-over/paused screen
             {
                 return;
@@ -83,21 +83,22 @@ namespace HenrySolidAdventure.GameScreens
             {
                 Game1.ExitGame();
             }
-            if (selected.Count == 0)
+            if (selected is null)
             {
                 Mouse.SetCursor(MouseCursor.Arrow);
                 return;
             }
+            var button = selected as Button;
             Mouse.SetCursor(MouseCursor.Hand);
             if (MouseController.IsLeftClicked)
             {
-                if (selected[0].Name == "StartButton")
+                if (button.Name == "StartButton")
                 {
                     
                     Game1.SetState(GameState.Playing);
                 }
 
-                if (selected[0].Name == "Setting")
+                if (button.Name == "Setting")
                 {
                     _loaded = true;
                     Game1.SetState(GameState.Settings);

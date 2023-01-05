@@ -7,9 +7,9 @@ namespace HenrySolidAdventure.Graphics
     public sealed class Sprites : IDisposable
     {
         private bool isDisposed;
-        private Game game;
-        private SpriteBatch sprites;
-        private BasicEffect effect;
+        private readonly Game game;
+        private readonly SpriteBatch sprites;
+        private readonly BasicEffect effect;
         private FlatTransform flatTransform;
         public Sprites(Game game)
         {

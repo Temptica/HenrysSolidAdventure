@@ -14,7 +14,7 @@ namespace HenrySolidAdventure.Characters
         public override void Update(GameTime gameTime)
         {
             
-            if (Vector2.Distance(Hero.Instance.Position, Position) <= Range)
+            if (!Hero.Instance.IsInvisible &&Vector2.Distance(Hero.Instance.Position, Position) <= Range)
             {
                 Chase(Hero.Instance.HitBox.Center.ToVector2());
             }

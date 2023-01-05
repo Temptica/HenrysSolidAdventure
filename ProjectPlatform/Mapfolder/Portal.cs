@@ -12,7 +12,7 @@ namespace HenrySolidAdventure.Mapfolder
         public static Texture2D Texture;
 
         public Rectangle HitBox => new((int)Position.X, (int)Position.Y, _basicAnimation.CurrentFrame.FrameRectangle.Width, _basicAnimation.CurrentFrame.FrameRectangle.Height);
-        private BasicAnimation _basicAnimation;
+        private readonly BasicAnimation _basicAnimation;
         public Portal(Vector2 position)
         {
             Position = position;

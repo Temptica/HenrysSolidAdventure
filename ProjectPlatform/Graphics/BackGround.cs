@@ -6,10 +6,10 @@ namespace HenrySolidAdventure.Graphics
 {
     internal class BackGround
     {//from same bundle as tileset, decoration and nature
-        Texture2D[] Backgrounds;
-        float[] scroll;
-        float scale;
-        float scrollSpeed = 0.05f;
+        private Texture2D[] Backgrounds;
+        private float[] scroll;
+        private float scale;
+        private readonly float scrollSpeed = 0.05f;
 
 
         //singleton

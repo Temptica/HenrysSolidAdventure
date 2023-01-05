@@ -2,6 +2,7 @@
 using HenrySolidAdventure.Animations;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace HenrySolidAdventure.Characters
 {
@@ -30,7 +31,7 @@ namespace HenrySolidAdventure.Characters
         private int _health;
         public virtual void Update(GameTime gameTime){}
 
-        public virtual void Draw(Sprites sprites){}
+        public virtual void Draw(Sprites sprites, SpriteBatch spriteBatch){}
 
         public Vector2 Position { get; set; }
         internal Rectangle GetHitBox(Vector2 position)

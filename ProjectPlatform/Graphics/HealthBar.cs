@@ -10,7 +10,7 @@ namespace HenrySolidAdventure.Graphics
         public static Texture2D BarTexture;
         public static Vector2 BarPosition;
         private float hpPercentage;
-        private float _scale;
+        private readonly float _scale;
         public HealthBar(Vector2 Position, float scale = 1f)
         {
             this.Position = Position;

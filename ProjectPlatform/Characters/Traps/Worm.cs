@@ -14,7 +14,7 @@ namespace HenrySolidAdventure.Characters.Traps
         public static Dictionary<TrapTier, Texture2D> SpawnTextures { get; set; }
         private float _timer;
         private float _fadeTimer;
-        private float _fadeTime = 3000f;
+        private readonly float _fadeTime = 3000f;
         public Worm(Vector2 position, TrapTier tier, bool direction, int wormHp = 0) : base(position, tier, direction)
         {
             var size = TextureSizeWidth;
@@ -70,15 +70,15 @@ namespace HenrySolidAdventure.Characters.Traps
             if (_fadeTimer >= 3000) IsFinished = true;
             _fadeTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
         }
-        public override void Draw(Sprites spriteBatch)
+        public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
             var effect = !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            Animations.Draw(spriteBatch, Position, effect, 1f);
+            Animations.Draw(sprites, Position, effect, 1f);
             //if fading (_timer >0) then make it fade
             if (_fadeTimer > 0)
             {
                 var fade = _fadeTimer / _fadeTime;
-                Animations.Draw(spriteBatch, Position, effect,1f,0f, Color.Lerp(Color.Transparent,Color.White, _fadeTimer / _fadeTime));
+                Animations.Draw(sprites, Position, effect,1f,0f, Color.Lerp(Color.Transparent,Color.White, _fadeTimer / _fadeTime));
             }
 
         }

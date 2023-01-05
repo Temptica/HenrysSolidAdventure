@@ -11,14 +11,14 @@ namespace HenrySolidAdventure.GameScreens
 {
     internal class PlayingScreen : IGameScreen
     {
-        BackGround _backGround;
-        List<Text> _texts;
-        SpriteFont _font;
-        Coin _displayCoin;
-        HealthBar _healthBar;
+        private readonly BackGround _backGround;
+        private List<Text> _texts;
+        private readonly SpriteFont _font;
+        private readonly Coin _displayCoin;
+        private readonly HealthBar _healthBar;
         private bool _loaded;
-        Screen _screen;
-        public PlayingScreen(Screen screen, ContentManager content, SpriteFont font)
+        private Screen _screen;
+        public PlayingScreen(Screen screen, ContentManager content)
         {
             MapLoader.SetMapId(1);
             MapLoader.LoadMap(screen.Height, content);
@@ -27,7 +27,7 @@ namespace HenrySolidAdventure.GameScreens
             Hero.Instance.Position = Map.Instance.Spawn;
             _backGround = BackGround.Instance;
             _backGround.Reset();
-            _font = font;
+            _font = Game1.MainFont;
             Hero.Instance.Reset();
             _displayCoin = new Coin(new Vector2(20,20));
             Hero.Instance.SetWalk(true);
@@ -37,17 +37,18 @@ namespace HenrySolidAdventure.GameScreens
             _healthBar = new HealthBar(new Vector2(20, 50),2f);
             _texts = new List<Text>
             {
-                new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, font)
+                new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font)
             };
             StatsController.Instance.Reset();
+            Hero.Instance.Coins = 100;
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
         {
             _backGround.Draw(sprites);
             
-            Map.Instance.Draw(sprites);
-            Hero.Instance.Draw(sprites);
+            Map.Instance.Draw(sprites, spriteBatch);
+            Hero.Instance.Draw(sprites, spriteBatch);
             _displayCoin.Draw(sprites);
             _texts.ForEach(text => text.Draw(spriteBatch));
             _healthBar.Draw(sprites);

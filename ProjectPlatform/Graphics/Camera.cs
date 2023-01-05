@@ -9,11 +9,11 @@ namespace HenrySolidAdventure.Graphics
         public readonly static float MaxZ = 2048f;
 
         private Vector2 position;
-        private float baseZ;
-        private float z;
+        private readonly float baseZ;
+        private readonly float z;
 
-        private float aspectRatio;
-        private float fieldOfView;
+        private readonly float aspectRatio;
+        private readonly float fieldOfView;
 
         private Matrix view;
         private Matrix proj;

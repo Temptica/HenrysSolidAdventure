@@ -3,13 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace HenrySolidAdventure.Graphics
 {
-    internal class Button: Clickable //make ButtonList class soon ?
+    internal class Button: IClickable //make ButtonList class soon ?
     {
-        public static SpriteFont Font;
         public string Name { get; }
         public Texture2D Texture { get; }
         public Vector2 Position { get; }
-        public override Rectangle HitBox { get; protected set; }
+        public Rectangle HitBox { get; set; }
         public bool IsActive { get;}
         public Text Text { get; set; }
         public float Scale { get; }
@@ -26,9 +25,9 @@ namespace HenrySolidAdventure.Graphics
             if (text != null)
             {
                 //center text in button
-                var length = Font.MeasureString(text).Length();
+                var length = Game1.MainFont.MeasureString(text).Length();
                 //text height
-                var height = Font.MeasureString(text).Y;
+                var height = Game1.MainFont.MeasureString(text).Y;
                 var halfWidth = Texture.Width / 2f ;
                 var halfHeight = Texture.Height / 2f;
 
@@ -42,7 +41,7 @@ namespace HenrySolidAdventure.Graphics
                 }
                 var textPosition = new Vector2((Position.X + halfWidth - length / 2) + 15, (Position.Y + halfHeight - height / 2) + 8);
 
-                Text = new Text(textPosition, text, Color.Black, textScale*scale, 0f, Font);
+                Text = new Text(textPosition, text, Color.Black, textScale*scale, 0f, Game1.MainFont);
                 //rescale text if too long with 20 pixels margin left and right
                 
             }

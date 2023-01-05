@@ -13,7 +13,7 @@ namespace HenrySolidAdventure.Characters
     {//https://luizmelo.itch.io/evil-wizard-2
         public static Texture2D Texture { get; set; }
         private const float Gravity = 0.0001f;
-        private HealthBar _healthBar;
+        private readonly HealthBar _healthBar;
         public Trap CurrentAttack { get; private set; }
         private float _meleAttackTimer;
         private float _specialAttackTimer;
@@ -44,7 +44,8 @@ namespace HenrySolidAdventure.Characters
             _rng = new Random();
 
         }
-        Random _rng;
+
+        private readonly Random _rng;
         public override void Update(GameTime gameTime)
         {
             CanDamage = true;
@@ -159,12 +160,12 @@ namespace HenrySolidAdventure.Characters
             }
         }
 
-        public override void Draw(Sprites spriteBatch)
+        public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
             
-            base.Draw(spriteBatch);
-            _healthBar.Draw(spriteBatch);
-            CurrentAttack?.Draw(spriteBatch);
+            base.Draw(sprites, spriteBatch);
+            _healthBar.Draw(sprites);
+            CurrentAttack?.Draw(sprites, spriteBatch);
             //todo
         }
         public Vector2 OnGround(Rectangle hitbox)
