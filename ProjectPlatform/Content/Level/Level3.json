@@ -567,8 +567,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":888,
-                 "y":816
+                 "x":887.333333333333,
+                 "y":818
                 }, 
                 {
                  "class":"Slime",
@@ -579,8 +579,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":240,
-                 "y":960
+                 "x":144,
+                 "y":914
                 }, 
                 {
                  "class":"",
@@ -595,7 +595,7 @@
                  "y":1008
                 }, 
                 {
-                 "class":"",
+                 "class":"Bat",
                  "gid":394,
                  "height":44,
                  "id":79,
@@ -607,7 +607,7 @@
                  "y":648
                 }, 
                 {
-                 "class":"",
+                 "class":"Bat",
                  "gid":394,
                  "height":44,
                  "id":80,
@@ -629,6 +629,54 @@
                  "width":100,
                  "x":-24,
                  "y":1176
+                }, 
+                {
+                 "class":"Ceiling2",
+                 "gid":399,
+                 "height":32,
+                 "id":82,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":96,
+                 "x":862.5,
+                 "y":920
+                }, 
+                {
+                 "class":"Lightning3",
+                 "gid":414,
+                 "height":96,
+                 "id":83,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":96,
+                 "x":120,
+                 "y":648
+                }, 
+                {
+                 "class":"Fire3",
+                 "gid":444,
+                 "height":64,
+                 "id":84,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":728.5,
+                 "y":888
+                }, 
+                {
+                 "class":"Saw1",
+                 "gid":448,
+                 "height":64,
+                 "id":85,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":64,
+                 "x":544.5,
+                 "y":899
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -637,7 +685,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":82,
+ "nextobjectid":86,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -686,6 +734,22 @@
         {
          "firstgid":398,
          "source":"..\/..\/..\/..\/Map\/Spawn.tsx"
+        }, 
+        {
+         "firstgid":399,
+         "source":"..\/..\/..\/..\/Map\/Ceiling Trap - Level 2.tsx"
+        }, 
+        {
+         "firstgid":414,
+         "source":"..\/..\/..\/..\/Map\/Lightning Trap - Level 3.tsx"
+        }, 
+        {
+         "firstgid":436,
+         "source":"..\/..\/..\/..\/Map\/Fire Trap - Level 3.tsx"
+        }, 
+        {
+         "firstgid":448,
+         "source":"..\/..\/..\/..\/Map\/Saw Trap - Level 1.tsx"
         }],
  "tilewidth":24,
  "type":"map",

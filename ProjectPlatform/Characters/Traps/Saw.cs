@@ -16,13 +16,29 @@ namespace HenrySolidAdventure.Characters.Traps
             return true; //every frame does damage
         }
 
-        public Saw(Vector2 position, TrapTier tier, bool direction) : base(position, tier, direction)
+        public Saw(Vector2 position, TrapTier tier, bool direction = false) : base(position, tier, direction)
         {
-            Animations = new AnimationList<Animation>()
+            if (tier is TrapTier.Three)
             {
-                new(SpawnTextures[tier],State.Other,SpawnTextures[tier].Width/TextureSizeWidth,6),
-                new(Textures[tier],State.Attacking, Textures[tier].Width / TextureSizeWidth, 6)
-            };
+                Animations = new AnimationList<Animation>()
+                {
+                    new(SpawnTextures[tier],State.Other,SpawnTextures[tier].Width/96,10),
+                    new(Textures[tier],State.Attacking, Textures[tier].Width / 96, 10)
+                };
+            }
+            else
+            {
+                Animations = new AnimationList<Animation>()
+                {
+                    new(SpawnTextures[tier],State.Other,SpawnTextures[tier].Width/64,10),
+                    new(Textures[tier],State.Attacking, Textures[tier].Width / 64, 10)
+                };
+            }
+            
+            _isActivated = true;
+            _loop = true;
+            Position = new Vector2(position.X, position.Y - Textures[tier].Height);
+            Damage = 4;
         }
     }
 }

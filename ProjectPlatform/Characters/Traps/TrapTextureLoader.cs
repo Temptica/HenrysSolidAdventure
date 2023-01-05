@@ -93,6 +93,28 @@ namespace HenrySolidAdventure.Characters.Traps
                     content.Load<Texture2D>("Enemies/Traps/Sandworm Trap/Sandworm Trap - level 2 - Transition")
                 }
             };
+            
+            Lightning.Textures = new Dictionary<TrapTier, Texture2D>
+            {
+                { TrapTier.One, content.Load<Texture2D>("Enemies/Traps/Lightning Trap/Lightning Trap - level 1") },
+                { TrapTier.Two, content.Load<Texture2D>("Enemies/Traps/Lightning Trap/Lightning Trap - level 2") },
+                { TrapTier.Three, content.Load<Texture2D>("Enemies/Traps/Lightning Trap/Lightning Trap - level 3") }
+            };
+            Lightning.SpawnTextures = new Dictionary<TrapTier, Texture2D>
+            {
+                {
+                    TrapTier.One,
+                    content.Load<Texture2D>("Enemies/Traps/Lightning Trap/Lightning Trap - level 1 - Transition")
+                },
+                {
+                    TrapTier.Two,
+                    content.Load<Texture2D>("Enemies/Traps/Lightning Trap/Lightning Trap - level 2 - Transition")
+                },
+                {
+                    TrapTier.Three,
+                    content.Load<Texture2D>("Enemies/Traps/Lightning Trap/Lightning Trap - level 3 - Transition")
+                }
+            };
         }
     }
 }

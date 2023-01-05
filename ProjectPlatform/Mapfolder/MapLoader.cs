@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.Traps;
 using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -59,6 +60,18 @@ namespace HenrySolidAdventure.Mapfolder
                 if (spawn._class == "Slime") map.Enemies.Add(new Slime(new Vector2(spawn.x, spawn.y + mapOffset - Slime.Texture.Height/3f)));
                 if (spawn._class == "Portal") map.Portal = new Portal(new Vector2(spawn.x, spawn.y + mapOffset - Portal.Texture.Height));
                 if (spawn._class == "Boss" && !map.Enemies.Any(e => e is Boss)) map.Enemies.Add(new Boss(new Vector2(spawn.x, spawn.y + mapOffset - Boss.Texture.Height/8f))); //if boss exists, do not add
+                if (spawn._class == "Fire1") map.Enemies.Add(new Fire(new Vector2(spawn.x, spawn.y + mapOffset),TrapTier.One));
+                if (spawn._class == "Fire2") map.Enemies.Add(new Fire(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Two));
+                if (spawn._class == "Fire3") map.Enemies.Add(new Fire(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Three));
+                if (spawn._class == "Saw1") map.Enemies.Add(new Saw(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.One));
+                if (spawn._class == "Saw2") map.Enemies.Add(new Saw(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Two));
+                if (spawn._class == "Saw3") map.Enemies.Add(new Saw(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Three));
+                if (spawn._class == "Lightning1") map.Enemies.Add(new Lightning(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.One));
+                if (spawn._class == "Lightning2") map.Enemies.Add(new Lightning(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Two));
+                if (spawn._class == "Lightning3") map.Enemies.Add(new Lightning(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Three));
+                if (spawn._class == "Ceiling1") map.Enemies.Add(new Ceiling(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.One));
+                if (spawn._class == "Ceiling2") map.Enemies.Add(new Ceiling(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Two));
+                if (spawn._class == "Ceiling3") map.Enemies.Add(new Ceiling(new Vector2(spawn.x, spawn.y + mapOffset), TrapTier.Three));
             }           
         }
 

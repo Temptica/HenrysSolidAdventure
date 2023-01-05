@@ -66,10 +66,13 @@ namespace HenrySolidAdventure.Characters
         public static MapTile TopHit(Rectangle hitBox, List<MapTile> maptiles, bool isLookingLeft = false)
         {
             //if looking left, only take left half of hitbox, else right half
-            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y -5, hitBox.Width, hitBox.Height);
+            var tempHitBox = new Rectangle(hitBox.X , hitBox.Y -5, hitBox.Width, hitBox.Height);
             tempHitBox.Width /= 2;
-            if (!isLookingLeft) tempHitBox.X += hitBox.Width;
 
+            if (!isLookingLeft)
+            {
+                tempHitBox.X += hitBox.Width/2;
+            }
             var mainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(tempHitBox) && tile.HitBox.Bottom - tempHitBox.Top < 10).ToList();
             if (mainTileFilter.Count == 0) return null;
             return mainTileFilter.OrderByDescending(tile => tile.HitBox.Bottom).First();

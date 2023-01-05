@@ -176,6 +176,54 @@
                  "width":100,
                  "x":0,
                  "y":1104
+                }, 
+                {
+                 "class":"Fire1",
+                 "gid":403,
+                 "height":64,
+                 "id":49,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":404.666666666667,
+                 "y":912
+                }, 
+                {
+                 "class":"Fire1",
+                 "gid":403,
+                 "height":64,
+                 "id":50,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":356,
+                 "y":912
+                }, 
+                {
+                 "class":"Fire1",
+                 "gid":403,
+                 "height":64,
+                 "id":51,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":307.333333333333,
+                 "y":912.060606060606
+                }, 
+                {
+                 "class":"Lightning3",
+                 "gid":411,
+                 "height":96,
+                 "id":52,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":96,
+                 "x":840,
+                 "y":912
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -492,7 +540,7 @@
          "y":0
         }],
  "nextlayerid":23,
- "nextobjectid":48,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -541,6 +589,14 @@
         {
          "firstgid":398,
          "source":"..\/..\/..\/..\/Map\/Spawn.tsx"
+        }, 
+        {
+         "firstgid":399,
+         "source":"..\/..\/..\/..\/Map\/Fire Trap - Level 1.tsx"
+        }, 
+        {
+         "firstgid":408,
+         "source":"..\/..\/..\/..\/Map\/Lightning Trap - Level 3.tsx"
         }],
  "tilewidth":24,
  "type":"map",

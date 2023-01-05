@@ -18,7 +18,7 @@ namespace HenrySolidAdventure.Characters
         private const float BaseJumpForce = 0.30f;
         private const float MaxYVelocity = 0.5f;
         private const float BaseWalkSpeed = 0.18f;
-        private const float RollingSpeed = 0.22f;
+        private const float RollingSpeed = 0.25f;
         private const float XAcceleration = 0.03f;
         private const float AttackWaitTime = 1500f;//1.5 seconds
         private const int BaseDamage = 3;
@@ -83,7 +83,7 @@ namespace HenrySolidAdventure.Characters
                 new(Texture, State.Dead, 8, width, height, height*4, width*8,6, scale),
                 new(Texture, State.Block, 8, width, height, height*5, width*8,8, scale),
                 new(Texture, State.BlockHit, 5, width, height, height*6, width*6,6, scale),
-                new(Texture, State.Rolling, 9, width, height, height*7, width,12, scale),
+                new(Texture, State.Rolling, 9, width, height, height*7, width,18, scale),
             };
             Reset();
             _lastTextureHeight = Animations.CurrentAnimation.CurrentFrame.HitBox.Height;

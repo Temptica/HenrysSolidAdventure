@@ -20,7 +20,7 @@ namespace HenrySolidAdventure.GameScreens
         private Screen _screen;
         public PlayingScreen(Screen screen, ContentManager content)
         {
-            MapLoader.SetMapId(1);
+            MapLoader.SetMapId(5);
             MapLoader.LoadMap(screen.Height, content);
             _screen = screen;
             //_gameState = GameState.Playing;
