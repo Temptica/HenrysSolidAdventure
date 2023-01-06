@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace HenrySolidAdventure.Characters
 {
     internal enum State { Idle, Walking, Rolling, Jumping, Falling, Attacking, Attacking2, Attacking3, Dead, Hit, Block, BlockHit, Other }
-    internal class Character
+    internal class Character //base class for every 'living' being and traps
     {
         public AnimationList<Animation> Animations { get; set; }
         public virtual Rectangle HitBox => GetHitBox(Position);
@@ -27,7 +27,7 @@ namespace HenrySolidAdventure.Characters
         }
         public float HealthPercentage => (float)Math.Round(Health / (double)BaseHp * 100, 0);
         public float Speed { get; set; }
-        protected Vector2 Velocity;
+        public Vector2 Velocity;
         private int _health;
         public virtual void Update(GameTime gameTime){}
 

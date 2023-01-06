@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace HenrySolidAdventure.Shop
 {
@@ -16,10 +12,10 @@ namespace HenrySolidAdventure.Shop
     {
         private List<Potion> _potions;
         private List<Text> _descriptions;
-        private SpriteFont _font;
-        private Store _store;
+        private readonly SpriteFont _font;
+        private readonly Store _store;
         private bool _clicked;
-        private Text _title;
+        private readonly Text _title;
 
         public PotionDisplay(IEnumerable<Potion> potions, Store store = null)
         {
@@ -28,8 +24,8 @@ namespace HenrySolidAdventure.Shop
             _potions = potions.ToList();
             SetPotionPosition();
             var titleText = store == null ? "Inventory" : "Store";
-            var halfwidth = Game1._screen.Width / 2f;
-            var x = halfwidth - _font.MeasureString(titleText).X/2;
+            var halfWidth = Game1.Screen.Width / 2f;
+            var x = halfWidth - _font.MeasureString(titleText).X/2;
             _title = new Text(new Vector2(x, 30), titleText, Color.White, 1f, 0f, _font);
         }
 
@@ -71,7 +67,7 @@ namespace HenrySolidAdventure.Shop
         {
             
             _potions = _potions.OrderBy(po => po.Type).ToList();
-            var width = PotionLoader.Width;
+            const int width = PotionLoader.Width;
             var x = 50;
             var y = 200;
             
@@ -105,16 +101,12 @@ namespace HenrySolidAdventure.Shop
             _potions.ToList().Add(potion);
             SetPotionPosition();
         }
-
         public void RemovePotion(Potion potion)
         {
             _potions.Remove(potion);
             SetPotionPosition();
 
         }
-
-        
-
         public void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
             foreach (var potion in _potions)

@@ -1,19 +1,20 @@
 ﻿using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.Enemies.Roaming
 {
-    internal class Slime:RoamingEnemy
+    internal class Slime : RoamingEnemy
     {//slimes are dumb and won't track enemies. (perhaps make them run onto slopes?)
         public static Texture2D Texture;
         public Slime(Vector2 position)
         {
             Position = position;
             var frameWidth = Texture.Width / 8;
-            var frameHeight = Texture.Height/3;
+            var frameHeight = Texture.Height / 3;
             Animations = new AnimationList<Animation>
             {
                 new(Texture, State.Idle, 4, frameWidth, frameHeight, 0, 0, 6),
@@ -38,12 +39,12 @@ namespace HenrySolidAdventure.Characters
         public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {//texture is flipped compared to other enemies
             Animations.Draw(sprites, Position, !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f);
-            
+
         }
         public override bool CheckDamage()
         {
-           return State is State.Attacking && CurrentAnimation.CurrentFrameIndex > 0 && CurrentAnimation.CurrentFrameIndex < 4;
-           //before 7th grame, it's lifting up it's weapon after 9th frame, skeleton can't damage otter as it lifts up his weapon
+            return State is State.Attacking && CurrentAnimation.CurrentFrameIndex > 0 && CurrentAnimation.CurrentFrameIndex < 4;
+            //before 7th grame, it's lifting up it's weapon after 9th frame, skeleton can't damage otter as it lifts up his weapon
         }
         public override bool CheckAttack()
         {
@@ -63,7 +64,7 @@ namespace HenrySolidAdventure.Characters
             }
             else
             {
-                if (hitBox.Left < HitBox.Right +35)
+                if (hitBox.Left < HitBox.Right + 35)
                 {
                     IsFacingLeft = false;
                     if (hitBox.Left < HitBox.Right - 2)
@@ -71,7 +72,7 @@ namespace HenrySolidAdventure.Characters
                         return true;
                     }
                 }
-                
+
             }
 
             return false;

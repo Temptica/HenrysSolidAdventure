@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
-using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.Enemies.Tracking;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.GameScreens;
 using HenrySolidAdventure.Graphics;
-using HenrySolidAdventure.Mapfolder;
+using HenrySolidAdventure.Graphics.Clickables;
+using HenrySolidAdventure.MapFolder;
 using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,21 +15,33 @@ namespace HenrySolidAdventure
 {
     internal enum GameState { Menu, Paused, Playing, GameOver, Settings, Win }
     public class Game1 : Game
-    {       
-        
+    {
+        #region Properties
+
+        public static SpriteFont MainFont { get; private set; }
+        public static Screen Screen { get; private set; }
+
+        #endregion
+
+        #region Fields
+
         private readonly GraphicsDeviceManager _graphics;
         private BackGround _backGround;
-        public static SpriteFont MainFont;
-        private static GameState _gameState;
-        private static bool _stateChanged;
-        public static Texture2D _hitbox;
         private SpriteBatch _sprite;
-        public static Screen _screen;
         private Sprites _sprites;
         private Camera _camera;
-        private static bool _isFullScreen;
-        private IGameScreen currentScreen;
-        private static bool _exit = false;
+        private IGameScreen _currentScreen;
+
+        #endregion
+
+        #region Static fields
+
+        private static bool _exit; 
+        private static bool _isFullScreen; 
+        private static GameState _gameState;
+        private static bool _stateChanged;
+
+        #endregion
 
         public Game1()
         {
@@ -45,8 +59,8 @@ namespace HenrySolidAdventure
             _graphics.ApplyChanges();
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += Window_ClientSizeChanged;
-            _screen = new Screen(this, 1200, 675);
-            _camera = new Camera(_screen);
+            Screen = new Screen(this, 1200, 675);
+            _camera = new Camera(Screen);
             _sprites = new Sprites(this);
             _ = DiscordRichPresence.Instance; //initialise
             base.Initialize();
@@ -76,10 +90,8 @@ namespace HenrySolidAdventure
             PotionLoader.Initialise(Content);
             Bat.Texture = Content.Load<Texture2D>("Enemies/Bat");
             var map = Map.Instance;
-            map.Initialise(Content, _screen);
+            map.Initialise(Content, Screen);
             Hero.Instance.Initialise(Content.Load<Texture2D>("Character/HeroKnight"), new Vector2(100, 100), 0.0005f, 1f);
-            _hitbox = new Texture2D(GraphicsDevice, 1, 1);
-            _hitbox.SetData(new[] { Color.White });
             AudioController.Instance.Initialise(Content);
 
             _gameState = GameState.Menu;
@@ -92,6 +104,9 @@ namespace HenrySolidAdventure
         protected override void Update(GameTime gameTime)
         {
             if (_exit) Exit();
+
+            #region MyRegion
+
             if (_isFullScreen && !_graphics.IsFullScreen)
             {
                 _graphics.IsFullScreen = true;
@@ -103,15 +118,20 @@ namespace HenrySolidAdventure
                 _graphics.ApplyChanges();
             }
             InputController.Update();
+            
 
+            #endregion
 
-            currentScreen?.Update(gameTime);
+            _currentScreen?.Update(gameTime);
+
+            #region Game state
+
             if (_stateChanged)
             {
-                if (currentScreen is SettingsScreen settingsScreen)
+                if (_currentScreen is SettingsScreen settingsScreen)
                 {
-                    currentScreen = settingsScreen.LastScreen;
-                    _gameState = currentScreen switch
+                    _currentScreen = settingsScreen.LastScreen;
+                    _gameState = _currentScreen switch
                     {
                         PlayingScreen => GameState.Playing,
                         TittleScreen => GameState.Menu,
@@ -124,26 +144,26 @@ namespace HenrySolidAdventure
                 {
                     switch (_gameState)
                     {
-                        case GameState.Playing when currentScreen is PausedScreen screen:
-                            currentScreen = screen._playingScreen;
+                        case GameState.Playing when _currentScreen is PausedScreen screen:
+                            _currentScreen = screen.PlayingScreen;
                             break;
                         case GameState.Playing:
-                            currentScreen = new PlayingScreen(_screen, Content);
+                            _currentScreen = new PlayingScreen(Screen, Content);
                             break;
                         case GameState.Menu:
-                            currentScreen = new TittleScreen(_screen, Content);
+                            _currentScreen = new TittleScreen(Screen, Content);
                             break;
                         case GameState.Paused:
-                            currentScreen = new PausedScreen(_screen, Content, (PlayingScreen)currentScreen);
+                            _currentScreen = new PausedScreen(Screen, Content, (PlayingScreen)_currentScreen);
                             break;
                         case GameState.GameOver:
-                            currentScreen = new GameOverScreen(_screen, Content);
+                            _currentScreen = new GameOverScreen(Screen, Content);
                             break;
                         case GameState.Settings:
-                            currentScreen = new SettingsScreen(currentScreen, _screen, Content);
+                            _currentScreen = new SettingsScreen(_currentScreen, Screen, Content);
                             break;
                         case GameState.Win:
-                            currentScreen = new WinScreen(_screen, Content);
+                            _currentScreen = new WinScreen(Screen, Content);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(_gameState), _gameState, null);
@@ -152,23 +172,26 @@ namespace HenrySolidAdventure
                 
                 _stateChanged = false;
                 DiscordRichPresence.Instance.UpdateState(_gameState);
-                currentScreen?.Update(gameTime);
+                _currentScreen?.Update(gameTime);
             }
+
+            #endregion
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
         {
-            _screen.Set();
+            Screen.Set();
             GraphicsDevice.Clear(Color.CornflowerBlue);
                 
             _sprites.Begin(_camera,true);
             _sprite.Begin();
             
-            currentScreen.Draw(_sprite, _sprites);
+            _currentScreen.Draw(_sprite, _sprites);
+            
             _sprites.End();
             _sprite.End();
-            _screen.UnSet();
-            _screen.Present(_sprites, false);
+            Screen.UnSet();
+            Screen.Present(_sprites, false);
             base.Draw(gameTime);
         }
         

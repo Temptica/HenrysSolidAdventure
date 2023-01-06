@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
 using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.HeroFolder
 {
     internal class Inventory
     {
@@ -16,10 +12,10 @@ namespace HenrySolidAdventure.Characters
         public List<Potion> Potions { get; private set; }
         private bool _display;
         private bool _buttonReleased;
-        
+
         public void Update()
         {
-            if (Potions is null  || Potions?.Count == 0)
+            if (Potions is null || Potions?.Count == 0)
             {
                 PotionDisplay = null;
                 return;

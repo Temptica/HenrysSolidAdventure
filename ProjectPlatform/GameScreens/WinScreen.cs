@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Graphics.Clickables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -53,7 +54,7 @@ namespace HenrySolidAdventure.GameScreens
                         return;
                 }
             }
-            //change color as a rainbow trough multiple colors 
+            //change color between orange and yellow. Who doesn't like to party?
             var color = Color.Lerp(Color.Orange, Color.Yellow, (float)Math.Sin(gameTime.TotalGameTime.TotalMilliseconds/500));
             _texts.First().Color = color;
         }

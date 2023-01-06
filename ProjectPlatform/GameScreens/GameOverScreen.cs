@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Graphics.Clickables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace HenrySolidAdventure.GameScreens
 {
@@ -13,10 +12,9 @@ namespace HenrySolidAdventure.GameScreens
     {
         private readonly List<Text> _texts;
         private readonly List<Button> _buttons;
-        private readonly Screen _screen;
         public GameOverScreen(Screen screen, ContentManager content)
         {
-            _screen = screen;
+            
             var halfWidth = screen.Width / 2f;
             var halfHeight = screen.Height / 2f;
             string title = "Game Over";
@@ -30,8 +28,8 @@ namespace HenrySolidAdventure.GameScreens
             var startTexture = content.Load<Texture2D>("buttons/EmptyButton");
             _buttons = new List<Button>
             {
-                new("Menu", startTexture, new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f), "Menu"),
-                new("Restart", startTexture, new Vector2((_screen.Width - startTexture.Width) / 2f, (_screen.Height - startTexture.Height) / 2f+startTexture.Height + 20f), "Restart")
+                new("Menu", startTexture, new Vector2((screen.Width - startTexture.Width) / 2f, (screen.Height - startTexture.Height) / 2f), "Menu"),
+                new("Restart", startTexture, new Vector2((screen.Width - startTexture.Width) / 2f, (screen.Height - startTexture.Height) / 2f+startTexture.Height + 20f), "Restart")
 
             };
             AudioController.Instance.PlaySong(Songs.GameOver);

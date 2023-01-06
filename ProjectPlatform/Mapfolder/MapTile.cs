@@ -4,7 +4,7 @@ using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Mapfolder
+namespace HenrySolidAdventure.MapFolder
 {
     internal class MapTile
     {
@@ -25,44 +25,5 @@ namespace HenrySolidAdventure.Mapfolder
                 Vector2.Zero, 1, SpriteEffects.None, 0f);
         }
 
-        //check if send in rectangle hits the top of the tile with it's bottom
-        public bool IsTopHit(Rectangle rectangle)
-        {
-            return rectangle.Bottom >= HitBox.Top && rectangle.Bottom <= HitBox.Bottom &&
-                   rectangle.Right >= HitBox.Left && rectangle.Left <= HitBox.Right;
-        }
-        //do the same for the bottom of the tile and the top of the rectangle
-        public bool IsBottomHit(Rectangle rectangle)
-        {
-            return rectangle.Top <= HitBox.Bottom && rectangle.Top >= HitBox.Top &&
-                   rectangle.Right >= HitBox.Left && rectangle.Left <= HitBox.Right;
-        }
-        //same for left of tile and right of rectangle
-        public bool IsLeftHit(Rectangle rectangle)
-        {
-            return rectangle.Right >= HitBox.Left && rectangle.Right <= HitBox.Right &&
-                   rectangle.Bottom >= HitBox.Top && rectangle.Top <= HitBox.Bottom;
-        }
-        //same for right of tile and left of rectangle
-        public bool IsRightHit(Rectangle rectangle)
-        {
-            return rectangle.Left <= HitBox.Right && rectangle.Left >= HitBox.Left &&
-                   rectangle.Bottom >= HitBox.Top && rectangle.Top <= HitBox.Bottom;
-        }
-        public static MapTile GetClosestAirTile(Vector2 Position)
-        {
-            {
-                var list = new List<MapTile>();
-                foreach (var item in Map.Instance.FrontMap)
-                {
-                    if (item.Tile.Type is TileType.Air)
-                    {
-                        list.Add(item);
-                    }
-                }
-                var closest = list.OrderBy(x => Vector2.Distance(Position, x.Position)).First();
-                return closest;
-            }
-        }
     }
 }

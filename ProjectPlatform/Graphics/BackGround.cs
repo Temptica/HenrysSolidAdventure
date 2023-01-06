@@ -6,68 +6,58 @@ namespace HenrySolidAdventure.Graphics
 {
     internal class BackGround
     {//from same bundle as tileset, decoration and nature
-        private Texture2D[] Backgrounds;
-        private float[] scroll;
-        private float scale;
-        private readonly float scrollSpeed = 0.05f;
+        private Texture2D[] _backgrounds;
+        private float[] _scroll;
+        private float _scale;
+        private const float ScrollSpeed = 0.05f;
 
 
         //singleton
-        private static BackGround instance;
-        public static BackGround Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new BackGround();
-                }
-                return instance;
-            }
-        }
+        private static BackGround _instance;
+        public static BackGround Instance => _instance ??= new BackGround();
+
         private BackGround()
         {
         }
         public void Initialise(ContentManager content)
         {
-            var BackgroundTextures = new Texture2D[3];
-            BackgroundTextures[0] = content.Load<Texture2D>("Background/background_layer_1");
-            BackgroundTextures[1] = content.Load<Texture2D>("Background/background_layer_2");
-            BackgroundTextures[2] = content.Load<Texture2D>("Background/background_layer_3");
-            Backgrounds = BackgroundTextures;
-            scroll = new float[Backgrounds.Length];
+            var backgroundTextures = new Texture2D[3];
+            backgroundTextures[0] = content.Load<Texture2D>("Background/background_layer_1");
+            backgroundTextures[1] = content.Load<Texture2D>("Background/background_layer_2");
+            backgroundTextures[2] = content.Load<Texture2D>("Background/background_layer_3");
+            _backgrounds = backgroundTextures;
+            _scroll = new float[_backgrounds.Length];
         }
 
-        public void Draw(Sprites spriteBatch, Vector2 ScreenSize = default)
+        public void Draw(Sprites spriteBatch, Vector2 screenSize = default)
         {
-            if (ScreenSize != default)
+            if (screenSize != default)
             {
-                scale = ScreenSize.X / Backgrounds[0].Width;
+                _scale = screenSize.X / _backgrounds[0].Width;
             }
-            for (int i = 0; i < Backgrounds.Length; i++)
+            for (var i = 0; i < _backgrounds.Length; i++)
             {
-                spriteBatch.Draw(Backgrounds[i], new Vector2(scroll[i], 0), new Rectangle(0, 0, Backgrounds[i].Width, Backgrounds[i].Height), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0f);//scrolled background
-                spriteBatch.Draw(Backgrounds[i], new Vector2(-Backgrounds[i].Width * scale + scroll[i], 0), new Rectangle(0, 0, Backgrounds[i].Width, Backgrounds[i].Height), Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, 0f); //replace another background next to the other one
+                spriteBatch.Draw(_backgrounds[i], new Vector2(_scroll[i], 0), new Rectangle(0, 0, _backgrounds[i].Width, _backgrounds[i].Height), Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0f);//scrolled background
+                spriteBatch.Draw(_backgrounds[i], new Vector2(-_backgrounds[i].Width * _scale + _scroll[i], 0), new Rectangle(0, 0, _backgrounds[i].Width, _backgrounds[i].Height), Color.White, 0, Vector2.Zero, _scale, SpriteEffects.None, 0f); //replace another background next to the other one
             }
-
         }
 
         public void Update(GameTime time)
         {
             //scroll all backgrounds
-            for (int i = 0; i < scroll.Length; i++)
+            for (var i = 0; i < _scroll.Length; i++)
             {
-                scroll[i] += (float)(scrollSpeed * time.ElapsedGameTime.TotalMilliseconds) * (i + 1);
-                if (scroll[i] >= Backgrounds[0].Width * scale)
+                _scroll[i] += (float)(ScrollSpeed * time.ElapsedGameTime.TotalMilliseconds) * (i + 1);
+                if (_scroll[i] >= _backgrounds[0].Width * _scale)
                 {
-                    scroll[i] -= Backgrounds[0].Width * scale;
+                    _scroll[i] -= _backgrounds[0].Width * _scale;
                 }
             }
         }
 
         public void Reset()
         {
-            scroll = new float[scroll.Length];
+            _scroll = new float[_scroll.Length];
         }
     }
 }

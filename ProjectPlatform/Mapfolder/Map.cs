@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.Enemies;
 using HenrySolidAdventure.Graphics;
 using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Mapfolder
+namespace HenrySolidAdventure.MapFolder
 {
     //TODO: Make map scaled to screen with fixed raster of 50X50 for example
     //TODO: Read from a string (from folder)
     //
     public class Map
     {
-        private static Map uMap; //unique key
+        private static Map _uMap; //unique key
         public static List<Tile> TileSet { get; private set; }
         public static Dictionary<string, Texture2D> DecorationTextures { get; private set; }
         internal List<MapTile> FrontMap { get; set; }
@@ -35,7 +35,7 @@ namespace HenrySolidAdventure.Mapfolder
         {
 
         }
-        public static Map Instance => uMap ??= new Map(); //Singleton
+        public static Map Instance => _uMap ??= new Map(); //Singleton
 
         public void Initialise(ContentManager content, Screen screen)
         {
@@ -114,22 +114,6 @@ namespace HenrySolidAdventure.Mapfolder
             {
                 MapLoader.LoadNextMap(ScreenRectangle.Height);
             }
-
-            
-        }
-        public Tile GetTile(int i)
-        {
-            if (TileSet is null) throw new NullReferenceException("Map is not initialized");
-            if (TileSet.Count < i) throw new IndexOutOfRangeException($"{i} is greater than {TileSet.Count}");
-            return TileSet[i];
-        }
-
-        private static bool IsFullyTransparent(Texture2D texture, Rectangle r) //from https://stackoverflow.com/questions/8372041/how-to-check-if-a-texture2d-is-transparent
-        {
-            int size = r.Width * r.Height;
-            Color[] buffer = new Color[size];
-            texture.GetData(0, r, buffer, 0, size);
-            return buffer.All(c => c == Color.Transparent);
         }
         
         internal void Unload()

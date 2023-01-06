@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
@@ -13,8 +12,9 @@ namespace HenrySolidAdventure.Characters.Traps
         public static Dictionary<TrapTier, Texture2D> Textures { get; set; }
         public static Dictionary<TrapTier, Texture2D> SpawnTextures { get; set; }
         private float _timer;
-        private float _fadeTimer;
-        private readonly float _fadeTime = 3000f;
+        private float _removeTimer;
+        private const float RemoveTime = 3000f;
+
         public Worm(Vector2 position, TrapTier tier, bool direction, int wormHp = 0) : base(position, tier, direction)
         {
             var size = TextureSizeWidth;
@@ -44,8 +44,9 @@ namespace HenrySolidAdventure.Characters.Traps
                 Health = BaseHp = wormHp;
             }
 
-            _loop = false;
-            _isActivated = true;
+            Loop = false;
+            IsActivated = true;
+            _timer = 0;
         }
         public override void Update(GameTime gameTime)
         {
@@ -67,34 +68,25 @@ namespace HenrySolidAdventure.Characters.Traps
                 Animations.Update(State, gameTime);
                 return;
             }
-            if (_fadeTimer >= 3000) IsFinished = true;
-            _fadeTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (_removeTimer >= RemoveTime) IsFinished = true;
+            _removeTimer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
         }
         public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
             var effect = !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             Animations.Draw(sprites, Position, effect, 1f);
-            //if fading (_timer >0) then make it fade
-            if (_fadeTimer > 0)
-            {
-                var fade = _fadeTimer / _fadeTime;
-                Animations.Draw(sprites, Position, effect,1f,0f, Color.Lerp(Color.Transparent,Color.White, _fadeTimer / _fadeTime));
-            }
 
         }
         public override bool CheckDamage()
         {
             if (Animations.CurrentAnimation.State != State.Attacking) return false;
-            switch (Tier)
+            return Tier switch
             {
-                case TrapTier.One:
-                    return Animations.CurrentAnimation.CurrentFrameIndex is > 3 and < 7;
-                case TrapTier.Two:
-                    return Animations.CurrentAnimation.CurrentFrameIndex is > 4 and < 8;
-                case TrapTier.Three:
-                    return Animations.CurrentAnimation.CurrentFrameIndex is > 1 and < 16;
-                default: return false;
-            }
+                TrapTier.One => Animations.CurrentAnimation.CurrentFrameIndex is > 3 and < 7,
+                TrapTier.Two => Animations.CurrentAnimation.CurrentFrameIndex is > 4 and < 8,
+                TrapTier.Three => Animations.CurrentAnimation.CurrentFrameIndex is > 1 and < 16,
+                _ => false
+            };
         }
 
         public override bool GetDamage(int i)

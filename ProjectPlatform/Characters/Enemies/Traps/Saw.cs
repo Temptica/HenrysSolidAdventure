@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,8 +34,8 @@ namespace HenrySolidAdventure.Characters.Traps
                 };
             }
             
-            _isActivated = true;
-            _loop = true;
+            IsActivated = true;
+            Loop = true;
             Position = new Vector2(position.X, position.Y - Textures[tier].Height);
             Damage = 4;
         }

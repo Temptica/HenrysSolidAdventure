@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
-using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
-using HenrySolidAdventure.Mapfolder;
+using HenrySolidAdventure.MapFolder;
+using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,7 +31,6 @@ namespace HenrySolidAdventure.GameScreens
             _font = Game1.MainFont;
             Hero.Instance.Reset();
             _displayCoin = new Coin(new Vector2(20,20));
-            Hero.Instance.SetWalk(true);
             AudioController.Instance.PlaySong(Songs.GamePlay);
             HealthBar.Texture ??= content.Load<Texture2D>("Items/HealthBarEmpty");
             HealthBar.BarTexture ??= content.Load<Texture2D>("Items/HealthBar");
@@ -40,6 +40,7 @@ namespace HenrySolidAdventure.GameScreens
                 new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font)
             };
             StatsController.Instance.Reset();
+            Hero.Instance.Inventory.PotionAdd(PotionLoader.MakeHealingPotion());
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
@@ -71,7 +72,6 @@ namespace HenrySolidAdventure.GameScreens
                 _loaded = true;
                 Game1.SetState(GameState.Paused);
             }
-            if (InputController.DeadInput) Game1.SetState(GameState.GameOver);
         }
     }
 }

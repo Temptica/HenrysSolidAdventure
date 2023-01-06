@@ -592,6 +592,18 @@
                  "width":96,
                  "x":936,
                  "y":1176
+                }, 
+                {
+                 "class":"Fire3",
+                 "gid":464,
+                 "height":64,
+                 "id":47,
+                 "name":"",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":764,
+                 "y":1008
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -600,7 +612,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":47,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -665,6 +677,10 @@
         {
          "firstgid":442,
          "source":"..\/..\/..\/..\/Map\/Lightning Trap - Level 3.tsx"
+        }, 
+        {
+         "firstgid":464,
+         "source":"..\/..\/..\/..\/Map\/Fire Trap - Level 3.tsx"
         }],
  "tilewidth":24,
  "type":"map",

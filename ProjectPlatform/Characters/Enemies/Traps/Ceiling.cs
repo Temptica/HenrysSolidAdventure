@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Characters.HeroFolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,19 +35,19 @@ namespace HenrySolidAdventure.Characters.Traps
                 new(SpawnTextures[tier], State.Other,SpawnTextures[tier].Width/width,8),
                 new(Textures[tier], State.Attacking,Textures[tier].Width / width, 10)
             };
-            _loop = false;
-            _isActivated = false;
+            Loop = false;
+            IsActivated = false;
             Position = new Vector2(position.X, position.Y - Textures[tier].Height);
-            _animationDelay = 500;
+            AnimationDelay = 500;
         }
         public override void Update(GameTime gameTime)
         {
             if (Hero.Instance.HitBox.Intersects(new Rectangle(HitBox.X, HitBox.Y, HitBox.Width, Textures[Tier].Height)))
             {
-                _isActivated = true;
-                _loop = true;
+                IsActivated = true;
+                Loop = true;
             }
-            else _loop = false;
+            else Loop = false;
             base.Update(gameTime);
         }
     }

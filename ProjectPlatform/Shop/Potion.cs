@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Graphics.Clickables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -17,6 +14,7 @@ namespace HenrySolidAdventure.Shop
         public Rectangle HitBox { get; set; }
         private readonly Rectangle _textureHitBox;
         private Vector2 _position;
+        private readonly EffectManager _effectManager;
         public Vector2 Position
         {
             get => _position;
@@ -35,6 +33,7 @@ namespace HenrySolidAdventure.Shop
 
         public Potion(Texture2D texture, Rectangle textureHitBox, PotionType type)
         {
+            _effectManager = EffectManager.Instance;
             _texture = texture;
             _textureHitBox = textureHitBox;
             Type = type;
@@ -69,9 +68,9 @@ namespace HenrySolidAdventure.Shop
             
             if (Type is not PotionType.Healing)
             {
-                if (hero.Effects.ContainsKey(Type))
+                if (_effectManager.Effects.ContainsKey(Type))
                 {
-                    hero.Effects[Type] += Duration;
+                    _effectManager.Effects[Type] += Duration;
                     return;
                 }
                 
@@ -81,7 +80,7 @@ namespace HenrySolidAdventure.Shop
             {
                 case PotionType.Floating:
                     hero.Gravity -= 0.0002f;
-                    hero.Effects.Add(Type, Duration);
+                    _effectManager.Effects.Add(Type, Duration);
                     break;
                 case PotionType.Healing:
                     hero.Health += 5;
@@ -90,23 +89,23 @@ namespace HenrySolidAdventure.Shop
                     break;
                 case PotionType.Invis:
                     hero.IsInvisible = true;
-                    hero.Effects.Add(Type, Duration*2);
+                    _effectManager.Effects.Add(Type, Duration*2);
                     break;
                 case PotionType.Damage:
                     hero.Damage += 3;
-                    hero.Effects.Add(Type, Duration*2);
+                    _effectManager.Effects.Add(Type, Duration*2);
                     break;
                 case PotionType.Jump:
                     hero.JumpForce += 0.05f;
-                    hero.Effects.Add(Type, Duration);
+                    _effectManager.Effects.Add(Type, Duration);
                     break;
                 case PotionType.Speed:
                     hero.WalkSpeed += 0.2f;
-                    hero.Effects.Add(Type, Duration);
+                    _effectManager.Effects.Add(Type, Duration);
                     break;
                 case PotionType.Undying:
                     hero.CanGetDamage = false;
-                    hero.Effects.Add(Type, Duration*1.5f);
+                    _effectManager.Effects.Add(Type, Duration*1.5f);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -118,7 +117,5 @@ namespace HenrySolidAdventure.Shop
         {
             sprites.Draw(_texture, _textureHitBox, Vector2.One, Position, 0f,Vector2.One, Color.White);
         }
-
-        
     }
 }

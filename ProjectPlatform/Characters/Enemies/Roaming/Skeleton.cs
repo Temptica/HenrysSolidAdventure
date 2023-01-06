@@ -1,18 +1,21 @@
 ﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Characters.HeroFolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.Enemies.Roaming
 {
-    internal class Skeleton:RoamingEnemy
+    internal class Skeleton : RoamingEnemy
     {//somewhat smart, will track when enemies are on the same platform
         public static Dictionary<State, Texture2D> Textures;//list as some of the spritesheets are bigger than others due to the big "sword" making it very difficult having them on one sprite
-        private readonly float fixedYPosition;
+        private readonly float _fixedYPosition;
+        private float _lastXWidth;
+
         public Skeleton(Vector2 position)
         {
             Position = position;
-            fixedYPosition = Position.Y;
+            _fixedYPosition = Position.Y;
             Animations = new()
             {//https://jesse-m.itch.io/skeleton-pack
                 new Animation(Textures[State.Idle], State.Idle,11, Textures[State.Idle].Width/11, Textures[State.Idle].Height, 0, 0,7),
@@ -34,14 +37,20 @@ namespace HenrySolidAdventure.Characters
         {
             SetState();
             Position = new Vector2(Position.X,
-                fixedYPosition + (Textures[State.Idle].Height - Textures[State].Height));//makes position correct, even tho texture is higher
-            
+                _fixedYPosition + (Textures[State.Idle].Height - Textures[State].Height));//makes position correct, even tho texture is higher
+            //if facing left and teh with isn't the same as the last width, make sure to set position to the left of the texture 
+            if (IsFacingLeft && _lastXWidth != Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width)
+            {
+                Position = new Vector2(Position.X - (Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width - _lastXWidth), Position.Y);
+            }
+            _lastXWidth = Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
+
             base.Update(gameTime);
         }
 
         public override bool CheckDamage()
         {
-            return State is State.Attacking && CurrentAnimation.CurrentFrameIndex < 10 && CurrentAnimation.CurrentFrameIndex > 6; 
+            return State is State.Attacking && CurrentAnimation.CurrentFrameIndex < 10 && CurrentAnimation.CurrentFrameIndex > 6;
             //before 7th frame, it's lifting up it's weapon after 9th frame, skeleton can't damage otter as it lifts up his weapon
         }
         public override bool CheckAttack()

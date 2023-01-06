@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Mapfolder
+namespace HenrySolidAdventure.MapFolder
 {
     public enum TileType
     {
@@ -25,22 +25,22 @@ namespace HenrySolidAdventure.Mapfolder
 
         public TileType CalculateTileType()
         {
-            int size = Rectangle.Width * Rectangle.Height;
-            Color[] buffer = new Color[size];
-            Texture.GetData(0, Rectangle, buffer, 0, size);
-            List<List<Color>> colors = new List<List<Color>>();
-            for (int i = 0; i < Rectangle.Height; i++)
+            var size = Rectangle.Width * Rectangle.Height;
+            var buffer = new Color[size];
+            Texture.GetData(0, Rectangle, buffer, 0, size); //gets the color array
+            var colors = new List<List<Color>>(); //make it a 2D list
+            for (var i = 0; i < Rectangle.Height; i++)
             {
                 colors.Add(new List<Color>());
-                for (int j = 0; j < Rectangle.Width; j++)
+                for (var j = 0; j < Rectangle.Width; j++)
                 {
                     colors[i].Add(buffer[i * Rectangle.Width + j]);
                 }
             }
 
-            int leftHeight = -1;
-            int rightHeight = -1;
-            for (int i = 0; i < colors.Count; i++) //checks every pixel if transparent or not.
+            var leftHeight = -1;
+            var rightHeight = -1;
+            for (var i = 0; i < colors.Count; i++) //checks every pixel if transparent or not.
             {
                 if (colors[i][5] != Color.Transparent && leftHeight == -1)//if the 5th pixel from left is not transparent, set value
                 {
@@ -66,7 +66,7 @@ namespace HenrySolidAdventure.Mapfolder
             }
             if (leftHeight > rightHeight) //height is from top to bottom so invert logic 
             {
-                return leftHeight > Rectangle.Height / 2 ? TileType.UphillLow : TileType.UpHillHigh;
+                return leftHeight > Rectangle.Height / 2 ? TileType.UphillLow : TileType.UpHillHigh; //if the most left point is above half of the fame, it means it's a bottom part, otherwise it's a top part aka low and high part.
             }
             return rightHeight < Rectangle.Height / 2 ? TileType.DownhillHigh : TileType.DownHillLow;
         }

@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Graphics.Clickables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +20,7 @@ namespace HenrySolidAdventure.GameScreens
         private readonly Text _title;
         private readonly Text _titleBackGround;
         private readonly Vector2 _textPosition;
-        private const float moveSpeed = 0.2f;
+        private const float MoveSpeed = 0.2f;
         private bool _loaded;
         public TittleScreen(Screen screen, ContentManager content)
         {
@@ -38,15 +39,14 @@ namespace HenrySolidAdventure.GameScreens
             };
 
             var halfWidth = _screen.Width / 2f;
-            string title = "Henry's Solid Adventure";
-            float scale = 0.75f;
+            const string title = "Henry's Solid Adventure";
+            const float scale = 0.75f;
             var length = _font.MeasureString(title).Length()*scale;
-            _textPosition = new(halfWidth - length / 2, _screen.Height / 10f);
+            _textPosition = new Vector2(halfWidth - length / 2, _screen.Height / 10f);
             _title = new Text(new Vector2(-length,_textPosition.Y), title, Color.SandyBrown, scale, 0f, _font);
             _titleBackGround = new Text(new Vector2(-length, _textPosition.Y) + new Vector2(5, 5), title, Color.Black, scale, 0f, _font);
             Hero.Instance.Reset();
             Hero.Instance.Position = _buttons.First(b=>b.Name=="StartButton").Position - new Vector2(0,Hero.Instance.HitBox.Height);
-            Hero.Instance.SetWalk(true);
             
             _backGround.Reset();
             AudioController.Instance.PlaySong(Songs.MainMenu);
@@ -62,11 +62,10 @@ namespace HenrySolidAdventure.GameScreens
 
         public void Update(GameTime gameTime)
         {
-            
             //move title to _textPosition
             if (_title.Position.X < _textPosition.X)
             {
-                var newX = (float)(moveSpeed * gameTime.ElapsedGameTime.TotalMilliseconds);
+                var newX = (float)(MoveSpeed * gameTime.ElapsedGameTime.TotalMilliseconds);
                 _title.Position += new Vector2(newX, 0);
                 _titleBackGround.Position += new Vector2(newX, 0);
             }

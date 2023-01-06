@@ -19,7 +19,7 @@ namespace HenrySolidAdventure.Animations
         }
     }
 
-    internal class AnimationList<T> : List<T> where T : Animation
+    internal class AnimationList<T> : List<T> where T : Animation //add extra possibilities to the list
     {
         private State _currentAnimation;
         public Animation CurrentAnimation => this.FirstOrDefault(ani => ani.State == _currentAnimation) ?? this.First();

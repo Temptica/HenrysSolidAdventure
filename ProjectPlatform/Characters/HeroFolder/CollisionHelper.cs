@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HenrySolidAdventure.Mapfolder;
+using HenrySolidAdventure.Characters.Enemies;
+using HenrySolidAdventure.MapFolder;
 using Microsoft.Xna.Framework;
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.HeroFolder
 {
     internal static class CollisionHelper
     {
@@ -12,13 +13,13 @@ namespace HenrySolidAdventure.Characters
         {
             hitBox.Width /= 2;
             if (!isLookingLeft) hitBox.X += hitBox.Width;
-            
+
             var filter1 = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(hitBox))
                 .ToList();
-            var MainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(hitBox) && (tile.HitBox.Top <= hitBox.Bottom && hitBox.Bottom - tile.HitBox.Top < 50 || tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with enemy (main hitbox based)
-            if (MainTileFilter.Count == 0) return -1;
-            var sorted = MainTileFilter.OrderByDescending(tile => tile.HitBox.Top).ToList();
-            if (MainTileFilter.TrueForAll(tile => tile.Tile.Type is TileType.Flat or TileType.Air)) return sorted.First().Position.Y;//no slopes
+            var mainTileFilter = maptiles.Where(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Intersects(hitBox) && (tile.HitBox.Top <= hitBox.Bottom && hitBox.Bottom - tile.HitBox.Top < 50 || tile.Tile.Type != TileType.Flat)).ToList(); // list of tiles that intersect with enemy (main hitbox based)
+            if (mainTileFilter.Count == 0) return -1;
+            var sorted = mainTileFilter.OrderByDescending(tile => tile.HitBox.Top).ToList();
+            if (mainTileFilter.TrueForAll(tile => tile.Tile.Type is TileType.Flat or TileType.Air)) return sorted.First().Position.Y;//no slopes
             float height = float.MaxValue;
             foreach (var tile in sorted)
             {
@@ -66,12 +67,12 @@ namespace HenrySolidAdventure.Characters
         public static MapTile TopHit(Rectangle hitBox, List<MapTile> maptiles, bool isLookingLeft = false)
         {
             //if looking left, only take left half of hitbox, else right half
-            var tempHitBox = new Rectangle(hitBox.X , hitBox.Y -5, hitBox.Width, hitBox.Height);
+            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y - 5, hitBox.Width, hitBox.Height);
             tempHitBox.Width /= 2;
 
             if (!isLookingLeft)
             {
-                tempHitBox.X += hitBox.Width/2;
+                tempHitBox.X += hitBox.Width / 2;
             }
             var mainTileFilter = maptiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(tempHitBox) && tile.HitBox.Bottom - tempHitBox.Top < 10).ToList();
             if (mainTileFilter.Count == 0) return null;
@@ -80,8 +81,8 @@ namespace HenrySolidAdventure.Characters
 
         public static MapTile LeftHit(Rectangle hitBox, List<MapTile> mapTiles)
         {
-            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y + 10, hitBox.Width, hitBox.Height-15);
-            
+            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y + 10, hitBox.Width, hitBox.Height - 15);
+
             var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(tempHitBox) && tile.HitBox.Right >= tempHitBox.Left && tile.HitBox.Right - tempHitBox.Left < 20).ToList();
             if (mainTileFilter.Count == 0) return null;
             return mainTileFilter.OrderByDescending(tile => tile.HitBox.Right).First();
@@ -90,9 +91,9 @@ namespace HenrySolidAdventure.Characters
         public static MapTile RightHit(Rectangle hitBox, List<MapTile> mapTiles)
         {
             //checks every time if intersects with oterHitbox
-            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y+10, hitBox.Width, hitBox.Height-15);
+            var tempHitBox = new Rectangle(hitBox.X, hitBox.Y + 10, hitBox.Width, hitBox.Height - 15);
             var mainTileFilter = mapTiles.Where(tile => tile.Tile.Type == TileType.Flat && tile.HitBox.Intersects(tempHitBox) && tile.HitBox.Left <= tempHitBox.Right && tempHitBox.Right - tile.HitBox.Left < 20).ToList();
-             if (mainTileFilter.Count == 0) return null;
+            if (mainTileFilter.Count == 0) return null;
             return mainTileFilter.OrderBy(tile => tile.HitBox.Left).First();
 
         }
@@ -101,8 +102,7 @@ namespace HenrySolidAdventure.Characters
         {
             var otterPixels2D = GetCurrentPixels2D(hero);
             var enemyPixels2D = GetCurrentPixels2D(enemy);
-            //if hero is facing left, change the pixels on the X axis
-            
+
             //get the rectangle wherein both collide
             var collisionRectangle = Rectangle.Intersect(hero.HitBox, enemy.HitBox);
             if (collisionRectangle.Width == 0 || collisionRectangle.Height == 0) return false;
@@ -121,10 +121,9 @@ namespace HenrySolidAdventure.Characters
                     var heroY = (int)(y - hero.GetPosition(hero.HitBox).Y);
                     var enemyX = (int)(x - enemy.GetPosition(enemy.HitBox).X);
                     var enemyY = (int)(y - enemy.GetPosition(enemy.HitBox).Y);
-                    //if hitbox is flipped
                     try
                     {
-                        if (otterPixels2D[heroX,heroY].A != 0 && enemyPixels2D[enemyX,enemyY].A != 0)
+                        if (otterPixels2D[heroX, heroY].A != 0 && enemyPixels2D[enemyX, enemyY].A != 0)
                         {
                             return true;
                         }
@@ -141,10 +140,10 @@ namespace HenrySolidAdventure.Characters
 
         private static Color[] GetCurrentPixels(Character character)
         {
-            
+
             Color[] pixels = new Color[character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width * character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height];
             character.Animations.CurrentAnimation.CurrentFrame.Texture.GetData(0, character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle, pixels, 0, pixels.Length);
-
+            //gets the pixels of the current frame in a single array
             return pixels;
         }
 
@@ -153,7 +152,7 @@ namespace HenrySolidAdventure.Characters
             Color[] otterPixels = GetCurrentPixels(character);
             var width = character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Width;
             var height = character.Animations.CurrentAnimation.CurrentFrame.FrameRectangle.Height;
-            //convert otterPixels to 2d array to from a Rectangle
+            //convert otterPixels to 2d array to form a Rectangle
             Color[,] otterPixels2D = new Color[width, height];
             if (character.IsFacingLeft)
             {
@@ -161,7 +160,7 @@ namespace HenrySolidAdventure.Characters
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        otterPixels2D[x, y] = otterPixels[(width - x - 1) + y * width];
+                        otterPixels2D[x, y] = otterPixels[width - x - 1 + y * width];
                     }
                 }
             }

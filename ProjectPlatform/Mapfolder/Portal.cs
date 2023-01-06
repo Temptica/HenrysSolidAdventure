@@ -1,10 +1,10 @@
 ﻿using HenrySolidAdventure.Animations;
-using HenrySolidAdventure.Characters;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Mapfolder
+namespace HenrySolidAdventure.MapFolder
 {
     internal class Portal
     {
@@ -16,7 +16,7 @@ namespace HenrySolidAdventure.Mapfolder
         public Portal(Vector2 position)
         {
             Position = position;
-            _basicAnimation = new(Texture, "portal", 4f,5);
+            _basicAnimation = new BasicAnimation(Texture, "portal", 4f,5);
         }
 
         public bool Update(GameTime gameTime)

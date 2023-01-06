@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Characters.HeroFolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -37,8 +37,8 @@ namespace HenrySolidAdventure.Characters.Traps
                     new(SpawnTextures[tier], State.Other, SpawnTextures[tier].Width / size, fps * 2),
                     new(Textures[tier], State.Attacking, Textures[tier].Width / size, fps)
                 };
-            _isActivated = true;
-            _loop = false;
+            IsActivated = true;
+            Loop = false;
             //put the position so the bottom of the trap is at the position as well as the position half to teh left
             Position = new Vector2(position.X - (size / 2), position.Y - (Textures[tier].Height / 2));
             Damage = 4 + (int)tier * 3;

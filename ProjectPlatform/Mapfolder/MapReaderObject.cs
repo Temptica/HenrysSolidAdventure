@@ -1,25 +1,25 @@
-﻿namespace HenrySolidAdventure.Mapfolder
+﻿namespace HenrySolidAdventure.MapFolder
 {
-    internal class MapReaderObject
+    internal class MapReaderObject //fields getting read in via the monogame extended son reader, generated with teh Tiles application.
     {
-        public Layer[] layers { get; set; }
+        public Layer[] Layers { get; set; }
     }
 
     public class Layer
     {
-        public int[] data { get; set; }
-        public int height { get; set; }
-        public string name { get; set; }
-        public int width { get; set; }
-        public Object[] objects { get; set; }
+        public int[] Data { get; set; }
+        public int Height { get; set; }
+        public string Name { get; set; }
+        public int Width { get; set; }
+        public Object[] Objects { get; set; }
     }
 
     public class Object
     {
         [Newtonsoft.Json.JsonProperty("class")]
-        public string _class { get; set; }
-        public float x { get; set; }
-        public float y { get; set; }
+        public string Class { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
     }
 
 }

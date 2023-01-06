@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Characters.HeroFolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -32,40 +32,40 @@ namespace HenrySolidAdventure.Characters.Traps
                 new(SpawnTextures[tier],State.Other,SpawnTextures[tier].Width/TextureSizeWidth,10),
                 new(Textures[tier],State.Attacking, Textures[tier].Width / TextureSizeWidth, 10)
             };
-            _isActivated = false;
-            _loop = false;
+            IsActivated = false;
+            Loop = false;
             Position = new Vector2(position.X, position.Y - Textures[tier].Height);
             if (tier is TrapTier.One)
             {
-                _loop = true;
-                _animationDelay = 150f;
-                _timer = 101f;
+                Loop = true;
+                AnimationDelay = 150f;
+                Timer = 101f;
                 _detectionRange = 50;
             }
             else if(Tier is TrapTier.Three)
             {
                 Damage = 5;
-                _detectionRange = 500;
+                _detectionRange = 100;
                 
-                _animationDelay = 200f;
+                AnimationDelay = 200f;
             }
             else
             {
-                _detectionRange = 500;
-                _animationDelay = 300f;
+                _detectionRange = 200;
+                AnimationDelay = 300f;
             }
             Damage = 2;
             
         }
         public override void Update(GameTime gameTime)
         {
-
-            if (Vector2.Distance(Hero.Instance.HitBox.Center.ToVector2(), HitBox.Center.ToVector2()) < 50)
+            if (Vector2.Distance(Hero.Instance.HitBox.Center.ToVector2(), HitBox.Center.ToVector2()) > _detectionRange * 3 && State is State.Other) return;
+            if (Vector2.Distance(Hero.Instance.HitBox.Center.ToVector2(), HitBox.Center.ToVector2()) < _detectionRange)
             {
-                _isActivated = true;
-                _loop = true;
+                IsActivated = true;
+                Loop = true;
             }
-            else _loop = false;
+            else Loop = false;
             base.Update(gameTime);
         }
     }

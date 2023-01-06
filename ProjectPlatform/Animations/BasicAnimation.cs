@@ -24,7 +24,7 @@ namespace HenrySolidAdventure.Animations
             if (fromChild) return;
             for (int i = 0; i < frameCount; i++)
             {
-                Frames.Add(new Frame(new Rectangle(i * frameWidth, beginHeight, frameWidth, frameHeight), texture, 1f));
+                Frames.Add(new Frame(new Rectangle(i * frameWidth, beginHeight, frameWidth, frameHeight), texture, 1f)); //generate a basic frame
             }
         }
 
@@ -32,7 +32,7 @@ namespace HenrySolidAdventure.Animations
         public void Update(GameTime gameTime)
         {
             _time += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (_time < FrameRate) return; 
+            if (_time < FrameRate) return;  //updates on the given FPS
             Frames.AnimationIndex++;
             if (Frames.AnimationIndex >= Frames.Count)
             {

@@ -1,21 +1,22 @@
 ﻿using System;
 using HenrySolidAdventure.Animations;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 //https://github.com/roy-t/AStar
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.Enemies.Tracking
 {
     internal class Bat : TrackingEnemy
     {
         //flying tracking enemy. will start flying to you when you are 15 tiles away, regardless of walls. Once detected, it will keep tracking
 
         public static Texture2D Texture;
-        private readonly float _attackRate; 
+        private readonly float _attackRate;
         private float _attackTimer;
-        public Bat(Vector2 position): base(position,150)
+        public Bat(Vector2 position) : base(position, 150)
         {
             Velocity = Vector2.Zero;
             Animations = new AnimationList<Animation> { new(Texture, 4, 10) };
@@ -42,11 +43,11 @@ namespace HenrySolidAdventure.Characters
                     IsFacingLeft = false;
                 }
                 if (_timer >= 4000) Remove = true;
-                
+
                 Position += Velocity;
-                _timer+= gameTime.ElapsedGameTime.Milliseconds;
+                _timer += gameTime.ElapsedGameTime.Milliseconds;
                 //rotate so it goes downwards
-                if (_rotation <= (Math.PI / 2))
+                if (_rotation <= Math.PI / 2)
                 {
                     _rotation += 0.01f * gameTime.ElapsedGameTime.Milliseconds;
                 }
@@ -60,9 +61,10 @@ namespace HenrySolidAdventure.Characters
             {
                 _attackTimer += gameTime.ElapsedGameTime.Milliseconds;
             }
-            else {
+            else
+            {
                 CanDamage = true;
-                
+
             }
             if (Vector2.Distance(HitBox.Center.ToVector2(), Hero.Instance.HitBox.Center.ToVector2()) <= 50)
             {
@@ -79,7 +81,7 @@ namespace HenrySolidAdventure.Characters
 
         internal override void Chase(Vector2 position)
         {
-            var angle = Math.Atan2(position.Y - Position.Y, position.X - Position.X);
+            var angle = Math.Atan2(position.Y + 5 - Position.Y, position.X - Position.X);
             //reduce speed if close by to avoid overshooting
             var tempSpeed = Vector2.Distance(Position, position) < 30 ? 0.05f : 0.1f;
             if (Vector2.Distance(Position, position) < 5) tempSpeed = 0f;
@@ -90,7 +92,7 @@ namespace HenrySolidAdventure.Characters
 
         public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
-            CurrentAnimation.Draw(sprites, Position, State is State.Dead || !IsFacingLeft?SpriteEffects.FlipHorizontally: SpriteEffects.None, 1f,_rotation);
+            CurrentAnimation.Draw(sprites, Position, State is State.Dead || !IsFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1f, _rotation);
         }
 
         public override bool CheckDamage()
@@ -99,8 +101,8 @@ namespace HenrySolidAdventure.Characters
         }
         public void Move(GameTime gameTime)
         {
-            
-            Position += Velocity*(float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            Position += Velocity * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
         }
         public override int Attack()
         {

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Graphics.Clickables;
 using Microsoft.Xna.Framework.Input;
 
 namespace HenrySolidAdventure.Controller
@@ -15,16 +12,16 @@ namespace HenrySolidAdventure.Controller
             var result = clickables.FirstOrDefault(CheckHit);
             if (result == default)
             {
-                Mouse.SetCursor(MouseCursor.Arrow);
+                Mouse.SetCursor(MouseCursor.Arrow);//automatically set cursor accordingly
                 return null;
             }
             Mouse.SetCursor(MouseCursor.Hand);
             return result;
             
         }
-        public static bool CheckHit(IClickable clickable) //-1 = no hit / 0 hit no click / 1 hit and click
+        public static bool CheckHit(IClickable clickable)
         {
-            return clickable.HitBox.Contains(MouseController.GetScreenPosition(Game1._screen));
+            return clickable.HitBox.Contains(MouseController.GetScreenPosition(Game1.Screen));
         }
     }
 }

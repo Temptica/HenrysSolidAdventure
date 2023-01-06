@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Controller;
-using HenrySolidAdventure.Mapfolder;
+using HenrySolidAdventure.MapFolder;
 using Microsoft.Xna.Framework;
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.Enemies.Roaming
 {
-    internal abstract class RoamingEnemy:Enemy
+    internal abstract class RoamingEnemy : Enemy
     {
         private float _maxLeftPosition;
         private float _maxRightPosition;
@@ -17,9 +18,9 @@ namespace HenrySolidAdventure.Characters
         {
             //get the tile the enemy is on
             //find how far left you can go without having a gap or a wall. Then same for right
-            Rectangle hitbox = new (0, HitBox.Y, Map.Instance.ScreenRectangle.Right, 200);
-            
-            var walkableMap = Map.Instance.FrontMap.FindAll(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Bottom>= hitbox.Top && hitbox.Intersects(tile.HitBox));
+            Rectangle hitbox = new(0, HitBox.Y, Map.Instance.ScreenRectangle.Right, 200);
+
+            var walkableMap = Map.Instance.FrontMap.FindAll(tile => tile.Tile.Type != TileType.Air && tile.HitBox.Bottom >= hitbox.Top && hitbox.Intersects(tile.HitBox));
             var sortedList = walkableMap.OrderBy(tile => Vector2.Distance(tile.Position, Position)).ToList();
             var bottomTile = sortedList.First();
 
@@ -61,7 +62,7 @@ namespace HenrySolidAdventure.Characters
         {
             var x = Position.X;
             Rectangle otterHb = Hero.Instance.HitBox;
-            if (this is not Slime && otterHb.Top <= HitBox.Bottom && otterHb.Bottom >= HitBox.Top && otterHb.Right > _maxLeftPosition && otterHb.Left < _maxRightPosition )
+            if (this is not Slime && otterHb.Top <= HitBox.Bottom && otterHb.Bottom >= HitBox.Top && otterHb.Right > _maxLeftPosition && otterHb.Left < _maxRightPosition)
             {
                 IsFacingLeft = otterHb.Center.X < HitBox.Center.X;
             }
@@ -87,11 +88,11 @@ namespace HenrySolidAdventure.Characters
                     x += Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
             }
-            Position = new Vector2(x, Position.Y );
+            Position = new Vector2(x, Position.Y);
         }
         public override void Update(GameTime gameTime)
         {
-            
+
             if (State is State.Walking)
             {
 
@@ -111,8 +112,8 @@ namespace HenrySolidAdventure.Characters
             if (IsDead) State = State.Dead;
             else if (IsHit) State = State.Hit;
             if (State is State.Dead || IsDead) return;
-            
-            if ((State is State.Hit && !CurrentAnimation.IsFinished) || (!CurrentAnimation.IsFinished && State == State.Attacking))
+
+            if (State is State.Hit && !CurrentAnimation.IsFinished || !CurrentAnimation.IsFinished && State == State.Attacking)
             {
                 CanAttack = false;
                 return;
@@ -125,11 +126,11 @@ namespace HenrySolidAdventure.Characters
             }
             IsAttacking = CheckAttack();
 
-            if (IsAttacking&& State is not State.Attacking)
+            if (IsAttacking && State is not State.Attacking)
             {
                 State = State.Attacking;
-                if(this is Skeleton) AudioController.Instance.PlayEffect(SoundEffects.HeavySwing);
-                if(this is Slime) AudioController.Instance.PlayEffect(SoundEffects.SlimeAttack);
+                if (this is Skeleton) AudioController.Instance.PlayEffect(SoundEffects.HeavySwing);
+                if (this is Slime) AudioController.Instance.PlayEffect(SoundEffects.SlimeAttack);
                 CanDamage = true;
                 return;
             }

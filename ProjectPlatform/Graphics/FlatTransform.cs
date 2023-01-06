@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 namespace HenrySolidAdventure.Graphics
 {
     public struct FlatTransform
-    {
+    {//from https://www.youtube.com/watch?v=yUSB_wAVtE8 and own previous project
         public float PosX;
         public float PosY;
         public float CosScaleX;
@@ -12,20 +12,7 @@ namespace HenrySolidAdventure.Graphics
         public float CosScaleY;
         public float SinScaleY;
 
-        public FlatTransform(Vector2 position, float angle, Vector2 scale)
-        {
-            float sin = MathF.Sin(angle);
-            float cos = MathF.Cos(angle);
-
-            PosX = position.X;
-            PosY = position.Y;
-            CosScaleX = cos * scale.X;
-            SinScaleX = sin * scale.X;
-            CosScaleY = cos * scale.Y;
-            SinScaleY = sin * scale.Y;
-        }
-
-        public FlatTransform(Vector2 position, float angle, float scale)
+        public FlatTransform(Vector2 position, float angle, float scale) //helps to put items compared to the camera position on and off the screen
         {
             float sin = MathF.Sin(angle);
             float cos = MathF.Cos(angle);
@@ -36,19 +23,6 @@ namespace HenrySolidAdventure.Graphics
             SinScaleX = sin * scale;
             CosScaleY = cos * scale;
             SinScaleY = sin * scale;
-        }
-
-        public Matrix ToMatrix()
-        {
-            Matrix result = Matrix.Identity;
-            result.M11 = CosScaleX;
-            result.M12 = SinScaleY;
-            result.M21 = -SinScaleX;
-            result.M22 = CosScaleY;
-            result.M41 = PosX;
-            result.M42 = PosY;
-
-            return result;
         }
     }
 }

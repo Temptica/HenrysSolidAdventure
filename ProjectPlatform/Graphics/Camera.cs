@@ -4,91 +4,75 @@ using Microsoft.Xna.Framework;
 namespace HenrySolidAdventure.Graphics
 {
     public sealed class Camera
-    {
-        public readonly static float MinZ = 1f;
-        public readonly static float MaxZ = 2048f;
+    {//from https://www.youtube.com/watch?v=yUSB_wAVtE8 and own previous project
+        public static readonly float MinZ = 1f;
+        public static readonly float MaxZ = 2048f;
 
-        private Vector2 position;
-        private readonly float baseZ;
-        private readonly float z;
+        private Vector2 _position;
+        private readonly float _baseZ;
+        private readonly float _z;
 
-        private readonly float aspectRatio;
-        private readonly float fieldOfView;
+        private readonly float _aspectRatio;
+        private readonly float _fieldOfView;
 
-        private Matrix view;
-        private Matrix proj;
+        public Vector2 Position => _position;
 
-        private int zoom;
+        public Matrix View { get; private set; }
 
-        public Vector2 Position
-        {
-            get { return position; }
-        }
-
-        public Matrix View
-        {
-            get { return view; }
-        }
-
-        public Matrix Projection
-        {
-            get { return proj; }
-        }
+        public Matrix Projection { get; private set; }
 
         public Camera(Screen screen)
         {
             if(screen is null)
             {
-                throw new ArgumentNullException("screen");
+                throw new ArgumentNullException(nameof(screen));
             }
 
-            aspectRatio = (float)screen.Width / screen.Height;
-            fieldOfView = MathHelper.PiOver2;
+            _aspectRatio = (float)screen.Width / screen.Height;
+            _fieldOfView = MathHelper.PiOver2;
 
-            position = new Vector2(-screen.Width/2f,-screen.Height/2f);
-            baseZ = -GetZFromHeight(screen.Height);
-            z = baseZ;
+            _position = new Vector2(-screen.Width/2f,-screen.Height/2f);
+            _baseZ = -GetZFromHeight(screen.Height);
+            _z = _baseZ;
 
             UpdateMatrices();
-
-            zoom = 1;
         }
 
         public void UpdateMatrices()
         {
-            view = Matrix.CreateLookAt(new Vector3(0,0, z), Vector3.Zero, Vector3.Down);
-            proj = Matrix.CreatePerspectiveFieldOfView(fieldOfView, aspectRatio, MinZ, MaxZ);
+            View = Matrix.CreateLookAt(new Vector3(0,0, _z), Vector3.Zero, Vector3.Down);
+            Projection = Matrix.CreatePerspectiveFieldOfView(_fieldOfView, _aspectRatio, MinZ, MaxZ);
         }
 
         public float GetZFromHeight(float height)
         {
-            return (0.5f * height) / MathF.Tan(0.5f * fieldOfView);
+            return (0.5f * height) / MathF.Tan(0.5f * _fieldOfView);
         }
 
         public float GetHeightFromZ()
         {
-            return z * MathF.Tan(0.5f * fieldOfView) * 2f;
+            return _z * MathF.Tan(0.5f * _fieldOfView) * 2f;
         }
 
         public void MoveTo(Vector2 position)
         {
-            this.position = position;
+            _position = position;
         }
         
 
         public void GetExtents(out float width, out float height)
         {
             height = GetHeightFromZ();
-            width = height * aspectRatio;
+            width = height * _aspectRatio;
         }
 
         public void GetExtents(out float left, out float right, out float bottom, out float top)
         {
             GetExtents(out float width, out float height);
 
-            left = position.X - width * 0.5f;
+            left = _position.X - width * 0.5f;
             right = left + width;
-            bottom = position.Y - height * 0.5f;
+            bottom = _position.Y - height * 0.5f;
             top = bottom + height;
         }
 

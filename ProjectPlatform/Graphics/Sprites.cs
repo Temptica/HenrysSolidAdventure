@@ -5,91 +5,88 @@ using Microsoft.Xna.Framework.Graphics;
 namespace HenrySolidAdventure.Graphics
 {
     public sealed class Sprites : IDisposable
-    {
-        private bool isDisposed;
-        private readonly Game game;
-        private readonly SpriteBatch sprites;
-        private readonly BasicEffect effect;
-        private FlatTransform flatTransform;
+    {//from https://www.youtube.com/watch?v=yUSB_wAVtE8 and own previous project
+        private bool _isDisposed;
+        private readonly Game _game;
+        private readonly SpriteBatch _sprites;
+        private readonly BasicEffect _effect;
+        private FlatTransform _flatTransform;
         public Sprites(Game game)
         {
-            if(game is null)
+            _game = game ?? throw new ArgumentNullException(nameof(game));
+
+            _isDisposed = false;
+
+            _sprites = new SpriteBatch(game.GraphicsDevice);
+
+            _effect = new BasicEffect(game.GraphicsDevice)
             {
-                throw new ArgumentNullException("game");
-            }
-
-            this.game = game;
-
-            isDisposed = false;
-
-            sprites = new SpriteBatch(game.GraphicsDevice);
-
-            effect = new BasicEffect(game.GraphicsDevice);
-            effect.FogEnabled = false;
-            effect.TextureEnabled = true;
-            effect.LightingEnabled = false;
-            effect.VertexColorEnabled = true;
-            flatTransform = new FlatTransform();
+                FogEnabled = false,
+                TextureEnabled = true,
+                LightingEnabled = false,
+                VertexColorEnabled = true
+            };
+            _flatTransform = new FlatTransform();
         }
 
         public void Dispose()
         {
-            if(isDisposed)
+            if(_isDisposed)
             {
                 return;
             }
 
-            effect?.Dispose();
-            sprites?.Dispose();
-            isDisposed = true;
+            _effect?.Dispose();
+            _sprites?.Dispose();
+            _isDisposed = true;
         }
 
         public void Begin(Camera camera, bool isTextureFileteringEnabled)
         {
             if (camera is null)
             {
-                Viewport vp = game.GraphicsDevice.Viewport;
-                effect.Projection = Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height,0,  0f, 1f);
-                effect.View = Matrix.Identity;
+                var vp = _game.GraphicsDevice.Viewport;
+                _effect.Projection = Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height,0,  0f, 1f);
+                _effect.View = Matrix.Identity;
             }
             else
             {
                 camera.UpdateMatrices();
-                flatTransform = new FlatTransform(camera.Position, 0, 1f);
-                effect.View = camera.View;
-                effect.Projection = camera.Projection;
+                _flatTransform = new FlatTransform(camera.Position, 0, 1f);
+                _effect.View = camera.View;
+                _effect.Projection = camera.Projection;
             }
-            sprites.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointWrap, rasterizerState: RasterizerState.CullNone, effect: effect);
+            _sprites.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointWrap, rasterizerState: RasterizerState.CullNone, effect: _effect);
         }
 
         public void End()
         {
-            sprites.End();
+            _sprites.End();
         }
 
         public void Draw(Texture2D texture, Vector2 origin, Vector2 position, Color color)
         {
-            sprites.Draw(texture, Util.Transform(position, flatTransform), null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
+            _sprites.Draw(texture, Util.Transform(position, _flatTransform), null, color, 0f, origin, 1f, SpriteEffects.None, 0f);
         }
 
         public void Draw(Texture2D texture, Rectangle? sourceRectangle, Vector2 origin, Vector2 position, float rotation, Vector2 scale, Color color)
         {
-            sprites.Draw(texture, Util.Transform(position, flatTransform), sourceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0f);
+            _sprites.Draw(texture, Util.Transform(position, _flatTransform), sourceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0f);
         }
 
         public void Draw(Texture2D texture, Rectangle? sourceRectangle, Rectangle destinationRectangle, Color color)
         {
-            sprites.Draw(texture, destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
+            _sprites.Draw(texture, destinationRectangle, sourceRectangle, color, 0f, Vector2.Zero, SpriteEffects.None, 0f);
         }
 
         public void Draw(Texture2D texture, Rectangle destinationRectangle, Color color)
         {
-            sprites.Draw(texture, destinationRectangle, color);
+            _sprites.Draw(texture, destinationRectangle, color);
         }
 
         public void Draw(Texture2D background, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effect, float layerDepth)
         {
-            sprites.Draw(background, Util.Transform(position, flatTransform), sourceRectangle, color, rotation, origin, scale, effect, layerDepth);
+            _sprites.Draw(background, Util.Transform(position, _flatTransform), sourceRectangle, color, rotation, origin, scale, effect, layerDepth);
         }
     }
 }

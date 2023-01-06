@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -65,6 +62,11 @@ namespace HenrySolidAdventure.Shop
             }
 
             return potions;
+        }
+
+        public static Potion MakeHealingPotion()
+        {
+            return new Potion(_textures, _hitBoxes[PotionType.Healing], PotionType.Healing);
         }
     }
 }

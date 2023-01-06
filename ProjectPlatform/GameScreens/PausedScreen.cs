@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Graphics.Clickables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,14 +13,14 @@ namespace HenrySolidAdventure.GameScreens
     internal class PausedScreen : IGameScreen
     {
         private readonly List<Text> _texts;
-        public PlayingScreen _playingScreen { get; }
+        public PlayingScreen PlayingScreen { get; }
         private readonly List<Button> _buttons;
         private readonly Screen _screen;
         private bool _loaded;
         public PausedScreen(Screen screen,ContentManager content, PlayingScreen playScreen)
         {
             _loaded = true;
-            _playingScreen = playScreen;
+            PlayingScreen = playScreen;
             _screen = screen;
             var halfWidth = screen.Width / 2f;
             var halfHeight = screen.Height / 2f;
@@ -38,13 +38,14 @@ namespace HenrySolidAdventure.GameScreens
         }
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
         {
-            _playingScreen.Draw(spriteBatch, sprites);
+            PlayingScreen.Draw(spriteBatch, sprites);
             _texts.ForEach(text => text.Draw(spriteBatch));
             _buttons.ForEach(button => button.Draw(sprites, spriteBatch));
         }
 
         public void Update(GameTime gameTime)
         {
+            //makes teh text fade in and out for the nostalgic feeling
             _texts.ForEach(text => text.Color = Color.Lerp(Color.White, Color.Transparent, (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds)));
             if (_loaded && InputController.ExitInput) return;
             _loaded = false;

@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Graphics
+namespace HenrySolidAdventure.Graphics.Clickables
 {
-    internal class StateButton: IClickable
+    internal class StateButton : IClickable
     {
         public bool IsClicked { get; set; }
         public Rectangle HitBox { get; set; }
@@ -21,7 +21,7 @@ namespace HenrySolidAdventure.Graphics
         }
         public void Update(Screen screen)
         {
-            if (!MouseController.IsLeftClicked) 
+            if (!MouseController.IsLeftClicked)
             {
                 _changed = false;
                 return;
@@ -34,14 +34,10 @@ namespace HenrySolidAdventure.Graphics
                 IsClicked = !IsClicked;
                 _changed = true;
             }
-            
-
         }
         public void Draw(Sprites sprites)
         {
             sprites.Draw(IsClicked ? ClickedTexture : UnClickedTexture, Vector2.One, _position, Color.White);
         }
-
-        
     }
 }

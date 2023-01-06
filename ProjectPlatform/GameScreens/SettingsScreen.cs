@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Graphics;
+using HenrySolidAdventure.Graphics.Clickables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace HenrySolidAdventure.GameScreens
 {
@@ -13,10 +12,10 @@ namespace HenrySolidAdventure.GameScreens
     {
         private readonly List<Text> _texts;
         private readonly List<IClickable> _clickables;
-        private readonly Slider _SongSlider;
+        private readonly Slider _songSlider;
         private readonly StateButton _muteSongButton;
-        private readonly StateButton _FullScreenButton;
-        private readonly Slider _EffectSlider;
+        private readonly StateButton _fullScreenButton;
+        private readonly Slider _effectSlider;
         private readonly StateButton _muteEffectButton;
         private readonly Button _goBackButton;
         private readonly Screen _screen;
@@ -45,12 +44,12 @@ namespace HenrySolidAdventure.GameScreens
                 new(new Vector2(textPos.X, textPos.Y+285f), effectText, Color.White, 0.2f, 0f, Game1.MainFont),
                 new(new Vector2(textPos.X, textPos.Y+375), fullscreenText, Color.White, 0.2f, 0f, Game1.MainFont)
             };
-            _SongSlider = new Slider(new Vector2(textPos.X +150f, textPos.Y + 150f), 0, 1, AudioController.Volume);
+            _songSlider = new Slider(new Vector2(textPos.X +150f, textPos.Y + 150f), 0, 1, AudioController.Volume);
             _muteSongButton = new StateButton(new Vector2(textPos.X + 150f, textPos.Y + 230f), false);
             _muteEffectButton = new StateButton(new Vector2(textPos.X*2 + 150f, textPos.Y + 230f), false);
 
-            _EffectSlider = new Slider(new Vector2(textPos.X + 150f, textPos.Y + 285f), 0, 1, AudioController.EffectVolume);
-            _FullScreenButton = new StateButton(new Vector2(textPos.X + 150f, textPos.Y + 375), false);
+            _effectSlider = new Slider(new Vector2(textPos.X + 150f, textPos.Y + 285f), 0, 1, AudioController.EffectVolume);
+            _fullScreenButton = new StateButton(new Vector2(textPos.X + 150f, textPos.Y + 375), false);
 
             _goBackButton = new Button("Go back", content.Load<Texture2D>("Buttons/EmptyButton"), new Vector2(textPos.X+40, textPos.Y + 410f), "Back");
             
@@ -59,7 +58,7 @@ namespace HenrySolidAdventure.GameScreens
             
             _clickables = new List<IClickable>
             {
-                _SongSlider, _FullScreenButton, _goBackButton, _muteSongButton, _muteEffectButton, _EffectSlider
+                _songSlider, _fullScreenButton, _goBackButton, _muteSongButton, _muteEffectButton, _effectSlider
             };
             
             _muteSongButton.IsClicked = Settings.Instance.Setting.MusicMuted;
@@ -80,72 +79,71 @@ namespace HenrySolidAdventure.GameScreens
                 Settings.Instance.Save();
                 Game1.SetState(GameState.Menu);
             }
-            _SongSlider.Update(gameTime, _screen);
+            _songSlider.Update(gameTime, _screen);
             if (_muteSongButton.IsClicked)
             {
                 AudioController.Volume = 0f;
                 Settings.Instance.Setting.MusicMuted = true;
-                _SongSlider.Value = 0f;
+                _songSlider.Value = 0f;
             }
             else
             {
                 Settings.Instance.Setting.MusicMuted = false;
-                if (_SongSlider.Value == 0)
+                if (_songSlider.Value == 0)
                 {
-                    AudioController.Volume = _SongSlider.Value = Settings.Instance.Setting.MusicVolume;
+                    AudioController.Volume = _songSlider.Value = Settings.Instance.Setting.MusicVolume;
                 }
-                else AudioController.Volume = Settings.Instance.Setting.MusicVolume = _SongSlider.Value;
+                else AudioController.Volume = Settings.Instance.Setting.MusicVolume = _songSlider.Value;
             }
 
-            _EffectSlider.Update(gameTime, _screen);
+            _effectSlider.Update(gameTime, _screen);
             if (_muteEffectButton.IsClicked)
             {
                 AudioController.EffectVolume = 0f;
                 Settings.Instance.Setting.EffectMuted = true;
-                _EffectSlider.Value = 0f;
+                _effectSlider.Value = 0f;
             }
             else
             {
                 Settings.Instance.Setting.EffectMuted = false;
-                if (_EffectSlider.Value == 0)
+                if (_effectSlider.Value == 0)
                 {
                     
 
-                    AudioController.EffectVolume = _EffectSlider.Value = Settings.Instance.Setting.EffectVolume;
+                    AudioController.EffectVolume = _effectSlider.Value = Settings.Instance.Setting.EffectVolume;
                 }
                 else
                 {
                     //if the volume changed
-                    if (_EffectSlider.Value != Settings.Instance.Setting.EffectVolume)
+                    if (_effectSlider.Value != Settings.Instance.Setting.EffectVolume)
                     {
-                        AudioController.EffectVolume = Settings.Instance.Setting.EffectVolume = _EffectSlider.Value;
+                        AudioController.EffectVolume = Settings.Instance.Setting.EffectVolume = _effectSlider.Value;
                         if (_timer >= 1000)
                         {
                             AudioController.Instance.PlayEffect(SoundEffects.Hurt1);
                             _timer = 0;
                         }
                     }
-                    
                 }
             }
 
-            _FullScreenButton.Update(_screen);
+            _fullScreenButton.Update(_screen);
             _muteSongButton.Update(_screen);
             _muteEffectButton.Update(_screen);
 
 
-            Game1.SetFullScreen(Settings.Instance.Setting.FullScreen = _FullScreenButton.IsClicked);
+            Game1.SetFullScreen(Settings.Instance.Setting.FullScreen = _fullScreenButton.IsClicked);
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
         {
             BackGround.Instance.Draw(sprites);
             _texts.ForEach(t => t.Draw(spriteBatch));
-            _SongSlider.Draw(sprites);
-            _FullScreenButton.Draw(sprites);
+            _songSlider.Draw(sprites);
+            _fullScreenButton.Draw(sprites);
             _muteSongButton.Draw(sprites);
             _goBackButton.Draw(sprites, spriteBatch);
-            _EffectSlider.Draw(sprites);
+            _effectSlider.Draw(sprites);
             _muteEffectButton.Draw(sprites);
 
         }

@@ -1,15 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Graphics
+namespace HenrySolidAdventure.Graphics.Clickables
 {
-    internal class Button: IClickable //make ButtonList class soon ?
+    internal class Button : IClickable 
     {
         public string Name { get; }
         public Texture2D Texture { get; }
         public Vector2 Position { get; }
         public Rectangle HitBox { get; set; }
-        public bool IsActive { get;}
+        public bool IsActive { get; }
         public Text Text { get; set; }
         public float Scale { get; }
 
@@ -28,7 +28,7 @@ namespace HenrySolidAdventure.Graphics
                 var length = Game1.MainFont.MeasureString(text).Length();
                 //text height
                 var height = Game1.MainFont.MeasureString(text).Y;
-                var halfWidth = Texture.Width / 2f ;
+                var halfWidth = Texture.Width / 2f;
                 var halfHeight = Texture.Height / 2f;
 
                 var textScale = scale;
@@ -36,24 +36,21 @@ namespace HenrySolidAdventure.Graphics
                 {
                     textScale = (Texture.Width - 40) / length;
                     //move text to the right
-                    length *= textScale*scale;
-                    height *= textScale*scale;
+                    length *= textScale * scale;
+                    height *= textScale * scale;
                 }
-                var textPosition = new Vector2((Position.X + halfWidth - length / 2) + 15, (Position.Y + halfHeight - height / 2) + 8);
+                var textPosition = new Vector2(Position.X + halfWidth - length / 2 + 15, Position.Y + halfHeight - height / 2 + 8);
 
-                Text = new Text(textPosition, text, Color.Black, textScale*scale, 0f, Game1.MainFont);
+                Text = new Text(textPosition, text, Color.Black, textScale * scale, 0f, Game1.MainFont);
                 //rescale text if too long with 20 pixels margin left and right
-                
+
             }
             else Text = null;
         }
         public void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
             sprites.Draw(Texture, Position, null, Color.White, 0f, Vector2.One, Scale, SpriteEffects.None, 0f);
-            if (Text != null)
-            {
-                Text.Draw(spriteBatch);
-            }
+            Text?.Draw(spriteBatch);
         }
 
     }

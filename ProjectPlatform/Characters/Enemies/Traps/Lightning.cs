@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,9 +16,9 @@ namespace HenrySolidAdventure.Characters.Traps
                 new(SpawnTextures[tier],State.Other,SpawnTextures[tier].Width/(TextureSizeWidth*3),10),
                 new(Textures[tier],State.Attacking, Textures[tier].Width / (TextureSizeWidth*3), 10)
             };
-            _isActivated = true;
-            _loop = true;
-            _animationDelay = 400f;
+            IsActivated = true;
+            Loop = true;
+            AnimationDelay = 400f;
             Position = new Vector2(position.X, position.Y - Textures[tier].Height);
 
             switch (tier)

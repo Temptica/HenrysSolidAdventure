@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using HenrySolidAdventure.Characters.Enemies.Roaming;
+using HenrySolidAdventure.Characters.Enemies.Tracking;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.Enemies
 {
     internal static class EnemyInitialiser
     {
-        public static void LoadTextures(ContentManager content)
+        public static void LoadTextures(ContentManager content) //simply loads ion all the enemy textures and Traps
         {
             Bat.Texture = content.Load<Texture2D>("Enemies/Bat");
             Slime.Texture = content.Load<Texture2D>("Enemies/slime-Sheet");

@@ -7,61 +7,55 @@ namespace HenrySolidAdventure.Graphics
     public sealed class Screen : IDisposable
     {//from https://www.youtube.com/watch?v=yUSB_wAVtE8 and own previous project
 
-        private bool isDisposed;
-        private readonly Game game;
-        private readonly RenderTarget2D target;
-        private bool isSet;
+        private bool _isDisposed;
+        private readonly Game _game;
+        private readonly RenderTarget2D _target;
+        private bool _isSet;
 
-        public int Width
-        {
-            get { return target.Width; }
-        }
+        public int Width => _target.Width;
 
-        public int Height
-        {
-            get { return target.Height; }
-        }
+        public int Height => _target.Height;
 
         public Screen(Game game, int width, int height)
         {
 
-            this.game = game ?? throw new ArgumentNullException("game");
+            _game = game ?? throw new ArgumentNullException("game");
 
-            target = new RenderTarget2D(this.game.GraphicsDevice, width, height);
-            isSet = false;
+            _target = new RenderTarget2D(this._game.GraphicsDevice, width, height);
+            _isSet = false;
         }
 
         public void Dispose()
         {
-            if(isDisposed)
+            if(_isDisposed)
             {
                 return;
             }
 
-            target?.Dispose();
-            isDisposed = true;
+            _target?.Dispose();
+            _isDisposed = true;
         }
 
         public void Set()
         {
-            if (isSet)
+            if (_isSet)
             {
                 throw new Exception("Render target is already set.");
             }
 
-            game.GraphicsDevice.SetRenderTarget(target);
-            isSet = true;
+            _game.GraphicsDevice.SetRenderTarget(_target);
+            _isSet = true;
         }
 
         public void UnSet()
         {
-            if (!isSet)
+            if (!_isSet)
             {
                 throw new Exception("Render target is not set.");
             }
 
-            game.GraphicsDevice.SetRenderTarget(null);
-            isSet = false;
+            _game.GraphicsDevice.SetRenderTarget(null);
+            _isSet = false;
         }
 
         public void Present(Sprites sprites, bool textureFiltering = true)
@@ -71,37 +65,37 @@ namespace HenrySolidAdventure.Graphics
                 throw new ArgumentNullException("sprites");
             }
             
-            game.GraphicsDevice.Clear(Color.Black);
+            _game.GraphicsDevice.Clear(Color.Black);
 
-            Rectangle destinationRectangle = CalculateDestinationRectangle();
+            var destinationRectangle = CalculateDestinationRectangle();
 
             sprites.Begin(null,textureFiltering);
-            sprites.Draw(target, null, destinationRectangle, Color.White);
+            sprites.Draw(_target, null, destinationRectangle, Color.White);
             sprites.End();
         }
         
         internal Rectangle CalculateDestinationRectangle()
         {
-            Rectangle backbufferBounds = game.GraphicsDevice.PresentationParameters.Bounds;
-            int backbufferAspectRatio = backbufferBounds.Width / backbufferBounds.Height;
-            int screenAspectRatio = Width / Height;
+            var backBufferBounds = _game.GraphicsDevice.PresentationParameters.Bounds;
+            var backBufferAspectRatio = backBufferBounds.Width / backBufferBounds.Height;
+            var screenAspectRatio = Width / Height;
 
-            float rx = 0f;
-            float ry = 0f;
-            float rw = backbufferBounds.Width;
-            float rh = backbufferBounds.Height;
+            var rx = 0f;
+            var ry = 0f;
+            float rw = backBufferBounds.Width;
+            float rh = backBufferBounds.Height;
 
-            if(backbufferAspectRatio > screenAspectRatio)
+            if(backBufferAspectRatio > screenAspectRatio)
             {
                 rw = rh * screenAspectRatio;
-                rx = (backbufferBounds.Width - rw) / 2f;
+                rx = (backBufferBounds.Width - rw) / 2f;
             }
-            else if(backbufferAspectRatio < screenAspectRatio)
+            else if(backBufferAspectRatio < screenAspectRatio)
             {
                 rh = rw / screenAspectRatio;
-                ry = (backbufferBounds.Height - rh) / 2f;
+                ry = (backBufferBounds.Height - rh) / 2f;
             }
-            Rectangle result = new Rectangle((int)rx, (int)ry, (int)rw, (int)rh);
+            Rectangle result = new ((int)rx, (int)ry, (int)rw, (int)rh);
             return result;
         }
 

@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure.Graphics
+namespace HenrySolidAdventure.Graphics.Clickables
 {
-    internal class Slider: IClickable
+    internal class Slider : IClickable
     {
         public static Texture2D SliderTexture;
         public static Texture2D SliderKnobTexture;
@@ -13,7 +13,7 @@ namespace HenrySolidAdventure.Graphics
         private readonly float _minValue;
         private readonly float _maxValue;
         public Rectangle HitBox { get; set; }
-        
+
         public float Value
         {
             get => _value;
@@ -43,7 +43,7 @@ namespace HenrySolidAdventure.Graphics
         public void Draw(Sprites sprites)
         {
             sprites.Draw(SliderTexture, Vector2.One, _position, Color.White);
-            var knobPos = new Vector2(_position.X + SliderTexture.Width * Value, _position.Y-2f);
+            var knobPos = new Vector2(_position.X + SliderTexture.Width * Value, _position.Y - 2f);
             sprites.Draw(SliderKnobTexture, Vector2.One, knobPos, Color.White);
         }
 

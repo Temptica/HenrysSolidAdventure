@@ -2,14 +2,14 @@
 using HenrySolidAdventure.Animations;
 using HenrySolidAdventure.Characters.Traps;
 using HenrySolidAdventure.Graphics;
-using HenrySolidAdventure.Mapfolder;
+using HenrySolidAdventure.MapFolder;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
+using HenrySolidAdventure.Characters.HeroFolder;
 
-namespace HenrySolidAdventure.Characters
+namespace HenrySolidAdventure.Characters.Enemies
 {
-    internal class Boss:Enemy
+    internal class Boss : Enemy
     {//https://luizmelo.itch.io/evil-wizard-2
         public static Texture2D Texture { get; set; }
         private const float Gravity = 0.0001f;
@@ -17,11 +17,11 @@ namespace HenrySolidAdventure.Characters
         public Trap CurrentAttack { get; private set; }
         private float _meleAttackTimer;
         private float _specialAttackTimer;
-        private const float MeleTime = 3000f;
+        private const float MeleTime = 4000f;
         private const float SpecialAttackTime = 10000f;
-        private int _wormHP;
+        private int _wormHp;
         private int _moveCounter;
-        
+
         public Boss(Vector2 position)
         {
             Position = position;
@@ -37,7 +37,7 @@ namespace HenrySolidAdventure.Characters
             };
             _healthBar = new HealthBar(Position);
             Health = BaseHp = 50;
-            _wormHP = 25;
+            _wormHp = 25;
             CanDamage = true;
             Damage = 5;
             _specialAttackTimer = 5000f;
@@ -50,9 +50,9 @@ namespace HenrySolidAdventure.Characters
         {
             CanDamage = true;
             int tier = 0;
-            if (Health < BaseHp * 0.5f)
+            if (Health < BaseHp * 0.5f) //respawn hero and enemie when boss foight upgrades 
             {
-                if (_moveCounter < 1)
+                if (_moveCounter == 0)
                 {
                     Hero.Instance.Position = Map.Instance.Spawn;
                     MapLoader.ReloadEnemies();
@@ -62,7 +62,7 @@ namespace HenrySolidAdventure.Characters
             }
             if (Health < BaseHp * 0.25f)
             {
-                if (_moveCounter < 2 && _moveCounter > 0)
+                if (_moveCounter == 1)
                 {
                     Hero.Instance.Position = Map.Instance.Spawn;
                     MapLoader.ReloadEnemies();
@@ -76,7 +76,7 @@ namespace HenrySolidAdventure.Characters
             }
             if (_specialAttackTimer < SpecialAttackTime)
             {
-                _specialAttackTimer += gameTime.ElapsedGameTime.Milliseconds * ((tier+1)*0.5f +0.5f);
+                _specialAttackTimer += gameTime.ElapsedGameTime.Milliseconds * ((tier + 1) * 0.5f + 0.5f); //speeds up attack ready time
             }
             if (Health <= 0)
             {
@@ -97,7 +97,7 @@ namespace HenrySolidAdventure.Characters
                 {
                     if (CurrentAttack is Worm)
                     {
-                        _wormHP = CurrentAttack.Health;
+                        _wormHp = CurrentAttack.Health;
                     }
                     CurrentAttack = null;
                 }
@@ -116,7 +116,7 @@ namespace HenrySolidAdventure.Characters
                     State = State.Hit;
                     return;
                 }
-                
+
             }
 
             if (State is State.Hit)
@@ -135,24 +135,24 @@ namespace HenrySolidAdventure.Characters
             //if otter is 200 pixels away from boss, use worm attack
             //if otter is 300 pixels away use Magic attack
             //if boss is half HP, use tier 2. if 25% then use tier 3
-            
+
             var distance = Vector2.Distance(Hero.Instance.HitBox.Center.ToVector2(), HitBox.Center.ToVector2());
             IsAttacking = distance < 100 && _meleAttackTimer >= MeleTime;
-            
+
             if (distance < 400 && CurrentAttack is null && _specialAttackTimer >= SpecialAttackTime) //distance smaller than 400 and no attack 
             {
                 //position = left side of character and on the ground height of teh boss
                 var position = new Vector2(Hero.Instance.HitBox.Left, HitBox.Bottom - Worm.Textures[(TrapTier)tier].Height);
-                CurrentAttack = new Worm(position, (TrapTier)tier, IsFacingLeft, _wormHP);
+                CurrentAttack = new Worm(position, (TrapTier)tier, IsFacingLeft, _wormHp);
                 _specialAttackTimer = 2000f;
             }
-            if (CurrentAttack is null && (distance > 400 || (distance <=400 && _rng.NextSingle()>0.90f)) && _specialAttackTimer >= SpecialAttackTime) // (if further than 400 OR if closer than 400 but with a 10 % chance) && time has run out then use an attack
+            if (CurrentAttack is null && (distance > 400 || distance <= 400 && _rng.NextSingle() > 0.85f) && _specialAttackTimer >= SpecialAttackTime) // (if further than 400 OR if closer than 400 but with a 15 % chance) && time has run out then use an attack
             {
                 //check if Hero is on a flat tile
                 CurrentAttack = new Magic(Hero.Instance.HitBox.Center.ToVector2(), (TrapTier)tier, IsFacingLeft);
                 _specialAttackTimer = 5000f;//takes less energy so less time
             }
-            
+
 
             if (IsAttacking)
             {
@@ -162,7 +162,7 @@ namespace HenrySolidAdventure.Characters
 
         public override void Draw(Sprites sprites, SpriteBatch spriteBatch)
         {
-            
+
             base.Draw(sprites, spriteBatch);
             _healthBar.Draw(sprites);
             CurrentAttack?.Draw(sprites, spriteBatch);
@@ -177,7 +177,7 @@ namespace HenrySolidAdventure.Characters
             //set the otter position so the otter is on the tile
             return new Vector2(hitbox.X, tile - hitbox.Height - CurrentAnimation.CurrentFrame.HitBox.Y);
         }
-        
+
         public override bool CheckDamage()
         {
             return State is State.Attacking && Animations.CurrentAnimation.CurrentFrameIndex is > 3 and < 8 or > 12 and < 16;

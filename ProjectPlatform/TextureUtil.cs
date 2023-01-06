@@ -7,33 +7,33 @@ namespace HenrySolidAdventure
     {
         public static Color[] GetCurrentPixels(Texture2D texture, Rectangle rectangle)
         {
-            Color[] Pixels = new Color[rectangle.Width * rectangle.Height];
-            texture.GetData(0, rectangle, Pixels, 0, Pixels.Length);
-            return Pixels;
+            var pixels = new Color[rectangle.Width * rectangle.Height];
+            texture.GetData(0, rectangle, pixels, 0, pixels.Length);
+            return pixels;
         }
         public static Color[,] GetCurrentPixels2D(Texture2D texture, Rectangle rectangle)
         {
-            Color[] Pixels = GetCurrentPixels(texture, rectangle);
-            Color[,] Pixels2D = new Color[rectangle.Width, rectangle.Height];
-            for (int x = 0; x < rectangle.Width; x++)
+            var pixels = GetCurrentPixels(texture, rectangle);
+            var pixels2D = new Color[rectangle.Width, rectangle.Height];
+            for (var x = 0; x < rectangle.Width; x++)
             {
-                for (int y = 0; y < rectangle.Height; y++)
+                for (var y = 0; y < rectangle.Height; y++)
                 {
-                    Pixels2D[x, y] = Pixels[x + y * rectangle.Width];
+                    pixels2D[x, y] = pixels[x + y * rectangle.Width];
                 }
             }
-            return Pixels2D;
+            return pixels2D;
         }
         public static Rectangle SetPixelBasedHitBox(Texture2D texture, Rectangle rectangle)
         {
             //get the lowest pixel in teh rectangle
             var color = GetCurrentPixels2D(texture, rectangle);
-            int mostLeftPixel = 0;
+            var mostLeftPixel = 0;
 
             //find left most pixel
-            for (int x = 0; x < rectangle.Width; x++)
+            for (var x = 0; x < rectangle.Width; x++)
             {
-                for (int y = 0; y < rectangle.Height; y++)
+                for (var y = 0; y < rectangle.Height; y++)
                 {
                     if (color[x, y].A == 0) continue;
                     mostLeftPixel = x;
@@ -42,10 +42,10 @@ namespace HenrySolidAdventure
                 if (mostLeftPixel != 0) break;
             }
             //find right most pixel
-            int mostRightPixel = 0;
-            for (int x = rectangle.Width - 1; x >= 0; x--)
+            var mostRightPixel = 0;
+            for (var x = rectangle.Width - 1; x >= 0; x--)
             {
-                for (int y = 0; y < rectangle.Height; y++)
+                for (var y = 0; y < rectangle.Height; y++)
                 {
                     if (color[x, y].A == 0) continue;
                     mostRightPixel = x;
@@ -54,10 +54,10 @@ namespace HenrySolidAdventure
                 if (mostRightPixel != 0) break;
             }
             //find highest pixel
-            int highestPixel = 0;
-            for (int y = 0; y < rectangle.Height; y++)
+            var highestPixel = 0;
+            for (var y = 0; y < rectangle.Height; y++)
             {
-                for (int x = 0; x < rectangle.Width; x++)
+                for (var x = 0; x < rectangle.Width; x++)
                 {
                     if (color[x, y].A == 0) continue;
                     highestPixel = y;
@@ -66,10 +66,10 @@ namespace HenrySolidAdventure
                 if (highestPixel != 0) break;
             }
             //find lowest pixel
-            int lowestPixel = 0;
-            for (int y = rectangle.Height - 1; y >= 0; y--)
+            var lowestPixel = 0;
+            for (var y = rectangle.Height - 1; y >= 0; y--)
             {
-                for (int x = 0; x < rectangle.Width; x++)
+                for (var x = 0; x < rectangle.Width; x++)
                 {
                     if (color[x, y].A == 0) continue;
                     lowestPixel = y;
@@ -77,7 +77,7 @@ namespace HenrySolidAdventure
                 }
                 if (lowestPixel != 0) break;
             }
-            //set hitbox
+            //set hitBox
             return new Rectangle(mostLeftPixel, (int)(highestPixel), (int)((mostRightPixel - mostLeftPixel)), (int)((lowestPixel - highestPixel)));
         }
 

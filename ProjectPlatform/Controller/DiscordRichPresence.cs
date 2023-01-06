@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DiscordRPC;
-using HenrySolidAdventure.Characters;
-using HenrySolidAdventure.Mapfolder;
+using HenrySolidAdventure.Characters.HeroFolder;
+using HenrySolidAdventure.MapFolder;
 
 namespace HenrySolidAdventure.Controller
 {
@@ -17,12 +13,12 @@ namespace HenrySolidAdventure.Controller
         private static DiscordRichPresence _instance;
         public static DiscordRichPresence Instance => _instance ??= new DiscordRichPresence();
         
-        public DiscordRpcClient client;
+        public DiscordRpcClient Client;
         public DiscordRichPresence()
         {
-            client = new DiscordRpcClient("1046877999989002300");
-            client.Initialize();
-            client.SetPresence(new RichPresence
+            Client = new DiscordRpcClient("1046877999989002300");
+            Client.Initialize();
+            Client.SetPresence(new RichPresence
             {
                 Details = "In Menu",
                 State = "Testing his sword",
@@ -46,19 +42,19 @@ namespace HenrySolidAdventure.Controller
             });
         }
 
-        private GameState lastGameState = GameState.Menu;
+        private GameState _lastGameState = GameState.Menu;
 
         public void UpdateState(GameState state)
         {
-            if (state != lastGameState)
+            if (state != _lastGameState)
             {
-                client.UpdateState(state.ToString());
+                Client.UpdateState(state.ToString());
                 switch (state)
                 {
                     case GameState.GameOver:
                     case GameState.Win:
                     case GameState.Menu:
-                        client.SetPresence(new RichPresence
+                        Client.SetPresence(new RichPresence
                         {
                             State = "In Menu",
                             Details = "Drinking a energy potion",
@@ -85,7 +81,7 @@ namespace HenrySolidAdventure.Controller
                         break;
                     case GameState.Settings:
                     case GameState.Paused:
-                        client.SetPresence(new RichPresence
+                        Client.SetPresence(new RichPresence
                         {
                             State = "Paused",
                             Details = "Taking a break",
@@ -111,10 +107,10 @@ namespace HenrySolidAdventure.Controller
                         });
                         break;
                     case GameState.Playing:
-                        client.SetPresence(new RichPresence
+                        Client.SetPresence(new RichPresence
                         {
                             Details = "Playing",
-                            State = "Level: " + MapLoader.MapID,
+                            State = "Level: " + MapLoader.MapId,
                             Assets = new Assets
                             {
                                 LargeImageKey = "heroknight",
@@ -142,17 +138,17 @@ namespace HenrySolidAdventure.Controller
 
         public void UpdateLevel()
         {
-            client.UpdateState("Level: " + MapLoader.MapID);//have to be like this, {} don't work here sadly
+            Client.UpdateState("Level: " + MapLoader.MapId);//have to be like this, {} don't work here sadly
         }
 
         public void UpdateHealth()
         {
-            client.UpdateLargeAsset("heroknight", "HP: " + Hero.Instance.Health + "/" + Hero.Instance.BaseHp);
+            Client.UpdateLargeAsset("heroknight", "HP: " + Hero.Instance.Health + "/" + Hero.Instance.BaseHp);
         }
 
         public void UpdateCoins()
         {
-            client.UpdateSmallAsset("coin", "Coins: " + Hero.Instance.Coins);
+            Client.UpdateSmallAsset("coin", "Coins: " + Hero.Instance.Coins);
         }
 
     }

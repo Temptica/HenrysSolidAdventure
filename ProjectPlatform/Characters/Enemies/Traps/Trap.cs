@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Characters.Enemies;
+using Microsoft.Xna.Framework;
 
 namespace HenrySolidAdventure.Characters.Traps
 {
@@ -9,10 +10,10 @@ namespace HenrySolidAdventure.Characters.Traps
 
         public TrapTier Tier { get; }
         protected const int TextureSizeWidth = 32;
-        protected bool _loop;
-        protected bool _isActivated;
-        protected float _animationDelay;
-        protected float _timer;
+        protected bool Loop;
+        protected bool IsActivated;
+        protected float AnimationDelay;
+        protected float Timer;
         public bool IsFinished { get; protected set; }
 
         protected Trap(Vector2 position, TrapTier tier, bool direction)
@@ -26,7 +27,7 @@ namespace HenrySolidAdventure.Characters.Traps
         }
         public override void Update(GameTime gameTime)
         {
-            if (State is State.Other)
+            if (State is State.Other)//build up animation
             {
                 Animations.Update(State, gameTime);
                 if (!Animations.CurrentAnimation.IsFinished) return;
@@ -34,14 +35,15 @@ namespace HenrySolidAdventure.Characters.Traps
                 Animations.Update(State, gameTime);//update just once
             }
 
-            if (!_isActivated || (!_loop && IsFinished)) return;
-            if (IsFinished && _animationDelay > 0 && _timer <= _animationDelay)
+            
+            if (IsFinished && AnimationDelay > 0 && Timer <= AnimationDelay)
             {
-                _timer += (float)gameTime.ElapsedGameTime.Milliseconds;
+                Timer += (float)gameTime.ElapsedGameTime.Milliseconds;
                 CanDamage = false;
                 return;
             }
-            if(_timer >= _animationDelay)
+            if (!IsActivated || (!Loop && IsFinished)) return;
+            if (Timer >= AnimationDelay)
             {
                 IsFinished = false;
                 CanDamage = true;
@@ -49,7 +51,7 @@ namespace HenrySolidAdventure.Characters.Traps
             Animations.Update(State, gameTime);
             if (!Animations.CurrentAnimation.IsFinished) return;
             IsFinished = true;
-            _timer = 0;
+            Timer = 0;
 
 
         }

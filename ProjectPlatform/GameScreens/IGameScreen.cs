@@ -6,7 +6,7 @@ namespace HenrySolidAdventure.GameScreens
 {
     internal interface IGameScreen
     {
-        public abstract void Update(GameTime gameTime);
-        public abstract void Draw(SpriteBatch spriteBatch, Sprites sprites);
+        public void Update(GameTime gameTime);
+        public void Draw(SpriteBatch spriteBatch, Sprites sprites);
     }
 }
