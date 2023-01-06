@@ -956,31 +956,31 @@
 #begin Level/Level1.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
+/processorParam:ContentType=HenrySolidAdventure.MapFolder.MapReader, HenrySolidAdventure
 /build:Level/Level1.json
 
 #begin Level/Level2.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
+/processorParam:ContentType=HenrySolidAdventure.MapFolder.MapReader, HenrySolidAdventure
 /build:Level/Level2.json
 
 #begin Level/Level3.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
+/processorParam:ContentType=HenrySolidAdventure.MapFolder.MapReader, HenrySolidAdventure
 /build:Level/Level3.json
 
 #begin Level/Level4.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
+/processorParam:ContentType=HenrySolidAdventure.MapFolder.MapReader, HenrySolidAdventure
 /build:Level/Level4.json
 
 #begin Level/Level5.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
-/processorParam:ContentType=HenrySolidAdventure.Mapfolder.MapReader, HenrySolidAdventure
+/processorParam:ContentType=HenrySolidAdventure.MapFolder.MapReader, HenrySolidAdventure
 /build:Level/Level5.json
 
 #begin Tiles/oak_woods_tileset_fixed.png

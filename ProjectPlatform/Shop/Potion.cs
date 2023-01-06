@@ -24,9 +24,9 @@ namespace HenrySolidAdventure.Shop
                 HitBox = new Rectangle(Position.ToPoint(), new Point(PotionLoader.Width));
             }
         }
-        public PotionType Type { get; private set; }
-        public int Cost { get; private set; }
-        public string Description { get; private set; }
+        public PotionType Type { get;  }
+        public int Cost { get; }
+        public string Description { get;}
 
         public const float Duration = 5000;
         private readonly Texture2D _texture;
@@ -39,22 +39,22 @@ namespace HenrySolidAdventure.Shop
             Type = type;
             Cost = type switch
             {
-                PotionType.Floating => 4,
-                PotionType.Healing => 5,
-                PotionType.Invis => 12,
-                PotionType.Damage => 10,
-                PotionType.Jump => 8,
-                PotionType.Speed => 7,
-                PotionType.Undying => 25,
+                PotionType.Floating => 5,
+                PotionType.Healing => 4,
+                PotionType.Invis => 8,
+                PotionType.Damage => 9,
+                PotionType.Jump => 7,
+                PotionType.Speed => 6,
+                PotionType.Undying => 20,
                 _ => 0
             };
 
             Description = type switch
             {
                 PotionType.Floating => "Reduces falling\nspeed",
-                PotionType.Healing => "Heals you 5HP",
+                PotionType.Healing => "Heals you\nfor 5 HP",
                 PotionType.Invis => "Makes you\ninvisible",
-                PotionType.Damage => "Adds 5 extra\ndamage",
+                PotionType.Damage => "Adds 3 extra\ndamage",
                 PotionType.Jump => "Increases jump\nforce",
                 PotionType.Speed => "Increases speed",
                 PotionType.Undying => "Makes you\ninvincible",
@@ -100,7 +100,7 @@ namespace HenrySolidAdventure.Shop
                     _effectManager.Effects.Add(Type, Duration);
                     break;
                 case PotionType.Speed:
-                    hero.WalkSpeed += 0.2f;
+                    hero.WalkSpeed += 0.15f;
                     _effectManager.Effects.Add(Type, Duration);
                     break;
                 case PotionType.Undying:
@@ -111,8 +111,6 @@ namespace HenrySolidAdventure.Shop
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-
         public void Draw(Sprites sprites)
         {
             sprites.Draw(_texture, _textureHitBox, Vector2.One, Position, 0f,Vector2.One, Color.White);
