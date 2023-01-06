@@ -27,7 +27,7 @@ namespace HenrySolidAdventure.GameScreens
         {
             LastScreen = lastScreen;
             const string settingText = "Settings";
-            const string volumeText = "MusicVolume";
+            const string volumeText = "Music Volume";
             const string muteText = "Mute Music";
             const string effectText = "Effect\nVolume";
             const string muteEffectText = "Mute Effect";
