@@ -86,6 +86,7 @@ namespace HenrySolidAdventure.Shop
                 case PotionType.Healing:
                     hero.Health += 5;
                     StatsController.Instance.AddRegainedHealth(5);
+                    DiscordRichPresence.Instance.UpdateHealth();
                     break;
                 case PotionType.Invis:
                     hero.IsInvisible = true;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HenrySolidAdventure.Characters;
 using HenrySolidAdventure.Characters.Traps;
+using HenrySolidAdventure.Controller;
 using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -13,7 +14,7 @@ namespace HenrySolidAdventure.Mapfolder
     {
         //"D:\ap\22-23\ProjGameDev\Map\Level1.json"
         private static float mapOffset;
-        private static int MapID = 1;
+        public static int MapID = 1;
         private static readonly int mapCount = 5;
         private static ContentManager _content;
         public static void LoadMap(int screenheight, ContentManager content = null)
@@ -48,6 +49,7 @@ namespace HenrySolidAdventure.Mapfolder
             map.Shop = shop == default ? null : shop;
             var spawn = mapFromFile.layers.First(layer => layer.name == "Otter & enemies").objects;
             SetSpawns(spawn, map);
+            DiscordRichPresence.Instance.UpdateLevel();
         }
         
         private static void SetSpawns(Object[] spawns, Map map)

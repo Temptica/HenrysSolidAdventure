@@ -301,6 +301,7 @@ namespace HenrySolidAdventure.Characters
                     { 
                         IsHit = true; 
                         if (State is not State.Block && State is not State.BlockHit) Health -= damage;
+                        DiscordRichPresence.Instance.UpdateHealth();
                     }
                 }
             }
@@ -324,6 +325,7 @@ namespace HenrySolidAdventure.Characters
                     if(State is not State.Block && State is not State.BlockHit)
                         Health -= damage;
                     else StatsController.Instance.AddBlock();
+                    DiscordRichPresence.Instance.UpdateHealth();
                 }
             }
         }

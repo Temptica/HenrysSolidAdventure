@@ -48,7 +48,7 @@ namespace HenrySolidAdventure
             _screen = new Screen(this, 1200, 675);
             _camera = new Camera(_screen);
             _sprites = new Sprites(this);
-            
+            _ = DiscordRichPresence.Instance; //initialise
             base.Initialize();
 
         }
@@ -104,7 +104,7 @@ namespace HenrySolidAdventure
             }
             InputController.Update();
 
-            
+
             currentScreen?.Update(gameTime);
             if (_stateChanged)
             {
@@ -151,6 +151,7 @@ namespace HenrySolidAdventure
                 }
                 
                 _stateChanged = false;
+                DiscordRichPresence.Instance.UpdateState(_gameState);
                 currentScreen?.Update(gameTime);
             }
             base.Update(gameTime);

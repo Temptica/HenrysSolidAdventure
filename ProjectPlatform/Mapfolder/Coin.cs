@@ -79,6 +79,7 @@ namespace HenrySolidAdventure.Mapfolder
             _collected = true;
             StatsController.Instance.AddCoin();
             AudioController.Instance.PlayEffect(SoundEffects.Coin);
+            DiscordRichPresence.Instance.UpdateCoins();
             return true;
         }
 

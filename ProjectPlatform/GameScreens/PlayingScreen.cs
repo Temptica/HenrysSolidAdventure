@@ -20,7 +20,7 @@ namespace HenrySolidAdventure.GameScreens
         private Screen _screen;
         public PlayingScreen(Screen screen, ContentManager content)
         {
-            MapLoader.SetMapId(5);
+            MapLoader.SetMapId(1);
             MapLoader.LoadMap(screen.Height, content);
             _screen = screen;
             //_gameState = GameState.Playing;
@@ -40,7 +40,6 @@ namespace HenrySolidAdventure.GameScreens
                 new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font)
             };
             StatsController.Instance.Reset();
-            Hero.Instance.Coins = 100;
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)

@@ -83,9 +83,9 @@ namespace HenrySolidAdventure.Mapfolder
             FrontMap.ForEach(mapTile => mapTile.Draw(sprites));
             Coins?.ForEach(coin =>coin.Draw(sprites));
             Decorations?.ForEach(deco => deco.Draw(sprites));
-            Shop?.Draw(sprites, spriteBatch);
             Enemies?.ForEach(enemy => enemy.Draw(sprites, spriteBatch));
             Portal?.Draw(sprites);
+            Shop?.Draw(sprites, spriteBatch);
         }
         public void Update(GameTime gameTime)
         {
