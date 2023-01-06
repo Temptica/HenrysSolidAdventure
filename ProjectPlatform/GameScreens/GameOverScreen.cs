@@ -16,14 +16,13 @@ namespace HenrySolidAdventure.GameScreens
         {
             
             var halfWidth = screen.Width / 2f;
-            var halfHeight = screen.Height / 2f;
             string title = "Game Over";
             var length = Game1.MainFont.MeasureString(title).Length();
             Vector2 textPosition = new(halfWidth - length / 2, screen.Height / 10f);
 
             _texts = new List<Text> {
                 new(textPosition,title , Color.Red, 1f, 0f, Game1.MainFont),
-                new(new Vector2(50,150),StatsController.Instance.GetStats(),Color.White,0.25f,0f,Game1.MainFont)
+                new(new Vector2(50,150),StatsController.GetStats(),Color.White,0.25f,0f,Game1.MainFont)
             };
             var startTexture = content.Load<Texture2D>("buttons/EmptyButton");
             _buttons = new List<Button>

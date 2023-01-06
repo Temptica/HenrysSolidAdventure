@@ -27,7 +27,7 @@ namespace HenrySolidAdventure.GameScreens
 
             _texts = new List<Text> {
                 new(textPosition,title , Color.Red, 1f, 0f, Game1.MainFont),
-                new(new Vector2(50,150),StatsController.Instance.GetStats(),Color.White,0.25f,0f,Game1.MainFont)
+                new(new Vector2(50,150),StatsController.GetStats(),Color.White,0.25f,0f,Game1.MainFont)
             };
             var startTexture = content.Load<Texture2D>("buttons/EmptyButton");
             _buttons = new List<Button>

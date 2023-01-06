@@ -31,7 +31,7 @@ namespace HenrySolidAdventure.Characters.Enemies
         public virtual bool GetDamage(int i)
         {
             Health -= i;
-            StatsController.Instance.AddDamageDealt(i);
+            StatsController.AddDamageDealt(i);
             IsHit = true;
             if (!(Health <= 0)) return false;
             IsDead = true;

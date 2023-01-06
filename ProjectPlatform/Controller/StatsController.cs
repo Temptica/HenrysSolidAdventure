@@ -16,52 +16,52 @@ namespace HenrySolidAdventure.Controller
             Reset();
         }
 
-        public void UpdatePlayTime(GameTime gameTime)
+        public static void UpdatePlayTime(GameTime gameTime)
         {
             Stats.PlayTime += gameTime.ElapsedGameTime;
         }
 
-        public void AddRegainedHealth(int regained)
+        public static void AddRegainedHealth(int regained)
         {
             Stats.HealthRegained += regained;
         }
 
-        public void AddHealthLost(int lost)
+        public static void AddHealthLost(int lost)
         {
-            Stats.HealthLost = lost;
+            Stats.HealthLost += lost;
         }
 
-        public void AddKill()
+        public static void AddKill()
         {
             Stats.Kills++;
         }
         
-        public void AddCoin()
+        public static void AddCoin()
         {
             Stats.TotalCoins++;
             Stats.SavedCoins++;
         }
 
-        public void RemoveCoins(int coins)
+        public static void RemoveCoins(int coins)
         {
             Stats.SavedCoins -= coins;
         }
-        public void AddDamageDealt(int damage)
+        public static void AddDamageDealt(int damage)
         {
             Stats.TotalDamage += damage;
         }
 
-        public void AddBlock()
+        public static void AddBlock()
         {
             Stats.Blocks++;
         }
 
-        public string GetStats()
+        public static string GetStats()
         {
             return Stats.ToString();
         }
 
-        public void Reset()
+        public static void Reset()
         {
             Stats = new Stats();
         }

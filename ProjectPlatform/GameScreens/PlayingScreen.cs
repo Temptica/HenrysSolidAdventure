@@ -39,7 +39,7 @@ namespace HenrySolidAdventure.GameScreens
             {
                 new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font)
             };
-            StatsController.Instance.Reset();
+            StatsController.Reset();
             Hero.Instance.Inventory.PotionAdd(PotionLoader.MakeHealingPotion());
         }
 
@@ -58,7 +58,7 @@ namespace HenrySolidAdventure.GameScreens
         {
             _healthBar.SetHealth(Hero.Instance.HealthPercentage);
             _displayCoin.Update(gameTime);
-            StatsController.Instance.UpdatePlayTime(gameTime);
+            StatsController.UpdatePlayTime(gameTime);
             _texts = new List<Text>
             {
                 new(new Vector2(55, 25), $"= {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font)

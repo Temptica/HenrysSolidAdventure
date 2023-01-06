@@ -77,7 +77,7 @@ namespace HenrySolidAdventure.MapFolder
             _animationX = (float)(_time = 0f);
             
             _collected = true;
-            StatsController.Instance.AddCoin();
+            StatsController.AddCoin();
             AudioController.Instance.PlayEffect(SoundEffects.Coin);
             DiscordRichPresence.Instance.UpdateCoins();
             return true;

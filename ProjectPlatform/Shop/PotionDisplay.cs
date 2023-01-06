@@ -51,7 +51,7 @@ namespace HenrySolidAdventure.Shop
                     {
                         hero.Inventory.PotionAdd(potion1);
                         hero.Coins -= potion1.Cost;
-                        StatsController.Instance.RemoveCoins(potion1.Cost);
+                        StatsController.RemoveCoins(potion1.Cost);
                         RemovePotion(potion1);
                         _store.RemovePotion(potion1);
                     }
@@ -71,7 +71,7 @@ namespace HenrySolidAdventure.Shop
             var x = 50;
             var y = 200;
             
-            for (int i = 0; i < _potions.Count(); i++)
+            for (int i = 0; i < _potions.Count; i++)
             {
                 //4 on a row
                 if (i % 6 == 0 && i != 0)
