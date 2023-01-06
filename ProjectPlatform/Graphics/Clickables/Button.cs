@@ -36,10 +36,10 @@ namespace HenrySolidAdventure.Graphics.Clickables
                 {
                     textScale = (Texture.Width - 40) / length;
                     //move text to the right
-                    length *= textScale * scale;
-                    height *= textScale * scale;
+                    length *= textScale;
+                    height *= textScale;
                 }
-                var textPosition = new Vector2(Position.X + halfWidth - length / 2 + 15, Position.Y + halfHeight - height / 2 + 8);
+                var textPosition = new Vector2(Position.X + halfWidth - length / 2 + 15* scale, Position.Y + halfHeight - height / 2 + 8* scale);
 
                 Text = new Text(textPosition, text, Color.Black, textScale * scale, 0f, Game1.MainFont);
                 //rescale text if too long with 20 pixels margin left and right

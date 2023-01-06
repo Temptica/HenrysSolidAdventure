@@ -24,16 +24,18 @@ namespace HenrySolidAdventure.GameScreens
             _screen = screen;
             var halfWidth = screen.Width / 2f;
             var halfHeight = screen.Height / 2f;
-            string title = "Press \"E\" or \"enter\" to resume.";
+            string title = "Press \"Escape\" to resume.";
             var length = Game1.MainFont.MeasureString(title).Length();
-            Vector2 textPosition = new(halfWidth - length / 2 * 0.5f, screen.Height / 2f);
+            Vector2 textPosition = new(halfWidth - length / 2 * 0.5f, 150);
             var setting = content.Load<Texture2D>("Buttons/Cog");
+            var menuButton = content.Load<Texture2D>("Buttons/EmptyButton");
             _buttons = new List<Button>
             {
-                new ("Setting", setting, new Vector2(screen.Width - setting.Width - 25, 25))
+                new ("Setting", setting, new Vector2(screen.Width - setting.Width - 25, 25)),
+                new ("GiveUp", menuButton, new Vector2(halfWidth - menuButton.Width / 2f, halfHeight - menuButton.Height / 2f + 100), "Give up",0.75f)
             };
             _texts = new List<Text> {
-            new(textPosition,"Press \"E\" or \"enter\" to resume. \nPress \"Escape\" to go to menu." , Color.White, 0.5f, 0f, Game1.MainFont)
+            new(textPosition,title , Color.White, 0.5f, 0f, Game1.MainFont)
             };
         }
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
@@ -59,19 +61,17 @@ namespace HenrySolidAdventure.GameScreens
                         _loaded = true;
                         Game1.SetState(GameState.Settings);
                         return;
+                    case "GiveUp":
+                        _loaded = true;
+                        Game1.SetState(GameState.GameOver);
+                        return;
                 }
             }
             else Mouse.SetCursor(MouseCursor.Arrow);
-            if (InputController.InteractInput)
-            {
-                _loaded = true;
-                Game1.SetState(GameState.Playing);
-                return;
-            }
             if (InputController.ExitInput)
             {
                 _loaded = true;
-                Game1.SetState(GameState.Menu);
+                Game1.SetState(GameState.Playing);
             }
             
         }

@@ -12,6 +12,7 @@ namespace HenrySolidAdventure.GameScreens
     {
         private readonly List<Text> _texts;
         private readonly List<Button> _buttons;
+        private bool _loaded;
         public GameOverScreen(Screen screen, ContentManager content)
         {
             
@@ -32,6 +33,7 @@ namespace HenrySolidAdventure.GameScreens
 
             };
             AudioController.Instance.PlaySong(Songs.GameOver);
+            _loaded = true;
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)
@@ -44,6 +46,8 @@ namespace HenrySolidAdventure.GameScreens
         public void Update(GameTime gameTime)
         {
 
+            if (_loaded && (InputController.ExitInput ||MouseController.IsLeftClicked)) return;
+            _loaded = false;
             BackGround.Instance.Update(gameTime);
             var selected = ClickableChecker.CheckHits(_buttons);
             if (MouseController.IsLeftClicked && selected is Button button)
