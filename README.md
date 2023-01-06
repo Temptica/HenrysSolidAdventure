@@ -23,8 +23,8 @@ Mouse is only used for clicking buttons
 ## Enemies
 There are 3 main enemies roaming henry's lands:
 
-1. Skeleton: has 14 HP, does 5 damage and detects you whenever you enter his platform.
-1. Slime: has 6HP and does 3 damage. It can only detect you within a few meters.
+1. Skeleton: has 9 HP, does 5 damage and detects you whenever you enter his platform.
+1. Slime: has 6 HP and does 3 damage. It can only detect you within a few meters.
 1. Bat: has 3 HP, does 4 damage and tracks you within a 50 meters range.
 
 ### Boss
