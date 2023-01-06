@@ -63,6 +63,9 @@ namespace HenrySolidAdventure.GameScreens
             
             _muteSongButton.IsClicked = Settings.Instance.Setting.MusicMuted;
             _muteEffectButton.IsClicked = Settings.Instance.Setting.EffectMuted;
+            _fullScreenButton.IsClicked = Settings.Instance.Setting.FullScreen;
+            _effectSlider.Value = Settings.Instance.Setting.EffectVolume;
+            _songSlider.Value = Settings.Instance.Setting.MusicVolume;
         }
         public void Update(GameTime gameTime)
         {
@@ -131,8 +134,8 @@ namespace HenrySolidAdventure.GameScreens
             _muteSongButton.Update(_screen);
             _muteEffectButton.Update(_screen);
 
-
-            Game1.SetFullScreen(Settings.Instance.Setting.FullScreen = _fullScreenButton.IsClicked);
+            Settings.Instance.Setting.FullScreen = _fullScreenButton.IsClicked;
+            Game1.SetFullScreen(Settings.Instance.Setting.FullScreen);
         }
 
         public void Draw(SpriteBatch spriteBatch, Sprites sprites)

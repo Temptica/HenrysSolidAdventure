@@ -14,13 +14,24 @@ namespace HenrySolidAdventure.Controller
             Setting = new Setting();
         }
 
-        public Setting Setting { get; }
+        public Setting Setting { get; private set; }
 
         private string _path;
         public void Initialise(string path)
         {
             _path = path;
-            if (!File.Exists(_path)) return;
+            if (!File.Exists(_path))
+            {
+                Setting = new Setting
+                {
+                    MusicVolume = 1,
+                    MusicMuted = false,
+                    EffectVolume = 1,
+                    EffectMuted = false,
+                    FullScreen = false
+                };
+                return;
+            }
             using StreamReader reader = new StreamReader(path);
             var data = reader.ReadToEnd();
             data.Split('\n')
