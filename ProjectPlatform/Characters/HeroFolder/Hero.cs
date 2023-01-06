@@ -23,7 +23,7 @@ namespace HenrySolidAdventure.Characters.HeroFolder
         public const float RollingSpeed = 0.25f;
         public const float XAcceleration = 0.03f;
         private const float AttackWaitTime = 1500f;//1.5 seconds
-        public const int BaseDamage = 3;
+        public const int BaseDamage = 4;
         #endregion
 
         #region properities
@@ -265,7 +265,7 @@ namespace HenrySolidAdventure.Characters.HeroFolder
         {
             Coins = 0;
             Health = BaseHp = 20;
-            Damage = 7;
+            Damage = BaseDamage;
             State = State.Idle;
             IsAttacking = false;
             IsDead = false;

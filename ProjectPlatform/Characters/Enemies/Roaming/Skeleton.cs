@@ -25,7 +25,7 @@ namespace HenrySolidAdventure.Characters.Enemies.Roaming
                 new Animation(Textures[State.Dead], State.Dead,15, Textures[State.Dead].Width/15, Textures[State.Dead].Height, 0, 0,5),
                 new Animation(Textures[State.Other], State.Other,4, Textures[State.Other].Width/4, Textures[State.Other].Height, 0, 0,7)//when skeleton detects Hero
             };
-            Health = BaseHp = 14;
+            Health = BaseHp = 9;
             Damage = 5;
             Speed = 8f;
             CanAttack = true;

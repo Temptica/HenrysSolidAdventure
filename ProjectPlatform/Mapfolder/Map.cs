@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using HenrySolidAdventure.Characters.Enemies;
+using HenrySolidAdventure.Characters.HeroFolder;
 using HenrySolidAdventure.Graphics;
 using HenrySolidAdventure.Shop;
 using Microsoft.Xna.Framework;
@@ -113,6 +114,7 @@ namespace HenrySolidAdventure.MapFolder
             if (Portal.Update(gameTime))
             {
                 MapLoader.LoadNextMap(ScreenRectangle.Height);
+                Hero.Instance.Position = Spawn;
             }
         }
         

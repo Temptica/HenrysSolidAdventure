@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HenrySolidAdventure.Animations;
 using HenrySolidAdventure.Graphics;
 using Microsoft.Xna.Framework;
@@ -17,17 +18,13 @@ namespace HenrySolidAdventure.Characters.Traps
 
         public Worm(Vector2 position, TrapTier tier, bool direction, int wormHp = 0) : base(position, tier, direction)
         {
-            var size = TextureSizeWidth;
-            switch (tier)
+            var size = tier switch
             {
-                case TrapTier.One:
-                    break;
-                case TrapTier.Two:
-                    
-                case TrapTier.Three:
-                    size = 96;
-                    break;
-            }
+                TrapTier.One => TextureSizeWidth,
+                TrapTier.Two => 96,
+                TrapTier.Three => 124,
+                _ => TextureSizeWidth
+            };
 
             Animations = new AnimationList<Animation>()
             {

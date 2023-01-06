@@ -23,7 +23,11 @@ internal static class EnemyCollisionChecker
                 if (damage > 0 && Hero.State != State.Hit && Hero.CanGetDamage)
                 {
                     Hero.IsHit = true;
-                    if (Hero.State is not State.Block && Hero.State is not State.BlockHit) Hero.Health -= damage;
+                    if (Hero.State is not State.Block && Hero.State is not State.BlockHit)
+                    {
+                        Hero.Health -= damage;
+                        StatsController.Instance.AddHealthLost(damage);
+                    }
                     DiscordRichPresence.Instance.UpdateHealth();
                 }
             }
@@ -46,7 +50,10 @@ internal static class EnemyCollisionChecker
             {
                 Hero.IsHit = true;
                 if (Hero.State is not State.Block && Hero.State is not State.BlockHit)
+                {
                     Hero.Health -= damage;
+                    StatsController.Instance.AddHealthLost(damage);
+                }
                 else StatsController.Instance.AddBlock();
                 DiscordRichPresence.Instance.UpdateHealth();
             }

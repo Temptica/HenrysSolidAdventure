@@ -36,7 +36,7 @@ namespace HenrySolidAdventure.Characters.Enemies
                 new(Texture, State.Hit, 3, width, height, Texture.Height - height, 0, 4)
             };
             _healthBar = new HealthBar(Position);
-            Health = BaseHp = 50;
+            Health = BaseHp = 40;
             _wormHp = 25;
             CanDamage = true;
             Damage = 5;
@@ -57,6 +57,8 @@ namespace HenrySolidAdventure.Characters.Enemies
                     Hero.Instance.Position = Map.Instance.Spawn;
                     MapLoader.ReloadEnemies();
                     _moveCounter++;
+                    IsHit = false;
+                    State = State.Idle;
                 }
                 tier = 1;
             }
@@ -67,6 +69,8 @@ namespace HenrySolidAdventure.Characters.Enemies
                     Hero.Instance.Position = Map.Instance.Spawn;
                     MapLoader.ReloadEnemies();
                     _moveCounter++;
+                    IsHit = false;
+                    State = State.Idle;
                 }
                 tier = 2;
             }
