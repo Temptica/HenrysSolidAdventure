@@ -20,6 +20,9 @@ Pause/Exit: Escape
 
 Mouse is only used for clicking buttons
 
+## Henry
+Henry has a shield that can block any kind of damage. Henry has 20 HP and does 4 base damage.
+
 ## Enemies
 There are 3 main enemies roaming henry's lands:
 
@@ -28,11 +31,11 @@ There are 3 main enemies roaming henry's lands:
 1. Bat: has 3 HP, does 4 damage and tracks you within a 50 meters range.
 
 ### Boss
-The evil wizard has some tricks up it's sleeves. 
-First of all he has 50 HP and does 5 damage per hit.
+The evil wizard Harry has some tricks up it's sleeves. 
+First of all he has 40 HP and does 5 damage per hit.
 He can also spell a magic cast and summon a Sand worm.
 
-The boss battle has 3 tiers. Tier one is when the boss has >50 HP. Tier 2 when the bos has between 50 and 25 HP, Tier 3 below or at 25 HP.
+The boss battle has 3 tiers. Tier one is when the boss has >50% HP. Tier 2 when the bos has between 50% and 25% HP, Tier 3 below or at 25% HP.
 Every tier change, the boss will teleport you back to teh begining and resummon the enemies. His spell casts will also change.
 
 #### Magic
