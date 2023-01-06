@@ -8,15 +8,15 @@ The goal of this game is to surive and defeat the eveil wizard who is planning t
 ## Controls
 Arrow keys and both Azerty and querty automatic support
 
-Left: Q/A/left arrow
-Right: D/right arrow
-Jump: Z/W/space bar/up arrow
-Roll: left/right Shift
-Attack: A/Q
-Block: E
-Interact: F/Enter
-Inventory: I
-Pause/Exit: Escape
+- Left: Q/A/left arrow
+- Right: D/right arrow
+- Jump: Z/W/space bar/up arrow
+- Roll: left/right Shift
+- Attack: A/Q
+- Block: E
+- Interact: F/Enter
+- Inventory: I
+- Pause/Exit: Escape
 
 Mouse is only used for clicking buttons
 
