@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace HenrySolidAdventure.Characters
 {
     internal enum State { Idle, Walking, Rolling, Jumping, Falling, Attacking, Attacking2, Attacking3, Dead, Hit, Block, BlockHit, Other }
-    internal class Character //base class for every 'living' being and traps
+    internal abstract class Character //base class for every 'living' being and traps
     {
         public AnimationList<Animation> Animations { get; set; }
         public virtual Rectangle HitBox => GetHitBox(Position);

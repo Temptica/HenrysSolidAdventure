@@ -12,7 +12,6 @@ using HenrySolidAdventure.Characters.Enemies;
 
 namespace HenrySolidAdventure.Characters.HeroFolder
 {
-    //TODO: Conditionbar, Healthbar, stats upgrades, coin collection
     internal class Hero : Character
     {
         #region Consts

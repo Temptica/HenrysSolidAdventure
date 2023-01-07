@@ -18,12 +18,10 @@ namespace HenrySolidAdventure.GameScreens
         private readonly Coin _displayCoin;
         private readonly HealthBar _healthBar;
         private bool _loaded;
-        private Screen _screen;
         public PlayingScreen(Screen screen, ContentManager content)
         {
             MapLoader.SetMapId(1);
             MapLoader.LoadMap(screen.Height, content);
-            _screen = screen;
             //_gameState = GameState.Playing;
             Hero.Instance.Position = Map.Instance.Spawn;
             _backGround = BackGround.Instance;
