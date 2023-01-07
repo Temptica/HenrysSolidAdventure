@@ -37,7 +37,9 @@ namespace HenrySolidAdventure.GameScreens
             _healthBar = new HealthBar(new Vector2(20, 50),2f);
             _texts = new List<Text>
             {
-                new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font)
+                new(new Vector2(55, 25), $": {Hero.Instance.Coins}", Color.White, 0.2f, 0f, _font),
+                //timer for speedrunning
+                
             };
             StatsController.Reset();
             Hero.Instance.Inventory.PotionAdd(PotionLoader.MakeHealingPotion());

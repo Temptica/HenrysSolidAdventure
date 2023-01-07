@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace HenrySolidAdventure
+namespace HenrySolidAdventure.Characters
 {
     public static class TextureUtil
     {
@@ -78,7 +78,7 @@ namespace HenrySolidAdventure
                 if (lowestPixel != 0) break;
             }
             //set hitBox
-            return new Rectangle(mostLeftPixel, (int)(highestPixel), (int)((mostRightPixel - mostLeftPixel)), (int)((lowestPixel - highestPixel)));
+            return new Rectangle(mostLeftPixel, highestPixel, mostRightPixel - mostLeftPixel, lowestPixel - highestPixel);
         }
 
     }

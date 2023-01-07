@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HenrySolidAdventure.Characters;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace HenrySolidAdventure.Animations
