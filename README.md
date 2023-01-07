@@ -3,7 +3,7 @@
 Henry's Solid Adventuer is a game made by me alone. This is a school project for the classes "Game development". The goal of this project is to make a 2D platformer game using the Monogame Platform/Engine.
 
 ## Goal
-The goal of this game is to surive and defeat the eveil wizard who is planning to make your beloved land his. A part of your beloved land is already full of monsters roaming around.
+The goal of this game is to surive and defeat the evil wizard who is planning to make your beloved land his. A part of your beloved land is already full of monsters roaming around.
 
 ## Controls
 Arrow keys and both Azerty and querty automatic support
