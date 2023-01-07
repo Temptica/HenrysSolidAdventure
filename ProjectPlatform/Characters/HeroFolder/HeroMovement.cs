@@ -122,8 +122,14 @@ namespace HenrySolidAdventure.Characters.HeroFolder
                 {
                     if (CollisionHelper.LeavingBottomMapBorder(nextHitBox, Map.Instance.ScreenRectangle.Height))
                     {
-                        Hero.Position = Map.Instance.Spawn;
                         Hero.Health -= Hero.BaseHp / 4;
+                        if (Hero.Health <= 0)
+                        {
+                            Game1.SetState(GameState.GameOver);
+                            return;
+                        }
+                        Hero.Position = Map.Instance.Spawn;
+                        
                         Hero.IsFalling = false;
                         return;
                     }
