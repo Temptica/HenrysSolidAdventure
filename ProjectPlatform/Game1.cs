@@ -105,7 +105,7 @@ namespace HenrySolidAdventure
         {
             if (_exit) Exit();
 
-            #region MyRegion
+            #region Fullscreen
 
             if (_isFullScreen && !_graphics.IsFullScreen)
             {
